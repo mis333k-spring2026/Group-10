@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Team_10_Final_Project.Models;
 
 public class AppDbContext : IdentityDbContext<AppUser>
 {
