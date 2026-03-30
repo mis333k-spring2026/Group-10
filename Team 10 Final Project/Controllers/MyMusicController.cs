@@ -1,0 +1,37 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Team10FinalProject.DAL;
+using Team10FinalProject.Models;
+
+namespace Team10FinalProject.Controllers
+{
+    [Authorize]
+    public class MyMusicController : Controller
+    {
+        private readonly AppDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
+
+        public MyMusicController(AppDbContext context, UserManager<AppUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            AppUser user = await _userManager.GetUserAsync(User);
+
+            var songs = _context.OrderDetails
+                .Include(od => od.Song)
+                .Include(od => od.Order)
+                .Where(od => od.Order.AppUser == user && od.Order.OrderStatus == "Completed")
+                .Select(od => od.Song)
+                .Distinct()
+                .ToList();
+
+            return View(songs);
+        }
+    }
+}
