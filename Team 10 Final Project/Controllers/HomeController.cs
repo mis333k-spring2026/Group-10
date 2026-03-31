@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Team_10_Final_Project.Models;
+using Team10FinalProject.Models;
 
-namespace Team_10_Final_Project.Controllers;
+namespace Team10FinalProject.Controllers;
 
 public class HomeController : Controller
 {

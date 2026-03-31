@@ -1,0 +1,45 @@
+@model IEnumerable<Order>
+@{
+    ViewData["Title"] = "Order History";
+}
+<h1>Order History</h1>
+<hr />
+@if (!Model.Any())
+{
+    <p>You have no completed orders.</p>
+}
+else
+{
+    @foreach (var order in Model)
+    {
+        decimal subtotal = order.OrderDetails.Sum(od => od.Price);
+        decimal tax = subtotal * 0.0825m;
+        decimal total = subtotal + tax;
+
+        <h4>Order #@order.OrderNumber — @order.OrderDate.ToString("MMM d, yyyy")</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Song</th>
+                    <th>Price Paid</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var od in order.OrderDetails)
+                {
+                    <tr>
+                        <td>@od.Song.SongName</td>
+                        <td>@od.Price.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <p><strong>Subtotal:</strong> @subtotal.ToString("C")</p>
+        <p><strong>Tax (8.25%):</strong> @tax.ToString("C")</p>
+        <p><strong>Total:</strong> @total.ToString("C")</p>
+        <hr />
+    }
+}
+<div>
+    <a asp-controller="Home" asp-action="Index">Home</a>
+</div>

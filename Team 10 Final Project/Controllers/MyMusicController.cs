@@ -26,7 +26,7 @@ namespace Team10FinalProject.Controllers
             var songs = _context.OrderDetails
                 .Include(od => od.Song)
                 .Include(od => od.Order)
-                .Where(od => od.Order.AppUser == user && od.Order.OrderStatus == "Completed")
+                .Where(od => od.Order.Customer == user && od.Order.Status == false)
                 .Select(od => od.Song)
                 .Distinct()
                 .ToList();

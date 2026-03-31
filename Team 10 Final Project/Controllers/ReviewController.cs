@@ -24,7 +24,7 @@ namespace Team10FinalProject.Controllers
         [HttpPost]
         public IActionResult Create(Review review)
         {
-            review.Approved = false; 
+            review.Status = false; 
             _context.Reviews.Add(review);
             _context.SaveChanges();
 
@@ -35,7 +35,7 @@ namespace Team10FinalProject.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Approve()
         {
-            var pending = _context.Reviews.Where(r => r.Approved == false).ToList();
+            var pending = _context.Reviews.Where(r => r.Status == false).ToList();
             return View(pending);
         }
 
@@ -43,7 +43,7 @@ namespace Team10FinalProject.Controllers
         public IActionResult ApproveReview(int id)
         {
             Review review = _context.Reviews.Find(id);
-            review.Approved = true;
+            review.Status = true;
 
             _context.SaveChanges();
             return RedirectToAction("Approve");

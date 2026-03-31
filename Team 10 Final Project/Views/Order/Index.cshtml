@@ -1,0 +1,54 @@
+@model Order
+@{
+    ViewData["Title"] = "Shopping Cart";
+    decimal subtotal = Model.OrderDetails != null ? Model.OrderDetails.Sum(od => od.Price) : 0m;
+    decimal tax = subtotal * 0.0825m;
+    decimal total = subtotal + tax;
+}
+<h1>Shopping Cart</h1>
+<hr />
+@if (TempData["Error"] != null)
+{
+    <p class="text-danger">@TempData["Error"]</p>
+}
+@if (Model.OrderDetails == null || !Model.OrderDetails.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Song</th>
+                <th>Artist</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var od in Model.OrderDetails)
+            {
+                <tr>
+                    <td>@od.Song.SongName</td>
+                    <td>@od.Song.Artist.ArtistName</td>
+                    <td>@od.Price.ToString("C")</td>
+                    <td>
+                        @* TODO: Add RemoveSong action to OrderController *@
+                        <a asp-action="RemoveSong" asp-route-songID="@od.Song.SongID">Remove</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p><strong>Subtotal:</strong> @subtotal.ToString("C")</p>
+    <p><strong>Tax (8.25%):</strong> @tax.ToString("C")</p>
+    <p><strong>Total:</strong> @total.ToString("C")</p>
+    <br />
+    <a asp-action="Checkout" class="btn btn-primary">Proceed to Checkout</a>
+}
+<br />
+<div>
+    <a asp-controller="Song" asp-action="Index">Browse Songs</a> |
+    <a asp-controller="Home" asp-action="Index">Home</a>
+</div>

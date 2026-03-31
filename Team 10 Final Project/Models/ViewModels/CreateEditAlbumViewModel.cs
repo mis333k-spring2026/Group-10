@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Team_10_Final_Project.ViewModels
+namespace Team10FinalProject.ViewModels
 {
     public class CreateEditAlbumViewModel
     {

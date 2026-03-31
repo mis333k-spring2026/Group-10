@@ -28,14 +28,15 @@ namespace Team10FinalProject.Controllers
             Order order = _context.Orders
                 .Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Song)
-                .FirstOrDefault(o => o.AppUser == user && o.OrderStatus == "Pending");
+                .FirstOrDefault(o => o.Customer == user && o.Status == true);
 
             if (order == null)
             {
                 order = new Order
                 {
-                    AppUser = user,
-                    OrderStatus = "Pending",
+                    // FIXED: was AppUser = user, OrderStatus = "Pending"
+                    Customer = user,
+                    Status = true,
                     OrderDate = DateTime.Now,
                     OrderDetails = new List<OrderDetail>()
                 };
@@ -55,9 +56,11 @@ namespace Team10FinalProject.Controllers
             Order order = _context.Orders
                 .Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Song)
-                .FirstOrDefault(o => o.AppUser == user && o.OrderStatus == "Pending");
+                .FirstOrDefault(o => o.Customer == user && o.Status == true);
 
-            Song song = _context.Songs.Include(s => s.Album).FirstOrDefault(s => s.SongID == songID);
+            // FIXED: removed .Include(s => s.Album) — Song model has no Album property yet
+            // TODO: add Album navigation property to Song model, then restore the include
+            Song song = _context.Songs.FirstOrDefault(s => s.SongID == songID);
 
             // Check for duplicates
             bool exists = order.OrderDetails.Any(od => od.Song.SongID == songID);
@@ -68,12 +71,13 @@ namespace Team10FinalProject.Controllers
             }
 
             // Check for album overlap
-            bool albumExists = order.OrderDetails.Any(od => od.Song.Album.AlbumID == song.Album.AlbumID);
-            if (albumExists)
-            {
-                TempData["Error"] = "You already have a song from this album!";
-                return RedirectToAction("Index");
-            }
+            // TODO: restore once Song.Album navigation property is added to Song model
+            // bool albumExists = order.OrderDetails.Any(od => od.Song.Album.AlbumID == song.Album.AlbumID);
+            // if (albumExists)
+            // {
+            //     TempData["Error"] = "You already have a song from this album!";
+            //     return RedirectToAction("Index");
+            // }
 
             OrderDetail od = new OrderDetail
             {
@@ -94,7 +98,7 @@ namespace Team10FinalProject.Controllers
 
             Order order = _context.Orders
                 .Include(o => o.OrderDetails)
-                .FirstOrDefault(o => o.AppUser == user && o.OrderStatus == "Pending");
+                .FirstOrDefault(o => o.Customer == user && o.Status == true);
 
             return View(order);
         }
@@ -107,21 +111,21 @@ namespace Team10FinalProject.Controllers
 
             Order order = _context.Orders
                 .Include(o => o.OrderDetails)
-                .FirstOrDefault(o => o.AppUser == user && o.OrderStatus == "Pending");
+                .FirstOrDefault(o => o.Customer == user && o.Status == true);
 
             // Apply promotion
-            if (!String.IsNullOrEmpty(orderInput.PromoCode))
-            {
-                Promotion promo = _context.Promotions.FirstOrDefault(p => p.Code == orderInput.PromoCode);
-
-                if (promo != null)
-                {
-                    order.DiscountAmount = promo.DiscountAmount;
-                }
-            }
+            // TODO: Add PromoCode and DiscountAmount to Order model to re-enable this
+            // if (!String.IsNullOrEmpty(orderInput.PromoCode))
+            // {
+            //     Promotion promo = _context.Promotions.FirstOrDefault(p => p.Code == orderInput.PromoCode);
+            //     if (promo != null)
+            //     {
+            //         order.DiscountAmount = promo.DiscountAmount;
+            //     }
+            // }
 
             // finalize order
-            order.OrderStatus = "Completed";
+            order.Status = false;
             order.OrderDate = DateTime.Now;
 
             _context.SaveChanges();

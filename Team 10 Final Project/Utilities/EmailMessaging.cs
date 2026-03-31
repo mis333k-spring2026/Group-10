@@ -1,10 +1,12 @@
 using System;
 using System.Net;
 using System.Net.Mail;
-using fa22RelationalDataDemo.DAL;
+using Team10FinalProject.Models;
+using Team10FinalProject.DAL;
 
-namespace fa22RelationalDataDemo.Utilities
+namespace Team10FinalProject.Utilities
 {
+
     public static class EmailMessaging
     {
         // Base method for sending any email
@@ -47,7 +49,7 @@ namespace fa22RelationalDataDemo.Utilities
 
             string subject = $"Order Confirmation #{order.OrderID}";
             string body =
-                $"Hello {order.AppUser.FirstName},\n\n" +
+                $"Hello {order.Customer.FirstName},\n\n" +
                 $"Thank you for your order placed on {order.OrderDate:MMMM dd, yyyy}.\n" +
                 $"Order Total: ${order.TotalPrice:F2}\n\n" +
                 "Order Details:\n";

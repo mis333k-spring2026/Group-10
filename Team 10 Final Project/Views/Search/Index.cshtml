@@ -1,0 +1,49 @@
+@model IEnumerable<Song>
+@{
+    ViewData["Title"] = "Search";
+}
+<h1>Search Songs</h1>
+<hr />
+<form asp-action="Index" method="get">
+    <div class="form-group">
+        <label for="searchString">Search by Title</label>
+        <input type="text" name="searchString" class="form-control"
+               value="@Context.Request.Query["searchString"]"
+               placeholder="Enter song title..." />
+    </div>
+    <br />
+    <div class="form-group">
+        <input type="submit" value="Search" class="btn btn-primary" />
+    </div>
+</form>
+<br />
+@if (Model != null)
+{
+    <p>Displaying @Model.Count() result(s)</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Song Name</th>
+                <th>Artist</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.SongName</td>
+                    <td>@item.Artist.ArtistName</td>
+                    <td>@item.Price</td>
+                    <td>
+                        <a asp-controller="Song" asp-action="Details" asp-route-id="@item.SongID">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<div>
+    <a asp-controller="Home" asp-action="Index">Home</a>
+</div>

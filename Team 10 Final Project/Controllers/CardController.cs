@@ -21,8 +21,7 @@ namespace Team10FinalProject.Controllers
         public async Task<IActionResult> Index()
         {
             AppUser user = await _userManager.GetUserAsync(User);
-            var cards = _context.Cards.Where(c => c.AppUser == user).ToList();
-
+            var cards = _context.Cards.Where(c => c.Customer == user).ToList();
             return View(cards);
         }
 
@@ -35,7 +34,8 @@ namespace Team10FinalProject.Controllers
         public async Task<IActionResult> Create(Card card)
         {
             AppUser user = await _userManager.GetUserAsync(User);
-            card.AppUser = user;
+            // FIXED: was AppUser = user
+            card.Customer = user;
 
             _context.Cards.Add(card);
             _context.SaveChanges();

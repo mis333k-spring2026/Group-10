@@ -26,7 +26,7 @@ namespace Team10FinalProject.Controllers
             var orders = _context.Orders
                 .Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Song)
-                .Where(o => o.AppUser == user && o.OrderStatus == "Completed")
+                .Where(o => o.Customer == user && o.Status == false)
                 .ToList();
 
             return View(orders);

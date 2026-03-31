@@ -22,7 +22,7 @@ namespace Team10FinalProject.Controllers
         public IActionResult Details(int id)
         {
             var song = _context.Songs
-                .Include(s => s.Album)
+                .Include(s => s.Albums)
                 .FirstOrDefault(s => s.SongID == id);
 
             return View(song);

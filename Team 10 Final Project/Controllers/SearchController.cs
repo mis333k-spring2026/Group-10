@@ -17,12 +17,12 @@ namespace Team10FinalProject.Controllers
         {
             var songs = _context.Songs
                 .Include(s => s.Artist)
-                .Include(s => s.Album)
+                .Include(s => s.Albums)
                 .AsQueryable();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                songs = songs.Where(s => s.Title.Contains(searchString));
+                songs = songs.Where(s => s.SongName.Contains(searchString));
             }
 
             return View(songs.ToList());

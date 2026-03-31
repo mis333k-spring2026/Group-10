@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Team_10_Final_Project.Models
+namespace Team10FinalProject.Models
 {
     public class Review
     {

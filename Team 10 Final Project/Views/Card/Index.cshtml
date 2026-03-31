@@ -1,0 +1,42 @@
+@model IEnumerable<Card>
+@{
+    ViewData["Title"] = "My Cards";
+}
+<h1>My Cards</h1>
+<hr />
+@if (!Model.Any())
+{
+    <p>You have no saved cards.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Card Type</th>
+                <th>Card Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.CardType</td>
+                    <td>@item.MaskedCardNumber</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@if (Model.Count() < 2)
+{
+    <a asp-action="Create" class="btn btn-primary">Add a Card</a>
+}
+else
+{
+    <p>You have reached the maximum of 2 saved cards.</p>
+}
+<br />
+<div>
+    <a asp-controller="Home" asp-action="Index">Home</a>
+</div>

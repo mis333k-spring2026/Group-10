@@ -1,0 +1,45 @@
+@model IEnumerable<Song>
+@{
+    ViewData["Title"] = "My Music";
+}
+<h1>My Music</h1>
+<hr />
+@if (!Model.Any())
+{
+    <p>You do not own any music yet.</p>
+}
+else
+{
+    <p>@Model.Count() song(s) in your collection</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Song Name</th>
+                <th>Artist</th>
+                <th>Genres</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.SongName</td>
+                    <td>@item.Artist.ArtistName</td>
+                    <td>
+                        @foreach (var genre in item.Genres)
+                        {
+                            <span>@genre.GenreName </span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-controller="Song" asp-action="Details" asp-route-id="@item.SongID">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<div>
+    <a asp-controller="Home" asp-action="Index">Home</a>
+</div>

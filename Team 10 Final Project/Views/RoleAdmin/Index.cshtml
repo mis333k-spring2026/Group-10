@@ -1,0 +1,41 @@
+@model IEnumerable<RoleEditModel>
+@{
+    ViewData["Title"] = "Manage Roles";
+}
+<h1>Manage Roles</h1>
+<hr />
+<a asp-action="Create" class="btn btn-primary">Create New Role</a>
+<br /><br />
+@foreach (var role in Model)
+{
+    <h4>@role.Role.Name</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Members</th>
+                <th>Non-Members</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    @foreach (var user in role.RoleMembers)
+                    {
+                        <p>@user.Email</p>
+                    }
+                </td>
+                <td>
+                    @foreach (var user in role.RoleNonMembers)
+                    {
+                        <p>@user.Email</p>
+                    }
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a asp-action="Edit" asp-route-id="@role.Role.Id">Edit Members</a>
+    <hr />
+}
+<div>
+    <a asp-controller="Home" asp-action="Index">Home</a>
+</div>

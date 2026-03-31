@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Team_10_Final_Project.ViewModels
+namespace Team10FinalProject.ViewModels
 {
     public class CreateEditReviewViewModel
     {

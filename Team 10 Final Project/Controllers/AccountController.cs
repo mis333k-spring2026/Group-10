@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Team_10_Final_Project.DAL;
-using Team_10_Final_Project.Models;
-using Team_10_Final_Project.Utilities;
+using Team10FinalProject.DAL;
+using Team10FinalProject.Models;
+using Team10FinalProject.ViewModels;
+using Team10FinalProject.Utilities;
 using System;
 
-namespace Team_10_Final_Project.Controllers
+namespace Team10FinalProject.Controllers
 {
     [Authorize]
     public class AccountController : Controller
@@ -14,12 +15,12 @@ namespace Team_10_Final_Project.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
         private readonly AppDbContext _context;
-        private readonly IEmailSender _emailSender; 
+        private readonly IEmailSender<AppUser> _emailSender; 
 
         public AccountController(AppDbContext appDbContext,
                                  UserManager<AppUser> userManager,
                                  SignInManager<AppUser> signIn,
-                                 IEmailSender emailSender)
+                                 IEmailSender<AppUser> emailSender)
         {
             _context = appDbContext;
             _userManager = userManager;
