@@ -20,7 +20,11 @@ namespace Team10FinalProject.Controllers
 
         public async Task<IActionResult> Index()
         {
-            AppUser user = await _userManager.GetUserAsync(User);
+            AppUser? user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return View("Error", new string[] { "User not found" });
+            }
             var cards = _context.Cards.Where(c => c.Customer == user).ToList();
             return View(cards);
         }
@@ -33,9 +37,13 @@ namespace Team10FinalProject.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Card card)
         {
-            AppUser user = await _userManager.GetUserAsync(User);
+            AppUser? user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return View("Error", new string[] { "User not found" });
+            }
             // FIXED: was AppUser = user
-            card.Customer = user;
+            card.Customer = user!;
 
             _context.Cards.Add(card);
             _context.SaveChanges();

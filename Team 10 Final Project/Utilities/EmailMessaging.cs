@@ -47,17 +47,21 @@ namespace Team10FinalProject.Utilities
             if (order == null) throw new ArgumentNullException(nameof(order));
             if (string.IsNullOrEmpty(userEmail)) throw new ArgumentNullException(nameof(userEmail));
 
+            // Calculate total price from order details
+            decimal totalPrice = order.OrderDetails.Sum(od => od.Price);
+
             string subject = $"Order Confirmation #{order.OrderID}";
             string body =
-                $"Hello {order.Customer.FirstName},\n\n" +
+                $"Hello {order.Customer!.FirstName},\n\n" +
                 $"Thank you for your order placed on {order.OrderDate:MMMM dd, yyyy}.\n" +
-                $"Order Total: ${order.TotalPrice:F2}\n\n" +
+                $"Order Total: ${totalPrice:F2}\n\n" +
                 "Order Details:\n";
 
             // Include each item in the order
             foreach (var item in order.OrderDetails)
             {
-                body += $"- {item.Song.SongName} x {item.Quantity} @ ${item.UnitPrice:F2}\n";
+                string itemName = item.Song?.SongName ?? item.Album?.AlbumName ?? "Item";
+                body += $"- {itemName}: ${item.Price:F2}\n";
             }
 
             // Send using base SendEmail method

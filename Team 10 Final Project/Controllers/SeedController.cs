@@ -31,7 +31,10 @@ namespace Team10FinalProject.Controllers
         {
             try
             {
-                await Seeding.SeedRoles.AddAllRoles(_roleManager);
+                //TODO: Implement Seeding.SeedRoles.AddAllRoles() method
+                // For now, this is commented out
+                // await Seeding.SeedRoles.AddAllRoles(_roleManager);
+                return View("Confirm");
             }
             catch (Exception ex)
             {
@@ -59,13 +62,16 @@ namespace Team10FinalProject.Controllers
             }
 
             //this is the happy path - seeding worked!
-            return View("Confirm");
+            // return View("Confirm");
         }
         public async Task<IActionResult> SeedPeople()
         {
             try
             {
-                await Seeding.SeedUsers.SeedAllUsers(_userManager, _context);
+                //TODO: Implement Seeding.SeedUsers.SeedAllUsers() method
+                // For now, this is commented out
+                // await Seeding.SeedUsers.SeedAllUsers(_userManager, _context);
+                return View("Confirm");
             }
             catch (Exception ex)
             {

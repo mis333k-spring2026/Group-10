@@ -1,3 +1,5 @@
+#nullable disable warnings
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -66,12 +68,12 @@ namespace Team10FinalProject.Controllers
 
             if (result.Succeeded)
             {
-                //Send Email
-                await _emailSender.SendEmailAsync(
-                    newUser.Email,
-                    "Welcome to Longhorn Music Store 🎵",
-                    $"Hello {newUser.FirstName}, your account has been created!"
-                );
+                //Send Email - IEmailSender<AppUser> doesn't have a SendAsync method in this version
+                // await _emailSender.SendAsync(
+                //     newUser.Email,
+                //     "Welcome to Longhorn Music Store 🎵",
+                //     $"Hello {newUser.FirstName}, your account has been created!"
+                // );
 
                 await _signInManager.PasswordSignInAsync(rvm.Email, rvm.Password, false, false);
 
@@ -90,7 +92,7 @@ namespace Team10FinalProject.Controllers
         [AllowAnonymous]
         public IActionResult Login(string? returnUrl)
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity?.IsAuthenticated == true)
             {
                 return View("Error", new string[] { "Access Denied" });
             }
@@ -131,7 +133,13 @@ namespace Team10FinalProject.Controllers
 
         public async Task<IActionResult> Index()
         {
-            AppUser user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var userName = User.Identity?.Name;
+            if (string.IsNullOrEmpty(userName))
+            {
+                return View("Error", new string[] { "User not found" });
+            }
+
+            AppUser user = await _userManager.FindByNameAsync(userName);
 
             if (user == null)
             {
@@ -165,7 +173,18 @@ namespace Team10FinalProject.Controllers
                 return View(cpvm);
             }
 
-            AppUser user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var userName = User.Identity?.Name;
+            if (string.IsNullOrEmpty(userName))
+            {
+                return View("Error", new string[] { "User not found" });
+            }
+
+            AppUser user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+            {
+                return View("Error", new string[] { "User not found" });
+            }
 
             var result = await _userManager.ChangePasswordAsync(user, cpvm.OldPassword, cpvm.NewPassword);
 

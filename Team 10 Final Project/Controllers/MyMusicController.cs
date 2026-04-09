@@ -21,12 +21,16 @@ namespace Team10FinalProject.Controllers
 
         public async Task<IActionResult> Index()
         {
-            AppUser user = await _userManager.GetUserAsync(User);
+            AppUser? user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return View("Error", new string[] { "User not found" });
+            }
 
             var songs = _context.OrderDetails
                 .Include(od => od.Song)
                 .Include(od => od.Order)
-                .Where(od => od.Order.Customer == user && od.Order.Status == false)
+                .Where(od => od.Order!.Customer == user && od.Order.Status == false)
                 .Select(od => od.Song)
                 .Distinct()
                 .ToList();

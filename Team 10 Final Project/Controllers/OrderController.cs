@@ -23,9 +23,13 @@ namespace Team10FinalProject.Controllers
         // GET: Order (Cart)
         public async Task<IActionResult> Index()
         {
-            AppUser user = await _userManager.GetUserAsync(User);
+            AppUser? user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return View("Error", new string[] { "User not found" });
+            }
 
-            Order order = _context.Orders
+            Order? order = _context.Orders
                 .Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Song)
                 .FirstOrDefault(o => o.Customer == user && o.Status == true);
@@ -35,7 +39,7 @@ namespace Team10FinalProject.Controllers
                 order = new Order
                 {
                     // FIXED: was AppUser = user, OrderStatus = "Pending"
-                    Customer = user,
+                    Customer = user!,
                     Status = true,
                     OrderDate = DateTime.Now,
                     OrderDetails = new List<OrderDetail>()
@@ -51,16 +55,30 @@ namespace Team10FinalProject.Controllers
         // Add song to cart
         public async Task<IActionResult> AddSong(int songID)
         {
-            AppUser user = await _userManager.GetUserAsync(User);
+            AppUser? user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return View("Error", new string[] { "User not found" });
+            }
 
-            Order order = _context.Orders
+            Order? order = _context.Orders
                 .Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Song)
                 .FirstOrDefault(o => o.Customer == user && o.Status == true);
 
+            if (order == null)
+            {
+                return View("Error", new string[] { "Order not found" });
+            }
+
             // FIXED: removed .Include(s => s.Album) — Song model has no Album property yet
             // TODO: add Album navigation property to Song model, then restore the include
-            Song song = _context.Songs.FirstOrDefault(s => s.SongID == songID);
+            Song? song = _context.Songs.FirstOrDefault(s => s.SongID == songID);
+
+            if (song == null)
+            {
+                return View("Error", new string[] { "Song not found" });
+            }
 
             // Check for duplicates
             bool exists = order.OrderDetails.Any(od => od.Song.SongID == songID);
@@ -94,11 +112,20 @@ namespace Team10FinalProject.Controllers
         // Checkout Page
         public async Task<IActionResult> Checkout()
         {
-            AppUser user = await _userManager.GetUserAsync(User);
+            AppUser? user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return View("Error", new string[] { "User not found" });
+            }
 
-            Order order = _context.Orders
+            Order? order = _context.Orders
                 .Include(o => o.OrderDetails)
                 .FirstOrDefault(o => o.Customer == user && o.Status == true);
+
+            if (order == null)
+            {
+                return View("Error", new string[] { "Order not found" });
+            }
 
             return View(order);
         }
@@ -107,11 +134,20 @@ namespace Team10FinalProject.Controllers
         [HttpPost]
         public async Task<IActionResult> Checkout(Order orderInput)
         {
-            AppUser user = await _userManager.GetUserAsync(User);
+            AppUser? user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return View("Error", new string[] { "User not found" });
+            }
 
-            Order order = _context.Orders
+            Order? order = _context.Orders
                 .Include(o => o.OrderDetails)
                 .FirstOrDefault(o => o.Customer == user && o.Status == true);
+
+            if (order == null)
+            {
+                return View("Error", new string[] { "Order not found" });
+            }
 
             // Apply promotion
             // TODO: Add PromoCode and DiscountAmount to Order model to re-enable this
