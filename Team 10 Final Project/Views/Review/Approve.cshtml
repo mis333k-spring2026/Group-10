@@ -1,0 +1,41 @@
+@model IEnumerable<Review>
+
+@{
+    ViewData["Title"] = "Approve Reviews";
+}
+
+<h1>Pending Reviews</h1>
+<hr />
+
+@if (!Model.Any())
+{
+    <p>There are no pending reviews.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Song</th>
+                <th>Reviewer</th>
+                <th>Rating</th>
+                <th>Review</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var review in Model)
+            {
+                <tr>
+                    <td>@review.Song?.SongName</td>
+                    <td>@review.Reviewer?.FirstName @review.Reviewer?.LastName</td>
+                    <td>@review.Rating</td>
+                    <td>@review.ReviewText</td>
+                    <td>
+                        <a asp-action="ApproveReview" asp-route-id="@review.ReviewID" class="btn btn-success btn-sm">Approve</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

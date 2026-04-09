@@ -1,0 +1,102 @@
+@model Song
+@using Team10FinalProject.Models
+
+@{
+    ViewData["Title"] = "Song Details";
+    List<Review> reviews = ViewBag.Reviews == null
+        ? new List<Review>()
+        : (List<Review>)ViewBag.Reviews;
+}
+
+<h1>Song Details</h1>
+<hr />
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Song</dt>
+        <dd class="col-sm-10">@Model.SongName</dd>
+
+        <dt class="col-sm-2">Artist</dt>
+        <dd class="col-sm-10">@Model.Artist?.ArtistName</dd>
+
+        <dt class="col-sm-2">Price</dt>
+        <dd class="col-sm-10">@Model.Price.ToString("C")</dd>
+
+        <dt class="col-sm-2">Rating</dt>
+        <dd class="col-sm-10">@Model.AvgRating</dd>
+
+        <dt class="col-sm-2">Albums</dt>
+        <dd class="col-sm-10">
+            @if (Model.Albums != null && Model.Albums.Any())
+            {
+                @foreach (var album in Model.Albums)
+                {
+                    <div>
+                        <a asp-controller="Album" asp-action="Details" asp-route-id="@album.AlbumID">@album.AlbumName</a>
+                    </div>
+                }
+            }
+            else
+            {
+                <span>No albums listed.</span>
+            }
+        </dd>
+
+        <dt class="col-sm-2">Genres</dt>
+        <dd class="col-sm-10">
+            @if (Model.Genres != null && Model.Genres.Any())
+            {
+                @foreach (var genre in Model.Genres)
+                {
+                    <span class="me-2">@genre.GenreName</span>
+                }
+            }
+            else
+            {
+                <span>No genres listed.</span>
+            }
+        </dd>
+    </dl>
+</div>
+
+@if (User.Identity != null && User.Identity.IsAuthenticated)
+{
+    <div class="mb-3">
+        <a asp-controller="Order" asp-action="AddSong" asp-route-songID="@Model.SongID" class="btn btn-primary">Add to Cart</a>
+        <a asp-controller="Review" asp-action="Create" asp-route-songID="@Model.SongID" class="btn btn-secondary">Write Review</a>
+    </div>
+}
+
+<h3>Approved Reviews</h3>
+
+@if (!reviews.Any())
+{
+    <p>No approved reviews yet.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Reviewer</th>
+                <th>Rating</th>
+                <th>Review</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var review in reviews)
+            {
+                <tr>
+                    <td>@review.Reviewer?.FirstName @review.Reviewer?.LastName</td>
+                    <td>@review.Rating</td>
+                    <td>@review.ReviewText</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div>
+    <a asp-action="Index">Back to Songs</a> |
+    <a asp-controller="Home" asp-action="Index">Home</a>
+</div>

@@ -1,27 +1,68 @@
 @model Artist
+
 @{
     ViewData["Title"] = "Artist Details";
 }
+
 <h1>Artist Details</h1>
 <hr />
+
 <div>
     <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.ArtistName)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.ArtistName)</dd>
+        <dt class="col-sm-2">Artist</dt>
+        <dd class="col-sm-10">@Model.ArtistName</dd>
 
-        <dt class="col-sm-2">Songs</dt>
+        <dt class="col-sm-2">Genres</dt>
         <dd class="col-sm-10">
-            @foreach (var song in Model.Songs)
+            @if (Model.Genres != null && Model.Genres.Any())
             {
-                <a asp-controller="Song" asp-action="Details" asp-route-id="@song.SongID">@song.SongName</a>
-                <span> </span>
+                @foreach (var genre in Model.Genres)
+                {
+                    <span class="me-2">@genre.GenreName</span>
+                }
+            }
+            else
+            {
+                <span>No genres listed.</span>
             }
         </dd>
 
-        @* TODO: Add Albums once ArtistController.Details includes Albums *@
+        <dt class="col-sm-2">Albums</dt>
+        <dd class="col-sm-10">
+            @if (Model.Albums != null && Model.Albums.Any())
+            {
+                @foreach (var album in Model.Albums)
+                {
+                    <div>
+                        <a asp-controller="Album" asp-action="Details" asp-route-id="@album.AlbumID">@album.AlbumName</a>
+                    </div>
+                }
+            }
+            else
+            {
+                <span>No albums listed.</span>
+            }
+        </dd>
+
+        <dt class="col-sm-2">Songs</dt>
+        <dd class="col-sm-10">
+            @if (Model.Songs != null && Model.Songs.Any())
+            {
+                @foreach (var song in Model.Songs)
+                {
+                    <div>
+                        <a asp-controller="Song" asp-action="Details" asp-route-id="@song.SongID">@song.SongName</a>
+                    </div>
+                }
+            }
+            else
+            {
+                <span>No songs listed.</span>
+            }
+        </dd>
     </dl>
 </div>
-<br />
+
 <div>
     <a asp-action="Index">Back to Artists</a> |
     <a asp-controller="Home" asp-action="Index">Home</a>

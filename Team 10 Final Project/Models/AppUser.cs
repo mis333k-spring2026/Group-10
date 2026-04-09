@@ -1,42 +1,32 @@
-using System;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace Team10FinalProject.Models
 {
+    public class AppUser : IdentityUser
+    {
+        [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; } = "";
 
-public class AppUser : IdentityUser
-{
-    // Customer info
-   
-    [Required]
-    [Display(Name = "First Name")]
-    public String FirstName { get; set; }
-    [Required]
-    [Display(Name = "Last Name")]
-    public String LastName { get; set; }
-    [Required]
-    [Display(Name = "Address")]
-    public String Address { get; set; }
-   
-    [Required]
-    [Display(Name = "City")]
-    public String City { get; set; }
-    [Required]
-    [Display(Name = "State")]
-    public String State { get; set; }
-   
-   
-    [Required]  
-    [Display(Name = "Zip Code")]
-    public String ZipCode { get; set; }
+        [Required]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; } = "";
 
-    // Status (for disable/enable)
-    public Boolean Status { get; set; } = true;
+        [Required]
+        [Display(Name = "Address")]
+        public string Address { get; set; } = "";
 
-    // Navigation properties, y'all can uncomment this later when yall make the models
-    //public List<Order> Orders { get; set; }
-    //public List<Review> Reviews { get; set; }
-}
+        [Display(Name = "City")]
+        public string? City { get; set; }
 
+        [Display(Name = "State")]
+        public string? State { get; set; }
+
+        [Required]
+        [Display(Name = "Zip Code")]
+        public string ZipCode { get; set; } = "";
+
+        public bool Status { get; set; } = true;
+    }
 }

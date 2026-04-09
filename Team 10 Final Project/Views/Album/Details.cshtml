@@ -1,40 +1,69 @@
 @model Album
+
 @{
     ViewData["Title"] = "Album Details";
 }
+
 <h1>Album Details</h1>
 <hr />
+
 <div>
     <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.AlbumName)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.AlbumName)</dd>
+        <dt class="col-sm-2">Album</dt>
+        <dd class="col-sm-10">@Model.AlbumName</dd>
 
         <dt class="col-sm-2">Artist</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Artist.ArtistName)</dd>
+        <dd class="col-sm-10">
+            @if (Model.Artist != null)
+            {
+                <a asp-controller="Artist" asp-action="Details" asp-route-id="@Model.ArtistID">@Model.Artist.ArtistName</a>
+            }
+        </dd>
 
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Price)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Price)</dd>
+        <dt class="col-sm-2">Price</dt>
+        <dd class="col-sm-10">@Model.Price.ToString("C")</dd>
+
+        <dt class="col-sm-2">Genres</dt>
+        <dd class="col-sm-10">
+            @if (Model.Genres != null && Model.Genres.Any())
+            {
+                @foreach (var genre in Model.Genres)
+                {
+                    <span class="me-2">@genre.GenreName</span>
+                }
+            }
+            else
+            {
+                <span>No genres listed.</span>
+            }
+        </dd>
 
         <dt class="col-sm-2">Songs</dt>
         <dd class="col-sm-10">
-            @foreach (var song in Model.Songs)
+            @if (Model.Songs != null && Model.Songs.Any())
             {
-                <a asp-controller="Song" asp-action="Details" asp-route-id="@song.SongID">@song.SongName</a>
-                <span> </span>
+                @foreach (var song in Model.Songs)
+                {
+                    <div>
+                        <a asp-controller="Song" asp-action="Details" asp-route-id="@song.SongID">@song.SongName</a>
+                    </div>
+                }
+            }
+            else
+            {
+                <span>No songs listed.</span>
             }
         </dd>
     </dl>
 </div>
 
-@if (User.Identity.IsAuthenticated)
+@if (User.Identity != null && User.Identity.IsAuthenticated)
 {
-    <div>
-        <a class="btn btn-primary">Add to Cart</a>
-        @* TODO: wire up once AddAlbum action exists in OrderController *@
+    <div class="mb-3">
+        <a asp-controller="Order" asp-action="AddAlbum" asp-route-albumID="@Model.AlbumID" class="btn btn-primary">Add to Cart</a>
     </div>
 }
 
-<br />
 <div>
     <a asp-action="Index">Back to Albums</a> |
     <a asp-controller="Home" asp-action="Index">Home</a>

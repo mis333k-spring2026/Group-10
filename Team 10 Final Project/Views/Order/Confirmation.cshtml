@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Order Confirmation";
+}
+
+<div class="container mt-5">
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Order Placed Successfully!</h4>
+        <p>Thank you for your purchase. Your order has been confirmed and a confirmation email has been sent to your email address.</p>
+        <hr>
+        <p class="mb-0">You can view your order history and download your purchases from your <a asp-controller="MyMusic" asp-action="Index">My Music</a> page.</p>
+    </div>
+
+    <div class="mt-4">
+        <h5>What's Next?</h5>
+        <ul>
+            <li>Check your email for the order confirmation</li>
+            <li>Your purchased music is now available in your library</li>
+            <li>Visit <a asp-controller="MyMusic" asp-action="Index">My Music</a> to access your collection</li>
+        </ul>
+    </div>
+
+    <div class="mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Return to Home</a>
+        <a asp-controller="Song" asp-action="Index" class="btn btn-secondary">Shop More Music</a>
+        <a asp-controller="MyMusic" asp-action="Index" class="btn btn-info">View My Music</a>
+    </div>
+</div>

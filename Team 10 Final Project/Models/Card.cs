@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Team10FinalProject.Models
@@ -7,37 +5,37 @@ namespace Team10FinalProject.Models
     public class Card
     {
         [Key]
-        public Int32 CardID { get; set; }
+        public int CardID { get; set; }
 
         [Required]
         [Display(Name = "Card Number")]
-        public String CardNumber { get; set; }
+        public string CardNumber { get; set; } = "";
 
         [Required]
         [Display(Name = "Card Type")]
-        public String CardType { get; set; }
+        public string CardType { get; set; } = "";
 
-        public Boolean Status { get; set; } = true;
+        public bool Status { get; set; } = true;
 
         [Required]
-        public String CustomerID { get; set; }
-        public AppUser Customer { get; set; }
+        public string CustomerID { get; set; } = "";
 
-        // navigation property
+        public AppUser? Customer { get; set; }
+
         public List<Order> Orders { get; set; } = new List<Order>();
 
         [Display(Name = "Masked Card")]
-        public String MaskedCardNumber
+        public string MaskedCardNumber
         {
             get
             {
-                if (String.IsNullOrEmpty(CardNumber) || CardNumber.Length < 4)
+                if (string.IsNullOrWhiteSpace(CardNumber) || CardNumber.Length < 4)
                 {
                     return "";
                 }
 
-                String lastFour = CardNumber.Substring(CardNumber.Length - 4);
-                return $"**** **** **** {lastFour}";
+                string lastFour = CardNumber.Substring(CardNumber.Length - 4);
+                return $"{CardType} ending in {lastFour}";
             }
         }
     }

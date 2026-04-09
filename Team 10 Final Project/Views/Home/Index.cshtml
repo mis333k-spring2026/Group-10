@@ -1,8 +1,465 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    :root {
+        --bt-navy: #0b1f4a;
+        --bt-royal: #1a4a9e;
+        --bt-cobalt: #2060cc;
+        --bt-sky: #3d8fe0;
+        --bt-ice: #5eb8f5;
+        --bt-teal: #17a2b8;
+        --bt-pale: #e8f2fb;
+        --bt-surface: #f0f5fc;
+    }
+
+    body, .main-content {
+        background: var(--bt-surface);
+    }
+
+    .bt-hero {
+        background: linear-gradient(135deg, var(--bt-navy) 0%, #0e2d6b 45%, #133580 100%);
+        padding: 4.5rem 0 4rem;
+        position: relative;
+        overflow: hidden;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+    }
+
+    .bt-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(ellipse at 12% 70%, rgba(32,96,204,0.22) 0%, transparent 50%),
+            radial-gradient(ellipse at 88% 20%, rgba(23,162,184,0.14) 0%, transparent 45%),
+            radial-gradient(ellipse at 55% 50%, rgba(94,184,245,0.07) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .bt-hero-inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+        padding: 0 2rem;
+    }
+
+    .bt-hero h1 {
+        font-size: clamp(2.4rem, 5vw, 3.5rem);
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+    }
+
+    .bt-hero h1 em {
+        font-style: normal;
+        background: linear-gradient(90deg, var(--bt-ice), var(--bt-teal));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .bt-hero-sub {
+        color: rgba(255,255,255,0.78);
+        font-size: 1rem;
+        line-height: 1.65;
+        max-width: 440px;
+    }
+
+    .bt-stat-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 11px;
+        flex: 0 0 300px;
+    }
+
+    .bt-stat {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 11px;
+        padding: 1.1rem 0.9rem;
+        text-align: center;
+    }
+
+    .bt-stat.wide {
+        grid-column: span 2;
+        background: rgba(32,96,204,0.18);
+        border-color: rgba(94,184,245,0.25);
+    }
+
+    .bt-stat-num {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #fff;
+        display: block;
+        letter-spacing: -0.02em;
+    }
+
+    .bt-stat-lbl {
+        font-size: 10px;
+        color: rgba(255,255,255,0.6);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    .bt-section-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--bt-navy);
+    }
+
+    .bt-section-title::before {
+        content: '';
+        display: inline-block;
+        width: 3px;
+        height: 1.15em;
+        background: linear-gradient(180deg, var(--bt-cobalt), var(--bt-teal));
+        border-radius: 2px;
+        flex-shrink: 0;
+    }
+
+    .bt-featured {
+        background: linear-gradient(135deg, var(--bt-navy) 0%, #0e2d6b 60%, #133580 100%);
+        border-radius: 14px;
+        padding: 2rem 2.25rem;
+        display: flex;
+        align-items: center;
+        gap: 1.75rem;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .bt-feat-art {
+        flex-shrink: 0;
+        width: 86px;
+        height: 86px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--bt-royal), var(--bt-ice));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.1rem;
+        box-shadow: 0 8px 24px rgba(32,96,204,0.45);
+        position: relative;
+        z-index: 1;
+        color: white;
+    }
+
+    .bt-feat-body {
+        flex: 1;
+        position: relative;
+        z-index: 1;
+    }
+
+    .bt-feat-body h2 {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.2rem;
+    }
+
+    .bt-feat-body p {
+        color: rgba(255,255,255,0.75);
+        font-size: 14px;
+        margin-bottom: 0.65rem;
+    }
+
+    .bt-song-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+        gap: 13px;
+    }
+
+    .bt-song-thumb {
+        width: 46px;
+        height: 46px;
+        border-radius: 8px;
+        flex-shrink: 0;
+        background: linear-gradient(135deg, #c8dff8, #8bbfef);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .bt-song-title {
+        font-weight: 700;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--bt-navy);
+    }
+
+    .bt-song-artist {
+        font-size: 12px;
+        color: var(--bt-cobalt);
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .bt-album-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+        gap: 13px;
+    }
+
+    .bt-album-art {
+        width: 100%;
+        aspect-ratio: 1;
+        background: linear-gradient(135deg, var(--bt-navy) 0%, var(--bt-royal) 50%, var(--bt-sky) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.3rem;
+        position: relative;
+        border-radius: 8px 8px 0 0;
+        color: white;
+    }
+
+    .bt-genre-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 11px;
+    }
+
+    .bt-genre-chip {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 0.95rem;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--bt-navy);
+        background: #fff;
+        border: 1px solid #cdddf5;
+        transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .bt-genre-chip span:first-child {
+        font-size: 1.45rem;
+    }
+
+    .bt-genre-chip:hover {
+        background: var(--bt-pale);
+        border-color: var(--bt-sky);
+        color: var(--bt-royal);
+        text-decoration: none;
+    }
+
+    .bt-cta {
+        background: linear-gradient(135deg, var(--bt-navy) 0%, #0e2d6b 60%, var(--bt-royal) 100%);
+        border-radius: 14px;
+        padding: 2.75rem 2.5rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    @@media (max-width: 768px) {
+        .bt-hero-inner {
+            flex-direction: column;
+        }
+
+        .bt-stat-grid {
+            display: none;
+        }
+
+        .bt-featured {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+<section class="bt-hero">
+    <div class="bt-hero-inner">
+        <div class="flex-grow-1">
+            <span class="badge mb-3 px-3 py-2"
+                  style="background:rgba(94,184,245,0.15); border:1px solid rgba(94,184,245,0.35); color:#a8d8f8; letter-spacing:.07em; font-size:11px;">
+                &#9835; Texas Music Store
+            </span>
+
+            <h1 class="mb-3">Your Music,<br /><em>Owned Forever</em></h1>
+
+            <p class="bt-hero-sub mb-4">
+                Buy songs and full albums, then keep them in your personal library.
+                Browse artists, explore albums, and build your Bevo’s Tunes collection.
+            </p>
+
+            <div class="d-flex gap-2 flex-wrap">
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Song" asp-action="Index" class="btn btn-light fw-semibold px-4">&#9835; Browse Songs</a>
+                    <a asp-controller="Album" asp-action="Index" class="btn btn-outline-light px-4">View Albums</a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-light fw-semibold px-4">&#9835; Get Started</a>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light px-4">Sign In</a>
+                }
+            </div>
+        </div>
+
+        <div class="bt-stat-grid">
+            <div class="bt-stat wide">
+                <span class="bt-stat-num">Bevo’s</span>
+                <div class="bt-stat-lbl">Tunes</div>
+            </div>
+            <div class="bt-stat">
+                <span class="bt-stat-num">Songs</span>
+                <div class="bt-stat-lbl">Browse Catalog</div>
+            </div>
+            <div class="bt-stat">
+                <span class="bt-stat-num">Albums</span>
+                <div class="bt-stat-lbl">Build Library</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="bt-featured">
+    <div class="bt-feat-art">&#9835;</div>
+    <div class="bt-feat-body">
+        <span class="badge mb-2 px-2 py-1"
+              style="background:var(--bt-teal); color:#fff; font-size:10px; letter-spacing:.1em;">
+            &#9733; FEATURED NOW
+        </span>
+        <h2>Welcome to Bevo’s Tunes</h2>
+        <p>Explore songs, albums, and artists from one place.</p>
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <span class="text-warning">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <span class="fw-bold fs-5" style="color:var(--bt-ice);">Music Marketplace</span>
+        </div>
+    </div>
+    <div>
+        <a asp-controller="Song" asp-action="Index" class="btn btn-light fw-semibold px-4">Browse Songs</a>
+    </div>
 </div>
+
+<hr class="my-2" style="border-color:#cdddf5;" />
+
+<div class="py-4">
+    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+        <h2 class="bt-section-title mb-0">Top Songs Right Now</h2>
+        <a asp-controller="Song" asp-action="Index" class="btn btn-sm btn-outline-primary">Browse all songs &rarr;</a>
+    </div>
+
+    <div class="bt-song-grid">
+        @foreach (var song in new[]
+        {
+            new { Title = "Barton Springs", Artist = "Auditorium Shores", Rating = "4.8", Price = "1.29" },
+            new { Title = "Sixth Street Serenade", Artist = "The Velvet Cactus", Rating = "4.5", Price = "0.99" },
+            new { Title = "Keep Austin Weird", Artist = "PDG Collective", Rating = "4.2", Price = "1.29" },
+            new { Title = "Congress Ave.", Artist = "The Texas Tones", Rating = "3.9", Price = "0.79" }
+        })
+        {
+            <div class="card border-0 shadow-sm">
+                <div class="card-body d-flex flex-column gap-2 p-3">
+                    <div class="d-flex align-items-start gap-2">
+                        <div class="bt-song-thumb">&#9835;</div>
+                        <div class="flex-grow-1 overflow-hidden">
+                            <div class="bt-song-title">@song.Title</div>
+                            <div class="bt-song-artist">@song.Artist</div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between pt-2 border-top">
+                        <small class="text-muted"><span class="text-warning">&#9733;</span> @song.Rating</small>
+                        <span class="fw-bold small" style="color:var(--bt-teal);">$@song.Price</span>
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-sm py-0 px-2">+ Cart</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<hr class="my-2" style="border-color:#cdddf5;" />
+
+<div class="py-4">
+    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+        <h2 class="bt-section-title mb-0">Featured Albums</h2>
+        <a asp-controller="Album" asp-action="Index" class="btn btn-sm btn-outline-primary">Browse all albums &rarr;</a>
+    </div>
+
+    <div class="bt-album-grid">
+        @foreach (var album in new[]
+        {
+            new { Title = "Greatest Hits Vol. 1", Artist = "The Texas Tones", Rating = "4.7", Price = "9.99", Sale = true },
+            new { Title = "Deep in the Heart", Artist = "Lone Star Sessions", Rating = "4.4", Price = "12.99", Sale = false },
+            new { Title = "Hill Country Nights", Artist = "Auditorium Shores", Rating = "4.1", Price = "8.99", Sale = false },
+            new { Title = "Austin City Limits", Artist = "PDG Collective", Rating = "4.6", Price = "11.99", Sale = true }
+        })
+        {
+            <div class="card border-0 shadow-sm">
+                <div class="bt-album-art">
+                    <span>&#9835;</span>
+                    @if (album.Sale)
+                    {
+                        <span class="badge position-absolute top-0 end-0 m-2" style="background:var(--bt-teal);">SALE</span>
+                    }
+                </div>
+                <div class="card-body p-2">
+                    <div class="fw-bold small text-truncate" style="color:var(--bt-navy);">@album.Title</div>
+                    <div class="small mb-1" style="color:var(--bt-cobalt);">@album.Artist</div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted"><span class="text-warning">&#9733;</span> @album.Rating</small>
+                        <span class="fw-bold small" style="color:var(--bt-teal);">$@album.Price</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<hr class="my-2" style="border-color:#cdddf5;" />
+
+<div class="py-4">
+    <h2 class="bt-section-title mb-3">Browse by Genre</h2>
+    <div class="bt-genre-grid">
+        @foreach (var genre in new[]
+        {
+            new { Name = "Rock" },
+            new { Name = "Pop" },
+            new { Name = "Jazz" },
+            new { Name = "Country" },
+            new { Name = "Blues" },
+            new { Name = "Classical" }
+        })
+        {
+            <a asp-controller="Search" asp-action="Index" asp-route-searchString="@genre.Name" class="bt-genre-chip">
+                <span>&#9835;</span>
+                <span>@genre.Name</span>
+            </a>
+        }
+    </div>
+</div>
+
+@if (User.Identity == null || !User.Identity.IsAuthenticated)
+{
+    <div class="bt-cta mb-4">
+        <div style="position:relative; z-index:1;">
+            <h2 class="fw-bold text-white mb-2">Ready to Build Your Library?</h2>
+            <p class="mb-4" style="color:rgba(255,255,255,0.78);">
+                Create an account and start building your Bevo’s Tunes collection.
+            </p>
+            <a asp-controller="Account" asp-action="Register" class="btn btn-light fw-semibold px-5">
+                &#9835; Get Started
+            </a>
+        </div>
+    </div>
+}

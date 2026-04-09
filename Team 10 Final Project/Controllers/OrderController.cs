@@ -20,161 +20,348 @@ namespace Team10FinalProject.Controllers
             _userManager = userManager;
         }
 
-        // GET: Order (Cart)
         public async Task<IActionResult> Index()
         {
             AppUser? user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return View("Error", new string[] { "User not found" });
+                return View("Error", new List<string> { "User not found." });
             }
 
-            Order? order = _context.Orders
-                .Include(o => o.OrderDetails)
-                .ThenInclude(od => od.Song)
-                .FirstOrDefault(o => o.Customer == user && o.Status == true);
+            Order? order = GetPendingOrder(user.Id);
 
             if (order == null)
             {
                 order = new Order
                 {
-                    // FIXED: was AppUser = user, OrderStatus = "Pending"
-                    Customer = user!,
+                    CustomerID = user.Id,
+                    Customer = user,
                     Status = true,
                     OrderDate = DateTime.Now,
-                    OrderDetails = new List<OrderDetail>()
+                    OrderNumber = 0
                 };
 
                 _context.Orders.Add(order);
                 _context.SaveChanges();
+
+                order = GetPendingOrder(user.Id)!;
             }
 
             return View(order);
         }
 
-        // Add song to cart
         public async Task<IActionResult> AddSong(int songID)
         {
             AppUser? user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return View("Error", new string[] { "User not found" });
+                return View("Error", new List<string> { "User not found." });
             }
 
-            Order? order = _context.Orders
-                .Include(o => o.OrderDetails)
-                .ThenInclude(od => od.Song)
-                .FirstOrDefault(o => o.Customer == user && o.Status == true);
-
+            Order? order = GetPendingOrder(user.Id);
             if (order == null)
             {
-                return View("Error", new string[] { "Order not found" });
-            }
-
-            // FIXED: removed .Include(s => s.Album) — Song model has no Album property yet
-            // TODO: add Album navigation property to Song model, then restore the include
-            Song? song = _context.Songs.FirstOrDefault(s => s.SongID == songID);
-
-            if (song == null)
-            {
-                return View("Error", new string[] { "Song not found" });
-            }
-
-            // Check for duplicates
-            bool exists = order.OrderDetails.Any(od => od.Song.SongID == songID);
-            if (exists)
-            {
-                TempData["Error"] = "Song already in cart!";
                 return RedirectToAction("Index");
             }
 
-            // Check for album overlap
-            // TODO: restore once Song.Album navigation property is added to Song model
-            // bool albumExists = order.OrderDetails.Any(od => od.Song.Album.AlbumID == song.Album.AlbumID);
-            // if (albumExists)
-            // {
-            //     TempData["Error"] = "You already have a song from this album!";
-            //     return RedirectToAction("Index");
-            // }
+            Song? song = _context.Songs
+                .Include(s => s.Albums)
+                .FirstOrDefault(s => s.SongID == songID);
+
+            if (song == null)
+            {
+                return View("Error", new List<string> { "Song not found." });
+            }
+
+            bool duplicateSong = order.OrderDetails.Any(od => od.SongID == songID);
+            if (duplicateSong)
+            {
+                TempData["Error"] = "That song is already in your cart.";
+                return RedirectToAction("Index");
+            }
+
+            bool duplicateViaAlbum = order.OrderDetails
+                .Where(od => od.Album != null)
+                .Any(od => od.Album!.Songs.Any(s => s.SongID == songID));
+
+            if (duplicateViaAlbum)
+            {
+                TempData["Error"] = "That song is already included through an album in your cart.";
+                return RedirectToAction("Index");
+            }
 
             OrderDetail od = new OrderDetail
             {
+                OrderID = order.OrderID,
+                Order = order,
+                SongID = song.SongID,
                 Song = song,
                 Price = song.Price
             };
 
-            order.OrderDetails.Add(od);
+            _context.OrderDetails.Add(od);
             _context.SaveChanges();
 
             return RedirectToAction("Index");
         }
 
-        // Checkout Page
+        public async Task<IActionResult> AddAlbum(int albumID)
+        {
+            AppUser? user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return View("Error", new List<string> { "User not found." });
+            }
+
+            Order? order = GetPendingOrder(user.Id);
+            if (order == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            Album? album = _context.Albums
+                .Include(a => a.Songs)
+                .FirstOrDefault(a => a.AlbumID == albumID);
+
+            if (album == null)
+            {
+                return View("Error", new List<string> { "Album not found." });
+            }
+
+            bool duplicateAlbum = order.OrderDetails.Any(od => od.AlbumID == albumID);
+            if (duplicateAlbum)
+            {
+                TempData["Error"] = "That album is already in your cart.";
+                return RedirectToAction("Index");
+            }
+
+            List<int> albumSongIds = album.Songs.Select(s => s.SongID).ToList();
+
+            bool duplicateSongs = order.OrderDetails.Any(od =>
+                (od.SongID != null && albumSongIds.Contains(od.SongID.Value)) ||
+                (od.Album != null && od.Album.Songs.Any(s => albumSongIds.Contains(s.SongID))));
+
+            if (duplicateSongs)
+            {
+                TempData["Error"] = "You already have one or more songs from that album in your cart.";
+                return RedirectToAction("Index");
+            }
+
+            OrderDetail od = new OrderDetail
+            {
+                OrderID = order.OrderID,
+                Order = order,
+                AlbumID = album.AlbumID,
+                Album = album,
+                Price = album.Price
+            };
+
+            _context.OrderDetails.Add(od);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> RemoveSong(int songID)
+        {
+            AppUser? user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return View("Error", new List<string> { "User not found." });
+            }
+
+            Order? order = GetPendingOrder(user.Id);
+            if (order == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            OrderDetail? detail = _context.OrderDetails
+                .FirstOrDefault(od => od.OrderID == order.OrderID && od.SongID == songID);
+
+            if (detail != null)
+            {
+                _context.OrderDetails.Remove(detail);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> RemoveAlbum(int albumID)
+        {
+            AppUser? user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return View("Error", new List<string> { "User not found." });
+            }
+
+            Order? order = GetPendingOrder(user.Id);
+            if (order == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            OrderDetail? detail = _context.OrderDetails
+                .FirstOrDefault(od => od.OrderID == order.OrderID && od.AlbumID == albumID);
+
+            if (detail != null)
+            {
+                _context.OrderDetails.Remove(detail);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
+        }
+
         public async Task<IActionResult> Checkout()
         {
             AppUser? user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return View("Error", new string[] { "User not found" });
+                return View("Error", new List<string> { "User not found." });
             }
 
-            Order? order = _context.Orders
-                .Include(o => o.OrderDetails)
-                .FirstOrDefault(o => o.Customer == user && o.Status == true);
-
+            Order? order = GetPendingOrder(user.Id);
             if (order == null)
             {
-                return View("Error", new string[] { "Order not found" });
+                return View("Error", new List<string> { "Order not found." });
             }
+
+            if (order.OrderDetails == null || order.OrderDetails.Count == 0)
+            {
+                return View("Error", new List<string> { "You must add items to your cart before checkout." });
+            }
+
+            ViewBag.Cards = _context.Cards
+                .Where(c => c.CustomerID == user.Id && c.Status)
+                .ToList();
 
             return View(order);
         }
 
-        // Place order
         [HttpPost]
-        public async Task<IActionResult> Checkout(Order orderInput)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Checkout(int cardID)
         {
             AppUser? user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return View("Error", new string[] { "User not found" });
+                return View("Error", new List<string> { "User not found." });
             }
 
-            Order? order = _context.Orders
-                .Include(o => o.OrderDetails)
-                .FirstOrDefault(o => o.Customer == user && o.Status == true);
-
+            Order? order = GetPendingOrder(user.Id);
             if (order == null)
             {
-                return View("Error", new string[] { "Order not found" });
+                return View("Error", new List<string> { "Order not found." });
             }
 
-            // Apply promotion
-            // TODO: Add PromoCode and DiscountAmount to Order model to re-enable this
-            // if (!String.IsNullOrEmpty(orderInput.PromoCode))
-            // {
-            //     Promotion promo = _context.Promotions.FirstOrDefault(p => p.Code == orderInput.PromoCode);
-            //     if (promo != null)
-            //     {
-            //         order.DiscountAmount = promo.DiscountAmount;
-            //     }
-            // }
+            if (order.OrderDetails == null || order.OrderDetails.Count == 0)
+            {
+                return View("Error", new List<string> { "You must add items to your cart before checkout." });
+            }
 
-            // finalize order
+            Card? card = _context.Cards.FirstOrDefault(c => c.CardID == cardID && c.CustomerID == user.Id && c.Status);
+            if (card == null)
+            {
+                ViewBag.Cards = _context.Cards
+                    .Where(c => c.CustomerID == user.Id && c.Status)
+                    .ToList();
+
+                ModelState.AddModelError("", "Please select a valid saved card.");
+                return View(order);
+            }
+
+            if (HasDuplicateSongs(order))
+            {
+                return View("Error", new List<string> { "Your cart contains duplicate songs. Remove duplicates before checkout." });
+            }
+
+            order.CardID = card.CardID;
+            order.Card = card;
             order.Status = false;
             order.OrderDate = DateTime.Now;
+            order.OrderNumber = GetNextOrderNumber();
 
             _context.SaveChanges();
 
-            // check method created EmailMessaging confirmation
-            EmailMessaging.SendOrderConfirmation(user.Email, order);
+            try
+            {
+                var emailOrder = _context.Orders
+                    .Include(o => o.Customer)
+                    .Include(o => o.OrderDetails)
+                        .ThenInclude(od => od.Song)
+                    .Include(o => o.OrderDetails)
+                        .ThenInclude(od => od.Album)
+                    .FirstOrDefault(o => o.OrderID == order.OrderID);
 
-            return RedirectToAction("Confirmation");
+                if (emailOrder != null && !string.IsNullOrWhiteSpace(user.Email))
+                {
+                    EmailMessaging.SendOrderConfirmation(user.Email, emailOrder);
+                }
+            }
+            catch
+            {
+                // Do not crash checkout if email fails
+            }
+
+            return RedirectToAction("Confirmation", new { id = order.OrderID });
         }
 
-        public IActionResult Confirmation()
+        public IActionResult Confirmation(int? id)
         {
+            ViewBag.OrderID = id;
             return View();
+        }
+
+        private Order? GetPendingOrder(string userId)
+        {
+            return _context.Orders
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Song)
+                        .ThenInclude(s => s.Artist)
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Album)
+                        .ThenInclude(a => a.Artist)
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Album)
+                        .ThenInclude(a => a.Songs)
+                .FirstOrDefault(o => o.CustomerID == userId && o.Status == true);
+        }
+
+        private int GetNextOrderNumber()
+        {
+            int? maxOrderNumber = _context.Orders
+                .Where(o => o.Status == false)
+                .Select(o => (int?)o.OrderNumber)
+                .Max();
+
+            if (maxOrderNumber == null || maxOrderNumber < 212000)
+            {
+                return 212000;
+            }
+
+            return maxOrderNumber.Value + 1;
+        }
+
+        private bool HasDuplicateSongs(Order order)
+        {
+            List<int> songIds = new List<int>();
+
+            foreach (var detail in order.OrderDetails)
+            {
+                if (detail.SongID != null)
+                {
+                    songIds.Add(detail.SongID.Value);
+                }
+
+                if (detail.Album != null)
+                {
+                    songIds.AddRange(detail.Album.Songs.Select(s => s.SongID));
+                }
+            }
+
+            return songIds.Count != songIds.Distinct().Count();
         }
     }
 }

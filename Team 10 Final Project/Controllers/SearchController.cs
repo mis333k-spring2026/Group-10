@@ -13,16 +13,20 @@ namespace Team10FinalProject.Controllers
             _context = context;
         }
 
-        public IActionResult Index(string searchString)
+        public IActionResult Index(string? searchString)
         {
             var songs = _context.Songs
                 .Include(s => s.Artist)
                 .Include(s => s.Albums)
                 .AsQueryable();
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrWhiteSpace(searchString))
             {
-                songs = songs.Where(s => s.SongName.Contains(searchString));
+                string term = searchString.Trim();
+
+                songs = songs.Where(s =>
+                    s.SongName.Contains(term) ||
+                    s.Artist.ArtistName.Contains(term));
             }
 
             return View(songs.ToList());

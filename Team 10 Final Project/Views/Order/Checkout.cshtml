@@ -1,0 +1,93 @@
+@model Order
+@using Team10FinalProject.Models
+
+@{
+    ViewData["Title"] = "Checkout";
+    decimal subtotal = Model.OrderDetails != null ? Model.OrderDetails.Sum(od => od.Price) : 0m;
+    decimal tax = subtotal * 0.0825m;
+    decimal total = subtotal + tax;
+
+    List<Card> cards = ViewBag.Cards == null
+        ? new List<Card>()
+        : (List<Card>)ViewBag.Cards;
+}
+
+<h1>Checkout</h1>
+<hr />
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<div class="row">
+    <div class="col-md-8">
+        <h3>Order Summary</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Artist</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var od in Model.OrderDetails)
+                {
+                    <tr>
+                        <td>
+                            @if (od.Song != null)
+                            {
+                                @od.Song.SongName
+                            }
+                            else if (od.Album != null)
+                            {
+                                @od.Album.AlbumName
+                            }
+                        </td>
+                        <td>
+                            @if (od.Song != null)
+                            {
+                                @od.Song.Artist?.ArtistName
+                            }
+                            else if (od.Album != null)
+                            {
+                                @od.Album.Artist?.ArtistName
+                            }
+                        </td>
+                        <td>@od.Price.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <p><strong>Subtotal:</strong> @subtotal.ToString("C")</p>
+        <p><strong>Tax (8.25%):</strong> @tax.ToString("C")</p>
+        <p><strong>Total:</strong> <strong>@total.ToString("C")</strong></p>
+    </div>
+
+    <div class="col-md-4">
+        <h3>Payment</h3>
+
+        @if (!cards.Any())
+        {
+            <p class="text-danger">You need to save a card before checking out.</p>
+            <a asp-controller="Card" asp-action="Create" class="btn btn-primary">Add Card</a>
+        }
+        else
+        {
+            <form asp-action="Checkout" method="post">
+                <div class="form-group mb-3">
+                    <label for="cardID" class="form-label">Select Payment Card</label>
+                    <select id="cardID" name="cardID" class="form-control" required>
+                        <option value="">-- Select a card --</option>
+                        @foreach (var card in cards)
+                        {
+                            <option value="@card.CardID">@card.MaskedCardNumber</option>
+                        }
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-success">Place Order</button>
+                <a asp-action="Index" class="btn btn-secondary">Back to Cart</a>
+            </form>
+        }
+    </div>
+</div>

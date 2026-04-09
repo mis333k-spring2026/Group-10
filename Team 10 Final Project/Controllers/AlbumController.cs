@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Team10FinalProject.DAL;
-using Team10FinalProject.Models;
 
 namespace Team10FinalProject.Controllers
 {
@@ -16,14 +15,26 @@ namespace Team10FinalProject.Controllers
 
         public IActionResult Index()
         {
-            return View(_context.Albums.Include(a => a.Artist).ToList());
+            var albums = _context.Albums
+                .Include(a => a.Artist)
+                .ToList();
+
+            return View(albums);
         }
 
         public IActionResult Details(int id)
         {
             var album = _context.Albums
+                .Include(a => a.Artist)
                 .Include(a => a.Songs)
+                    .ThenInclude(s => s.Artist)
+                .Include(a => a.Genres)
                 .FirstOrDefault(a => a.AlbumID == id);
+
+            if (album == null)
+            {
+                return View("Error", new List<string> { "Album not found." });
+            }
 
             return View(album);
         }

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Team10FinalProject.DAL;
-using Team10FinalProject.Models;
 
 namespace Team10FinalProject.Controllers
 {
@@ -23,7 +22,14 @@ namespace Team10FinalProject.Controllers
         {
             var artist = _context.Artists
                 .Include(a => a.Songs)
+                .Include(a => a.Albums)
+                .Include(a => a.Genres)
                 .FirstOrDefault(a => a.ArtistID == id);
+
+            if (artist == null)
+            {
+                return View("Error", new List<string> { "Artist not found." });
+            }
 
             return View(artist);
         }

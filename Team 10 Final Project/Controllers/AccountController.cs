@@ -7,7 +7,6 @@ using Team10FinalProject.DAL;
 using Team10FinalProject.Models;
 using Team10FinalProject.ViewModels;
 using Team10FinalProject.Utilities;
-using System;
 
 namespace Team10FinalProject.Controllers
 {
@@ -17,27 +16,22 @@ namespace Team10FinalProject.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
         private readonly AppDbContext _context;
-        private readonly IEmailSender<AppUser> _emailSender; 
 
         public AccountController(AppDbContext appDbContext,
                                  UserManager<AppUser> userManager,
-                                 SignInManager<AppUser> signIn,
-                                 IEmailSender<AppUser> emailSender)
+                                 SignInManager<AppUser> signIn)
         {
             _context = appDbContext;
             _userManager = userManager;
             _signInManager = signIn;
-            _emailSender = emailSender;
         }
 
-        // GET: /Account/Register
         [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
         }
 
-        // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -54,7 +48,11 @@ namespace Team10FinalProject.Controllers
                 Email = rvm.Email,
                 PhoneNumber = rvm.PhoneNumber,
                 FirstName = rvm.FirstName,
-                LastName = rvm.LastName
+                LastName = rvm.LastName,
+                Address = rvm.Address,
+                ZipCode = rvm.ZipCode,
+                City = "",
+                State = ""
             };
 
             AddUserModel aum = new AddUserModel
@@ -68,15 +66,7 @@ namespace Team10FinalProject.Controllers
 
             if (result.Succeeded)
             {
-                //Send Email - IEmailSender<AppUser> doesn't have a SendAsync method in this version
-                // await _emailSender.SendAsync(
-                //     newUser.Email,
-                //     "Welcome to Longhorn Music Store 🎵",
-                //     $"Hello {newUser.FirstName}, your account has been created!"
-                // );
-
                 await _signInManager.PasswordSignInAsync(rvm.Email, rvm.Password, false, false);
-
                 return RedirectToAction("Index", "Home");
             }
 
@@ -88,22 +78,19 @@ namespace Team10FinalProject.Controllers
             return View(rvm);
         }
 
-        // GET: /Account/Login
         [AllowAnonymous]
-        public IActionResult Login(string? returnUrl)
+        public async Task<IActionResult> Login(string? returnUrl)
         {
             if (User.Identity?.IsAuthenticated == true)
             {
-                return View("Error", new string[] { "Access Denied" });
+                return View("Error", new List<string> { "You are already logged in." });
             }
 
-            _signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
             ViewBag.ReturnUrl = returnUrl;
-
             return View();
         }
 
-        // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -114,12 +101,31 @@ namespace Team10FinalProject.Controllers
                 return View(lvm);
             }
 
+            AppUser user = await _userManager.FindByEmailAsync(lvm.Email);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Invalid login attempt.");
+                return View(lvm);
+            }
+
+            if (user.Status == false)
+            {
+                ModelState.AddModelError("", "This account is disabled.");
+                return View(lvm);
+            }
+
             var result = await _signInManager.PasswordSignInAsync(
                 lvm.Email, lvm.Password, lvm.RememberMe, false);
 
             if (result.Succeeded)
             {
-                return Redirect(returnUrl ?? "/");
+                if (!string.IsNullOrWhiteSpace(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+
+                return RedirectToAction("Index", "Home");
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");
@@ -128,22 +134,23 @@ namespace Team10FinalProject.Controllers
 
         public IActionResult AccessDenied()
         {
-            return View("Error", new string[] { "Not authorized" });
+            return View("Error", new List<string> { "You are not authorized to access that page." });
         }
 
         public async Task<IActionResult> Index()
         {
             var userName = User.Identity?.Name;
+
             if (string.IsNullOrEmpty(userName))
             {
-                return View("Error", new string[] { "User not found" });
+                return View("Error", new List<string> { "User not found." });
             }
 
             AppUser user = await _userManager.FindByNameAsync(userName);
 
             if (user == null)
             {
-                return View("Error", new string[] { "User not found" });
+                return View("Error", new List<string> { "User not found." });
             }
 
             IndexViewModel ivm = new IndexViewModel
@@ -157,13 +164,11 @@ namespace Team10FinalProject.Controllers
             return View(ivm);
         }
 
-        // GET
         public IActionResult ChangePassword()
         {
             return View();
         }
 
-        // POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel cpvm)
@@ -174,16 +179,17 @@ namespace Team10FinalProject.Controllers
             }
 
             var userName = User.Identity?.Name;
+
             if (string.IsNullOrEmpty(userName))
             {
-                return View("Error", new string[] { "User not found" });
+                return View("Error", new List<string> { "User not found." });
             }
 
             AppUser user = await _userManager.FindByNameAsync(userName);
 
             if (user == null)
             {
-                return View("Error", new string[] { "User not found" });
+                return View("Error", new List<string> { "User not found." });
             }
 
             var result = await _userManager.ChangePasswordAsync(user, cpvm.OldPassword, cpvm.NewPassword);

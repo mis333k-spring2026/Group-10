@@ -1,13 +1,8 @@
-using Team10FinalProject.DAL;
-//TODO: Update this using statement to include your project name
-using Team10FinalProject.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Team10FinalProject.DAL;
+using Team10FinalProject.Models;
 
-//TODO: Upddate this namespace to match your project name
 namespace Team10FinalProject.Controllers
 {
     public class SeedController : Controller
@@ -25,80 +20,34 @@ namespace Team10FinalProject.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return Content("Seed controller is wired up, but role/user seed logic has not been implemented yet.");
         }
+
         public async Task<IActionResult> SeedRoles()
         {
             try
             {
-                //TODO: Implement Seeding.SeedRoles.AddAllRoles() method
-                // For now, this is commented out
-                // await Seeding.SeedRoles.AddAllRoles(_roleManager);
-                return View("Confirm");
+                string[] roles = { "Customer", "Employee", "Manager", "Admin" };
+
+                foreach (string roleName in roles)
+                {
+                    if (!await _roleManager.RoleExistsAsync(roleName))
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole(roleName));
+                    }
+                }
+
+                return Content("Roles seeded successfully.");
             }
             catch (Exception ex)
             {
-                //add the error messages to a list of strings
-                List<String> errorList = new List<String>();
-
-                //Add the outer message
-                errorList.Add(ex.Message);
-
-                // Check the inner exception before trying to add it
-                if (ex.InnerException != null)
-                {
-                    //Add the message from the inner exception
-                    errorList.Add(ex.InnerException.Message);
-
-                    //Add additional inner exception messages, if there are any
-                    if (ex.InnerException.InnerException != null)
-                    {
-                        errorList.Add(ex.InnerException.InnerException.Message);
-                    }
-                }
-                
-
-                return View("Error", errorList);
+                return View("Error", new List<string> { ex.Message, ex.InnerException?.Message ?? "" });
             }
-
-            //this is the happy path - seeding worked!
-            // return View("Confirm");
         }
-        public async Task<IActionResult> SeedPeople()
+
+        public IActionResult SeedPeople()
         {
-            try
-            {
-                //TODO: Implement Seeding.SeedUsers.SeedAllUsers() method
-                // For now, this is commented out
-                // await Seeding.SeedUsers.SeedAllUsers(_userManager, _context);
-                return View("Confirm");
-            }
-            catch (Exception ex)
-            {
-                //add the error messages to a list of strings
-                List<String> errorList = new List<String>();
-
-                //Add the outer message
-                errorList.Add(ex.Message);
-
-                // Check the inner exception before trying to add it
-                if (ex.InnerException != null)
-                {
-                    //Add the message from the inner exception
-                    errorList.Add(ex.InnerException.Message);
-
-                    //Add additional inner exception messages, if there are any
-                    if (ex.InnerException.InnerException != null)
-                    {
-                        errorList.Add(ex.InnerException.InnerException.Message);
-                    }
-                }
-
-                return View("Error", errorList);
-            }
-
-            //this is the happy path - seeding worked!
-            return View("Confirm");
+            return Content("User seeding has not been implemented yet.");
         }
     }
 }
