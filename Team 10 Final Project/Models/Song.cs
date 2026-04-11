@@ -31,6 +31,7 @@ namespace Team10FinalProject.Models
         public Artist Artist { get; set; }
         public List<Genre> Genres { get; set; } = new List<Genre>();
         public List<Album> Albums { get; set; } = new List<Album>();
+        public List<Review> Reviews { get; set; } = new List<Review>();
 
         
     }

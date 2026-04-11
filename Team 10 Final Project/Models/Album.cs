@@ -23,14 +23,10 @@ namespace Team10FinalProject.Models
         public Boolean Status { get; set; } = true;
 
         //navigation properties
-        //one to many relationship
-        [Required]
-        public Int32 ArtistID { get; set; }
-        public Artist Artist { get; set; } 
-
         //many to many relationship
+        public List<Artist> Artists { get; set; } = new List<Artist>();
         public List<Genre> Genres { get; set; } = new List<Genre>();
         public List<Song> Songs { get; set; } = new List<Song>();
-        
+        public List<Review> Reviews { get; set; } = new List<Review>();
     }
 }

@@ -16,7 +16,7 @@ namespace Team10FinalProject.Controllers
         public IActionResult Index()
         {
             var albums = _context.Albums
-                .Include(a => a.Artist)
+                .Include(a => a.Artists)
                 .ToList();
 
             return View(albums);
@@ -25,7 +25,7 @@ namespace Team10FinalProject.Controllers
         public IActionResult Details(int id)
         {
             var album = _context.Albums
-                .Include(a => a.Artist)
+                .Include(a => a.Artists)
                 .Include(a => a.Songs)
                     .ThenInclude(s => s.Artist)
                 .Include(a => a.Genres)

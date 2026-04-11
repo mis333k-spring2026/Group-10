@@ -51,7 +51,7 @@ else
                         }
                         else if (od.Album != null)
                         {
-                            @od.Album.Artist?.ArtistName
+                            @String.Join(", ", od.Album.Artists.Select(a => a.ArtistName))
                         }
                     </td>
                     <td>@od.Price.ToString("C")</td>

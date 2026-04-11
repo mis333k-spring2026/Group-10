@@ -20,6 +20,6 @@ namespace Team10FinalProject.Models
         //one to many relationship
         public List<Song> Songs { get; set; } = new List<Song>();
         public List<Album> Albums { get; set; } = new List<Album>();
-        
+        public List<Review> Reviews { get; set; } = new List<Review>();
     }
 }

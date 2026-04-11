@@ -11,6 +11,18 @@ namespace Team10FinalProject.DAL
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            foreach (var relationship in modelBuilder.Model
+                         .GetEntityTypes()
+                         .SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.NoAction;
+            }
+        }
+
         public DbSet<Song> Songs { get; set; }
         public DbSet<Album> Albums { get; set; }
         public DbSet<Artist> Artists { get; set; }
@@ -21,4 +33,7 @@ namespace Team10FinalProject.DAL
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
     }
+
 }
+
+

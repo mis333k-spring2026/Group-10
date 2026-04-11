@@ -18,7 +18,21 @@
         {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.AlbumName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Artist.ArtistName)</td>
+                <td>
+                    @if (item.Artists != null && item.Artists.Any())
+                    {
+                        @for (int i = 0; i < item.Artists.Count; i++)
+                        {
+                            <a asp-controller="Artist" asp-action="Details" asp-route-id="@item.Artists[i].ArtistID">
+                                @item.Artists[i].ArtistName
+                            </a>
+                            @if (i < item.Artists.Count - 1)
+                            {
+                                @:,
+                            }
+                        }
+                    }
+                </td>
                 <td>@Html.DisplayFor(modelItem => item.Price)</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.AlbumID">Details</a>

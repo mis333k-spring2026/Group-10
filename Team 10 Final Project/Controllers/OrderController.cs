@@ -322,7 +322,7 @@ namespace Team10FinalProject.Controllers
                         .ThenInclude(s => s.Artist)
                 .Include(o => o.OrderDetails)
                     .ThenInclude(od => od.Album)
-                        .ThenInclude(a => a.Artist)
+                        .ThenInclude(a => a.Artists)
                 .Include(o => o.OrderDetails)
                     .ThenInclude(od => od.Album)
                         .ThenInclude(a => a.Songs)

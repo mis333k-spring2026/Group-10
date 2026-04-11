@@ -12,8 +12,8 @@ using Team10FinalProject.DAL;
 namespace Team_10_Final_Project.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260409024459_RepairProjectRuntimeIssues")]
-    partial class RepairProjectRuntimeIssues
+    [Migration("20260410045307_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace Team_10_Final_Project.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("AlbumArtist", b =>
+                {
+                    b.Property<int>("AlbumsAlbumID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ArtistsArtistID")
+                        .HasColumnType("int");
+
+                    b.HasKey("AlbumsAlbumID", "ArtistsArtistID");
+
+                    b.HasIndex("ArtistsArtistID");
+
+                    b.ToTable("AlbumArtist");
+                });
 
             modelBuilder.Entity("AlbumGenre", b =>
                 {
@@ -165,10 +180,12 @@ namespace Team_10_Final_Project.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -205,10 +222,12 @@ namespace Team_10_Final_Project.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -234,9 +253,6 @@ namespace Team_10_Final_Project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ArtistID")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -244,8 +260,6 @@ namespace Team_10_Final_Project.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("AlbumID");
-
-                    b.HasIndex("ArtistID");
 
                     b.ToTable("Albums");
                 });
@@ -591,18 +605,33 @@ namespace Team_10_Final_Project.Migrations
                     b.ToTable("Songs");
                 });
 
+            modelBuilder.Entity("AlbumArtist", b =>
+                {
+                    b.HasOne("Team10FinalProject.Models.Album", null)
+                        .WithMany()
+                        .HasForeignKey("AlbumsAlbumID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Team10FinalProject.Models.Artist", null)
+                        .WithMany()
+                        .HasForeignKey("ArtistsArtistID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("AlbumGenre", b =>
                 {
                     b.HasOne("Team10FinalProject.Models.Album", null)
                         .WithMany()
                         .HasForeignKey("AlbumsAlbumID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Team10FinalProject.Models.Genre", null)
                         .WithMany()
                         .HasForeignKey("GenresGenreID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -611,13 +640,13 @@ namespace Team_10_Final_Project.Migrations
                     b.HasOne("Team10FinalProject.Models.Album", null)
                         .WithMany()
                         .HasForeignKey("AlbumsAlbumID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Team10FinalProject.Models.Song", null)
                         .WithMany()
                         .HasForeignKey("SongsSongID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -626,13 +655,13 @@ namespace Team_10_Final_Project.Migrations
                     b.HasOne("Team10FinalProject.Models.Artist", null)
                         .WithMany()
                         .HasForeignKey("ArtistsArtistID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Team10FinalProject.Models.Genre", null)
                         .WithMany()
                         .HasForeignKey("GenresGenreID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -641,13 +670,13 @@ namespace Team_10_Final_Project.Migrations
                     b.HasOne("Team10FinalProject.Models.Genre", null)
                         .WithMany()
                         .HasForeignKey("GenresGenreID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Team10FinalProject.Models.Song", null)
                         .WithMany()
                         .HasForeignKey("SongsSongID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -656,7 +685,7 @@ namespace Team_10_Final_Project.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -665,7 +694,7 @@ namespace Team_10_Final_Project.Migrations
                     b.HasOne("Team10FinalProject.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -674,7 +703,7 @@ namespace Team_10_Final_Project.Migrations
                     b.HasOne("Team10FinalProject.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -683,13 +712,13 @@ namespace Team_10_Final_Project.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Team10FinalProject.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -698,19 +727,8 @@ namespace Team_10_Final_Project.Migrations
                     b.HasOne("Team10FinalProject.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Team10FinalProject.Models.Album", b =>
-                {
-                    b.HasOne("Team10FinalProject.Models.Artist", "Artist")
-                        .WithMany("Albums")
-                        .HasForeignKey("ArtistID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Artist");
                 });
 
             modelBuilder.Entity("Team10FinalProject.Models.Card", b =>
@@ -718,7 +736,7 @@ namespace Team_10_Final_Project.Migrations
                     b.HasOne("Team10FinalProject.Models.AppUser", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Customer");
@@ -728,17 +746,19 @@ namespace Team_10_Final_Project.Migrations
                 {
                     b.HasOne("Team10FinalProject.Models.Card", "Card")
                         .WithMany("Orders")
-                        .HasForeignKey("CardID");
+                        .HasForeignKey("CardID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Team10FinalProject.Models.AppUser", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Team10FinalProject.Models.AppUser", "Friend")
                         .WithMany()
-                        .HasForeignKey("FriendID");
+                        .HasForeignKey("FriendID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Card");
 
@@ -751,17 +771,19 @@ namespace Team_10_Final_Project.Migrations
                 {
                     b.HasOne("Team10FinalProject.Models.Album", "Album")
                         .WithMany()
-                        .HasForeignKey("AlbumID");
+                        .HasForeignKey("AlbumID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Team10FinalProject.Models.Order", "Order")
                         .WithMany("OrderDetails")
                         .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Team10FinalProject.Models.Song", "Song")
                         .WithMany()
-                        .HasForeignKey("SongID");
+                        .HasForeignKey("SongID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Album");
 
@@ -774,15 +796,18 @@ namespace Team_10_Final_Project.Migrations
                 {
                     b.HasOne("Team10FinalProject.Models.Album", "Album")
                         .WithMany()
-                        .HasForeignKey("AlbumID");
+                        .HasForeignKey("AlbumID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Team10FinalProject.Models.Artist", "Artist")
                         .WithMany()
-                        .HasForeignKey("ArtistID");
+                        .HasForeignKey("ArtistID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Team10FinalProject.Models.Song", "Song")
                         .WithMany()
-                        .HasForeignKey("SongID");
+                        .HasForeignKey("SongID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Album");
 
@@ -795,25 +820,29 @@ namespace Team_10_Final_Project.Migrations
                 {
                     b.HasOne("Team10FinalProject.Models.Album", "Album")
                         .WithMany()
-                        .HasForeignKey("AlbumID");
+                        .HasForeignKey("AlbumID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Team10FinalProject.Models.AppUser", "Approver")
                         .WithMany()
-                        .HasForeignKey("ApproverID");
+                        .HasForeignKey("ApproverID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Team10FinalProject.Models.Artist", "Artist")
                         .WithMany()
-                        .HasForeignKey("ArtistID");
+                        .HasForeignKey("ArtistID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Team10FinalProject.Models.AppUser", "Reviewer")
                         .WithMany()
                         .HasForeignKey("ReviewerID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Team10FinalProject.Models.Song", "Song")
                         .WithMany()
-                        .HasForeignKey("SongID");
+                        .HasForeignKey("SongID")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Album");
 
@@ -831,7 +860,7 @@ namespace Team_10_Final_Project.Migrations
                     b.HasOne("Team10FinalProject.Models.Artist", "Artist")
                         .WithMany("Songs")
                         .HasForeignKey("ArtistID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Artist");
@@ -839,8 +868,6 @@ namespace Team_10_Final_Project.Migrations
 
             modelBuilder.Entity("Team10FinalProject.Models.Artist", b =>
                 {
-                    b.Navigation("Albums");
-
                     b.Navigation("Songs");
                 });
 
