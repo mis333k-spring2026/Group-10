@@ -1,0 +1,22 @@
+@model Team10FinalProject.Models.Genre
+
+@{
+    ViewData["Title"] = "Genre Details";
+}
+
+<h1>Genre Details</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Genre ID</dt>
+        <dd class="col-sm-9">@Model.GenreID</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.GenreName)</dt>
+        <dd class="col-sm-9">@Model.GenreName</dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

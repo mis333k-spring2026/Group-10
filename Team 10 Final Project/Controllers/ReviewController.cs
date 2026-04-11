@@ -18,6 +18,17 @@ namespace Team10FinalProject.Controllers
             _userManager = userManager;
         }
 
+        [AllowAnonymous]
+        public IActionResult SeedIndex()
+        {
+            var reviews = _context.Reviews
+                .Include(r => r.Song)
+                .Include(r => r.Reviewer)
+                .ToList();
+
+            return View(reviews);
+        }
+
         [Authorize]
         public async Task<IActionResult> Create(int songID)
         {

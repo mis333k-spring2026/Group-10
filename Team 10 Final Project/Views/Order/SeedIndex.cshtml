@@ -1,0 +1,54 @@
+@model IEnumerable<Team10FinalProject.Models.Order>
+
+@{
+    ViewData["Title"] = "All Orders";
+}
+
+<h1>All Orders</h1>
+
+<p><strong>Total Records:</strong> @Model.Count()</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Order Number</th>
+            <th>Customer</th>
+            <th>Order Date</th>
+            <th>Card</th>
+            <th>Status</th>
+            <th>Items</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.OrderNumber</td>
+                <td>@order.Customer?.Email</td>
+                <td>@order.OrderDate</td>
+                <td>
+                    @if (order.Card != null)
+                    {
+                        @order.Card.CardType @: ending in @order.Card.CardNumber.Substring(Math.Max(0, order.Card.CardNumber.Length - 4))
+                    }
+                </td>
+                <td>@(order.Status ? "Pending" : "Completed")</td>
+                <td>
+                    @if (order.OrderDetails != null && order.OrderDetails.Any())
+                    {
+                        <ul>
+                            @foreach (var detail in order.OrderDetails)
+                            {
+                                <li>
+                                    @(detail.Song != null ? $"Song: {detail.Song.SongName}" :
+                                      detail.Album != null ? $"Album: {detail.Album.AlbumName}" :
+                                      "Unknown Item")
+                                </li>
+                            }
+                        </ul>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

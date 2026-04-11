@@ -1,0 +1,50 @@
+@model IEnumerable<Team10FinalProject.Models.Promotion>
+
+@{
+    ViewData["Title"] = "Promotions";
+}
+
+<h1>Promotions</h1>
+
+<p><strong>Total Records:</strong> @Model.Count()</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Promotion ID</th>
+            <th>@Html.DisplayNameFor(model => model.PromotionType)</th>
+            <th>@Html.DisplayNameFor(model => model.DiscountAmount)</th>
+            <th>Promotion Status</th>
+            <th>Applies To</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.PromotionID</td>
+            <td>@item.PromotionType</td>
+            <td>@item.DiscountAmount</td>
+            <td>@item.PromotionStatus</td>
+            <td>
+                @if (item.Song != null)
+                {
+                    @:Song: @item.Song.SongName
+                }
+                else if (item.Album != null)
+                {
+                    @:Album: @item.Album.AlbumName
+                }
+                else if (item.Artist != null)
+                {
+                    @:Artist: @item.Artist.ArtistName
+                }
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.PromotionID">Details</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

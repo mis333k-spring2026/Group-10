@@ -1,0 +1,31 @@
+@model IEnumerable<Team10FinalProject.Models.Genre>
+
+@{
+    ViewData["Title"] = "Genres";
+}
+
+<h1>Genres</h1>
+
+<p><strong>Total Records:</strong> @Model.Count()</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Genre ID</th>
+            <th>@Html.DisplayNameFor(model => model.GenreName)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.GenreID</td>
+            <td>@item.GenreName</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.GenreID">Details</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

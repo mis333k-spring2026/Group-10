@@ -20,6 +20,7 @@ namespace Team10FinalProject.Controllers
             _userManager = userManager;
         }
 
+        // normal logged-in user's cart page
         public async Task<IActionResult> Index()
         {
             AppUser? user = await _userManager.GetUserAsync(User);
@@ -48,6 +49,23 @@ namespace Team10FinalProject.Controllers
             }
 
             return View(order);
+        }
+
+        // public seeded-data page
+        [AllowAnonymous]
+        public async Task<IActionResult> SeedIndex()
+        {
+            var orders = await _context.Orders
+                .Include(o => o.Customer)
+                .Include(o => o.Card)
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Song)
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Album)
+                .Where(o => o.Status == false)
+                .ToListAsync();
+
+            return View("SeedIndex", orders);
         }
 
         public async Task<IActionResult> AddSong(int songID)
@@ -302,7 +320,6 @@ namespace Team10FinalProject.Controllers
             }
             catch
             {
-                // Do not crash checkout if email fails
             }
 
             return RedirectToAction("Confirmation", new { id = order.OrderID });

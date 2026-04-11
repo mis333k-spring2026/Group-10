@@ -270,6 +270,44 @@
         overflow: hidden;
     }
 
+    .bt-seed-section {
+        background: #fff;
+        border: 1px solid #cdddf5;
+        border-radius: 14px;
+        padding: 1.75rem;
+        box-shadow: 0 4px 18px rgba(11, 31, 74, 0.06);
+    }
+
+    .bt-seed-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        gap: 12px;
+    }
+
+    .bt-seed-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 52px;
+        padding: 0.9rem 1rem;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 700;
+        color: #fff;
+        background: linear-gradient(135deg, var(--bt-royal), var(--bt-cobalt));
+        border: none;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+        box-shadow: 0 6px 18px rgba(32, 96, 204, 0.18);
+    }
+
+    .bt-seed-btn:hover {
+        color: #fff;
+        text-decoration: none;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 24px rgba(32, 96, 204, 0.22);
+        opacity: 0.96;
+    }
+
     @@media (max-width: 768px) {
         .bt-hero-inner {
             flex-direction: column;
@@ -348,6 +386,31 @@
     </div>
     <div>
         <a asp-controller="Song" asp-action="Index" class="btn btn-light fw-semibold px-4">Browse Songs</a>
+    </div>
+</div>
+
+<hr class="my-2" style="border-color:#cdddf5;" />
+
+<div class="py-4">
+    <div class="bt-seed-section">
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <h2 class="bt-section-title mb-0">View Seeded Data</h2>
+            <span class="text-muted small">Quick links to all seeded entity lists</span>
+        </div>
+
+        <div class="bt-seed-grid">
+            <a asp-controller="Album" asp-action="Index" class="bt-seed-btn">Albums</a>
+            <a asp-controller="Artist" asp-action="Index" class="bt-seed-btn">Artists</a>
+            <a asp-controller="Card" asp-action="SeedIndex" class="bt-seed-btn">Cards</a>
+            <a asp-controller="RoleAdmin" asp-action="Customers" class="bt-seed-btn">Customers</a>
+            <a asp-controller="RoleAdmin" asp-action="Employees" class="bt-seed-btn">Employees</a>
+            <a asp-controller="Genre" asp-action="Index" class="bt-seed-btn">Genres</a>
+            <a asp-controller="RoleAdmin" asp-action="Managers" class="bt-seed-btn">Managers</a>
+            <a asp-controller="Order" asp-action="SeedIndex" class="bt-seed-btn">Orders</a>
+            <a asp-controller="Promotion" asp-action="Index" class="bt-seed-btn">Promotions</a>
+            <a asp-controller="Review" asp-action="SeedIndex" class="bt-seed-btn">Reviews</a>
+            <a asp-controller="Song" asp-action="Index" class="bt-seed-btn">Songs</a>
+        </div>
     </div>
 </div>
 

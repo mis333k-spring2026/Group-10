@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Kind_K\\Group-10\\Team 10 Final Project\\Team 10 Final Project.csproj": {}
+    "/Users/meghapazhayidathu/MIS333K/Group-10/Team 10 Final Project/Team 10 Final Project.csproj": {}
   },
   "projects": {
-    "C:\\Kind_K\\Group-10\\Team 10 Final Project\\Team 10 Final Project.csproj": {
+    "/Users/meghapazhayidathu/MIS333K/Group-10/Team 10 Final Project/Team 10 Final Project.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Kind_K\\Group-10\\Team 10 Final Project\\Team 10 Final Project.csproj",
+        "projectUniqueName": "/Users/meghapazhayidathu/MIS333K/Group-10/Team 10 Final Project/Team 10 Final Project.csproj",
         "projectName": "Team 10 Final Project",
-        "projectPath": "C:\\Kind_K\\Group-10\\Team 10 Final Project\\Team 10 Final Project.csproj",
-        "packagesPath": "C:\\Users\\Natalie Pang\\.nuget\\packages\\",
-        "outputPath": "C:\\Kind_K\\Group-10\\Team 10 Final Project\\obj\\",
+        "projectPath": "/Users/meghapazhayidathu/MIS333K/Group-10/Team 10 Final Project/Team 10 Final Project.csproj",
+        "packagesPath": "/Users/meghapazhayidathu/.nuget/packages/",
+        "outputPath": "/Users/meghapazhayidathu/MIS333K/Group-10/Team 10 Final Project/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Natalie Pang\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/meghapazhayidathu/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -96,7 +96,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.102/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

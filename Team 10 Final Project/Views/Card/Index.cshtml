@@ -3,6 +3,7 @@
     ViewData["Title"] = "My Cards";
 }
 <h1>My Cards</h1>
+<p><strong>Total Records:</strong> @Model.Count()</p>
 <hr />
 @if (!Model.Any())
 {
@@ -13,6 +14,7 @@ else
     <table class="table">
         <thead>
             <tr>
+                <th>Customer</th>
                 <th>Card Type</th>
                 <th>Card Number</th>
             </tr>
@@ -21,6 +23,7 @@ else
             @foreach (var item in Model)
             {
                 <tr>
+                    <td>@item.Customer?.Email</td>
                     <td>@item.CardType</td>
                     <td>@item.MaskedCardNumber</td>
                 </tr>

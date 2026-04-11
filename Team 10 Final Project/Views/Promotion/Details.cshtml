@@ -1,0 +1,37 @@
+@model Team10FinalProject.Models.Promotion
+
+@{
+    ViewData["Title"] = "Promotion Details";
+}
+
+<h1>Promotion Details</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Promotion ID</dt>
+        <dd class="col-sm-9">@Model.PromotionID</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.PromotionType)</dt>
+        <dd class="col-sm-9">@Model.PromotionType</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DiscountAmount)</dt>
+        <dd class="col-sm-9">@Model.DiscountAmount</dd>
+
+        <dt class="col-sm-3">Promotion Status</dt>
+        <dd class="col-sm-9">@Model.PromotionStatus</dd>
+
+        <dt class="col-sm-3">Song</dt>
+        <dd class="col-sm-9">@Model.Song?.SongName</dd>
+
+        <dt class="col-sm-3">Album</dt>
+        <dd class="col-sm-9">@Model.Album?.AlbumName</dd>
+
+        <dt class="col-sm-3">Artist</dt>
+        <dd class="col-sm-9">@Model.Artist?.ArtistName</dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

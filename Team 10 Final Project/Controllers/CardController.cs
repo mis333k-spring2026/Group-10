@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Team10FinalProject.DAL;
 using Team10FinalProject.Models;
 
 namespace Team10FinalProject.Controllers
 {
-    [Authorize]
+    [Authorize] // re-protect normal card pages
     public class CardController : Controller
     {
         private readonly AppDbContext _context;
@@ -18,6 +19,7 @@ namespace Team10FinalProject.Controllers
             _userManager = userManager;
         }
 
+        // normal user-specific page
         public async Task<IActionResult> Index()
         {
             AppUser? user = await _userManager.GetUserAsync(User);
@@ -32,6 +34,18 @@ namespace Team10FinalProject.Controllers
                 .ToList();
 
             return View(cards);
+        }
+
+        // public seeded-data page
+        [AllowAnonymous]
+        public async Task<IActionResult> SeedIndex()
+        {
+            var cards = await _context.Cards
+                .Include(c => c.Customer)
+                .Where(c => c.Status)
+                .ToListAsync();
+
+            return View("Index", cards);
         }
 
         public async Task<IActionResult> Create()
