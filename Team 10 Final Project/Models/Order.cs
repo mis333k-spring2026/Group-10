@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Team10FinalProject.Models
@@ -14,8 +16,8 @@ namespace Team10FinalProject.Models
         [Display(Name = "Order Date")]
         public DateTime OrderDate { get; set; } = DateTime.Now;
 
-        // true = cart/pending, false = completed
         [Required]
+        [Display(Name = "Status")]
         public bool Status { get; set; } = true;
 
         [Required]

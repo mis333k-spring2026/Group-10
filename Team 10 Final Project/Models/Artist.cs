@@ -11,6 +11,7 @@ namespace Team10FinalProject.Models
 
         [Required]
         [Display(Name = "Artist Name")]
+        // TODO: Change to public String? ArtistName { get; set; }
         public String ArtistName { get; set; }
 
         //navigation properties

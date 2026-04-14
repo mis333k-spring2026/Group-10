@@ -10,6 +10,7 @@ namespace Team10FinalProject.Models
 
         [Required]
         [Display(Name = "Promotion Type")]
+        // TODO: Change to public String? PromotionType { get; set; }
         public String PromotionType { get; set; }
 
         [Display(Name = "Discount Amount")]

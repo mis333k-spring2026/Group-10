@@ -11,6 +11,7 @@ namespace Team10FinalProject.Models
 
         [Required]
         [Display(Name = "Song Name")]
+        // TODO: Change to public String? SongName { get; set; }
         public String SongName   { get; set; }
 
         [Required]
@@ -28,6 +29,7 @@ namespace Team10FinalProject.Models
         //one to many relationship
         [Required]
         public Int32 ArtistID { get; set; }
+        // TODO: Change to public Artist? Artist { get; set; }
         public Artist Artist { get; set; }
         public List<Genre> Genres { get; set; } = new List<Genre>();
         public List<Album> Albums { get; set; } = new List<Album>();

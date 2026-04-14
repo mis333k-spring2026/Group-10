@@ -333,6 +333,7 @@ namespace Team10FinalProject.Controllers
 
         private Order? GetPendingOrder(string userId)
         {
+            // TODO: Add null-forgiving operators (!) for od.Song and od.Album in Include statements
             return _context.Orders
                 .Include(o => o.OrderDetails)
                     .ThenInclude(od => od.Song)

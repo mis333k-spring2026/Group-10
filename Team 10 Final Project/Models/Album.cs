@@ -11,6 +11,7 @@ namespace Team10FinalProject.Models
 
         [Required]
         [Display(Name = "Album Name")]
+        // TODO: Change to public String? AlbumName { get; set; }
         public String AlbumName { get; set; }
 
         [Required]
@@ -18,6 +19,7 @@ namespace Team10FinalProject.Models
         public Decimal Price { get; set; }
 
         [Display(Name = "Album Cover")]
+        // TODO: Change to public String? AlbumCover { get; set; }
         public String AlbumCover { get; set; }
 
         public Boolean Status { get; set; } = true;

@@ -28,6 +28,7 @@ namespace Team10FinalProject.Controllers
                 return View("Error", new List<string> { "User not found." });
             }
 
+            // TODO: Add null-forgiving operator (!) - change od.Song to od.Song! in Include
             var songs = _context.OrderDetails
                 .Include(od => od.Order)
                 .Include(od => od.Song)

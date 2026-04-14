@@ -11,6 +11,7 @@ namespace Team10FinalProject.Models
 
         [Required]
         [Display(Name = "Genre")]
+        // TODO: Change to public String? GenreName { get; set; }
         public String GenreName { get; set; }
 
         //navigation properties

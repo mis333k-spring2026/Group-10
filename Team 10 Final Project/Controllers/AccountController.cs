@@ -11,6 +11,7 @@ using Team10FinalProject.Utilities;
 namespace Team10FinalProject.Controllers
 {
     [Authorize]
+    //[AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly SignInManager<AppUser> _signInManager;
@@ -158,8 +159,93 @@ namespace Team10FinalProject.Controllers
                 Email = user.Email,
                 HasPassword = true,
                 UserID = user.Id,
-                UserName = user.UserName
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Address = user.Address,
+                City = user.City,
+                State = user.State,
+                ZipCode = user.ZipCode,
+                PhoneNumber = user.PhoneNumber
             };
+
+            return View(ivm);
+        }
+
+        public async Task<IActionResult> Edit()
+        {
+            var userName = User.Identity?.Name;
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                return View("Error", new List<string> { "User not found." });
+            }
+
+            AppUser user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+            {
+                return View("Error", new List<string> { "User not found." });
+            }
+
+            IndexViewModel ivm = new IndexViewModel
+            {
+                Email = user.Email,
+                HasPassword = true,
+                UserID = user.Id,
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Address = user.Address,
+                City = user.City,
+                State = user.State,
+                ZipCode = user.ZipCode,
+                PhoneNumber = user.PhoneNumber
+            };
+
+            return View(ivm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(IndexViewModel ivm)
+        {
+            var userName = User.Identity?.Name;
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                return View("Error", new List<string> { "User not found." });
+            }
+
+            AppUser user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+            {
+                return View("Error", new List<string> { "User not found." });
+            }
+
+            // Update user properties
+            user.FirstName = ivm.FirstName;
+            user.LastName = ivm.LastName;
+            user.Email = ivm.Email;
+            user.UserName = ivm.Email; // Keep username in sync with email
+            user.PhoneNumber = ivm.PhoneNumber;
+            user.Address = ivm.Address;
+            user.City = ivm.City;
+            user.State = ivm.State;
+            user.ZipCode = ivm.ZipCode;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
 
             return View(ivm);
         }

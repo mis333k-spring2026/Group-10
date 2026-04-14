@@ -1,3 +1,6 @@
+@using System.Collections.Generic
+@using Team10FinalProject.Models
+
 @model IEnumerable<Order>
 @{
     ViewData["Title"] = "Order History";
@@ -20,7 +23,7 @@ else
         <table class="table">
             <thead>
                 <tr>
-                    <th>Song</th>
+                    <th>Item</th>
                     <th>Price Paid</th>
                 </tr>
             </thead>
@@ -28,7 +31,16 @@ else
                 @foreach (var od in order.OrderDetails)
                 {
                     <tr>
-                        <td>@od.Song.SongName</td>
+                        <td>
+                            @if (od.Song != null)
+                            {
+                                @od.Song.SongName
+                            }
+                            else if (od.Album != null)
+                            {
+                                @od.Album.AlbumName
+                            }
+                        </td>
                         <td>@od.Price.ToString("C")</td>
                     </tr>
                 }

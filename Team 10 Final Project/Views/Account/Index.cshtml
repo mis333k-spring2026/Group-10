@@ -1,23 +1,47 @@
 @model Team10FinalProject.ViewModels.IndexViewModel
 @{
-    ViewBag.Title = "Change Password";
+    ViewBag.Title = "Account Information";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2 class="fw-bold mb-1" style="color:#333F48;">Account Information</h2>
+<hr style="border-color:#E8D5C4;" />
 
-<div>
-    <h4>Change your account settings</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>User Name:</dt>
-        <dd>@Model.UserName</dd>
+<div class="card border p-4 mb-4" style="border-color:#E8D5C4; background-color:#fff;">
+    <h5 class="fw-semibold mb-3" style="color:#BF5700;">Your Account Settings</h5>
 
-        <dt>Email:</dt>
-        <dd>@Model.Email</dd>
+    <dl class="row">
+        <dt class="col-sm-3 text-muted">First Name</dt>
+        <dd class="col-sm-9 fw-semibold" style="color:#333F48;">@Model.FirstName</dd>
 
-        <dt>Password:</dt>
-        <dd>
-            [@Html.ActionLink("Change your password", "ChangePassword")]
+        <dt class="col-sm-3 text-muted">Last Name</dt>
+        <dd class="col-sm-9 fw-semibold" style="color:#333F48;">@Model.LastName</dd>
+
+        <dt class="col-sm-3 text-muted">Email</dt>
+        <dd class="col-sm-9 fw-semibold" style="color:#333F48;">@Model.Email</dd>
+
+        <dt class="col-sm-3 text-muted">Phone Number</dt>
+        <dd class="col-sm-9 fw-semibold" style="color:#333F48;">@Model.PhoneNumber</dd>
+
+        <dt class="col-sm-3 text-muted">Address</dt>
+        <dd class="col-sm-9 fw-semibold" style="color:#333F48;">@Model.Address</dd>
+
+        <dt class="col-sm-3 text-muted">City</dt>
+        <dd class="col-sm-9 fw-semibold" style="color:#333F48;">@Model.City</dd>
+
+        <dt class="col-sm-3 text-muted">State</dt>
+        <dd class="col-sm-9 fw-semibold" style="color:#333F48;">@Model.State</dd>
+
+        <dt class="col-sm-3 text-muted">Zip Code</dt>
+        <dd class="col-sm-9 fw-semibold" style="color:#333F48;">@Model.ZipCode</dd>
+
+        <dt class="col-sm-3 text-muted">Password</dt>
+        <dd class="col-sm-9">
+            <a asp-action="ChangePassword" style="color:#BF5700;">Change your password</a>
         </dd>
     </dl>
+</div>
+
+<div class="d-flex gap-2">
+    <a asp-action="Edit" class="btn btn-primary">Edit Account</a>
+    <a asp-controller="Card" asp-action="Index" class="btn btn-secondary">View My Cards</a>
 </div>
