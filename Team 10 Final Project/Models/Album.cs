@@ -18,6 +18,10 @@ namespace Team10FinalProject.Models
         [Display(Name = "Price")]
         public Decimal Price { get; set; }
 
+        [Required]
+[Display(Name = "Rating")]
+        public Decimal AvgRating { get; set; } = 0.0m;
+
         [Display(Name = "Album Cover")]
         // TODO: Change to public String? AlbumCover { get; set; }
         public String AlbumCover { get; set; }

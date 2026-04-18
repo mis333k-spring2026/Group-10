@@ -14,6 +14,10 @@ namespace Team10FinalProject.Models
         // TODO: Change to public String? ArtistName { get; set; }
         public String ArtistName { get; set; }
 
+        [Required]
+[Display(Name = "Rating")]
+        public Decimal AvgRating { get; set; } = 0.0m;
+
         //navigation properties
         //many to many relationship
         public List<Genre> Genres { get; set; } = new List<Genre>();

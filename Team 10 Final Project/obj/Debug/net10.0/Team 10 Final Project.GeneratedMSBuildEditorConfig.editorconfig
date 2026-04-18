@@ -154,8 +154,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUm9sZUFkbWluL01hbmFnZXJzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/meghapazhayidathu/MIS333K/Group-10/Team 10 Final Project/Views/Search/AlbumSearch.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2VhcmNoL0FsYnVtU2VhcmNoLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/meghapazhayidathu/MIS333K/Group-10/Team 10 Final Project/Views/Search/ArtistSearch.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2VhcmNoL0FydGlzdFNlYXJjaC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/meghapazhayidathu/MIS333K/Group-10/Team 10 Final Project/Views/Search/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2VhcmNoL0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/meghapazhayidathu/MIS333K/Group-10/Team 10 Final Project/Views/Search/SongSearch.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2VhcmNoL1NvbmdTZWFyY2guY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/meghapazhayidathu/MIS333K/Group-10/Team 10 Final Project/Views/Seed/Confirm.cshtml]
