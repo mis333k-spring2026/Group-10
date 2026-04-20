@@ -8,8 +8,8 @@ namespace Team10FinalProject.Utilities
     {
         public static void SendEmail(string emailSubject, string emailBody, string recipientEmail)
         {
-            string fromEmail = "mis333k.emaildemo@gmail.com";
-            string appPassword = "REPLACE_WITH_REAL_APP_PASSWORD";
+            string fromEmail = "KindKGroup10@gmail.com";
+            string appPassword = "Password123!!!";
             string companyName = "Bevo's Tunes";
 
             if (string.IsNullOrWhiteSpace(recipientEmail))

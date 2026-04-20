@@ -1,45 +1,30 @@
-@model IEnumerable<Card>
-@{
-    ViewData["Title"] = "My Cards";
-}
+@model IEnumerable<Team10FinalProject.Models.Card>
+
 <h1>My Cards</h1>
-<p><strong>Total Records:</strong> @Model.Count()</p>
-<hr />
-@if (!Model.Any())
-{
-    <p>You have no saved cards.</p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Customer</th>
-                <th>Card Type</th>
-                <th>Card Number</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Customer?.Email</td>
-                    <td>@item.CardType</td>
-                    <td>@item.MaskedCardNumber</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-@if (Model.Count() < 2)
-{
-    <a asp-action="Create" class="btn btn-primary">Add a Card</a>
-}
-else
-{
-    <p>You have reached the maximum of 2 saved cards.</p>
-}
-<br />
-<div>
-    <a asp-controller="Home" asp-action="Index">Home</a>
-</div>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add New Card</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Card</th>
+            <th>Type</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var card in Model)
+    {
+        <tr>
+            <td>@card.MaskedCardNumber</td>
+            <td>@card.CardType</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@card.CardID" class="btn btn-warning btn-sm">Edit</a>
+                <a asp-action="Delete" asp-route-id="@card.CardID" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

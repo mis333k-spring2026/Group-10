@@ -1,15 +1,16 @@
 @model Team10FinalProject.Models.Card
 
 @{
-    ViewData["Title"] = "Add a Card";
+    ViewData["Title"] = "Edit Card";
 }
 
-<h1>Add a Card</h1>
+<h1>Edit Card</h1>
 <hr />
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" method="post">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="CardID" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
@@ -18,13 +19,15 @@
                 <span asp-validation-for="CardNumber" class="text-danger"></span>
                 <small class="form-text text-muted">
                     Card type is detected automatically.
+                    Visa starts with 4, MasterCard starts with 54,
+                    Discover starts with 6, American Express starts with 34 or 37 and has 15 digits.
                 </small>
             </div>
 
             <br />
 
             <div class="form-group">
-                <input type="submit" value="Save Card" class="btn btn-primary" />
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
                 <a asp-action="Index" class="btn btn-secondary">Back to My Cards</a>
             </div>
         </form>

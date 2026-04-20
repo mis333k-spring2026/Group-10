@@ -77,6 +77,12 @@ namespace Team10FinalProject.Controllers
 
             string cleanNumber = new string(card.CardNumber.Where(char.IsDigit).ToArray());
 
+            if (cleanNumber.Length < 15 || cleanNumber.Length > 16)
+            {
+                ModelState.AddModelError("CardNumber", "Card number must be 15 or 16 digits.");
+                return View(card);
+}
+
             string? cardType = DetectCardType(cleanNumber);
             if (cardType == null)
             {
@@ -105,7 +111,7 @@ namespace Team10FinalProject.Controllers
 
         private string? DetectCardType(string cardNumber)
         {
-            if (cardNumber.Length == 15 && cardNumber.StartsWith("3"))
+            if (cardNumber.Length == 15)
             {
                 return "American Express";
             }
@@ -126,6 +132,129 @@ namespace Team10FinalProject.Controllers
             }
 
             return null;
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            AppUser? user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return View("Error", new List<string> { "User not found." });
+            }
+
+            Card? card = _context.Cards.FirstOrDefault(c => c.CardID == id && c.CustomerID == user.Id && c.Status);
+
+            if (card == null)
+            {
+                return View("Error", new List<string> { "Card not found." });
+            }
+
+            return View(card);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Card card)
+        {
+            AppUser? user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return View("Error", new List<string> { "User not found." });
+            }
+
+            Card? dbCard = _context.Cards.FirstOrDefault(c => c.CardID == card.CardID && c.CustomerID == user.Id && c.Status);
+
+            if (dbCard == null)
+            {
+                return View("Error", new List<string> { "Card not found." });
+            }
+
+            if (string.IsNullOrWhiteSpace(card.CardNumber))
+            {
+                ModelState.AddModelError("CardNumber", "Card number is required.");
+                return View(card);
+            }
+
+            string cleanNumber = new string(card.CardNumber.Where(char.IsDigit).ToArray());
+
+            if (cleanNumber.Length < 15 || cleanNumber.Length > 16)
+            {
+                ModelState.AddModelError("CardNumber", "Card number must be 15 or 16 digits.");
+                return View(card);
+            }
+
+            string? cardType = DetectCardType(cleanNumber);
+            if (cardType == null)
+            {
+                ModelState.AddModelError("CardNumber", "Invalid card number. Use Visa, MasterCard, Discover, or American Express.");
+                return View(card);
+            }
+
+            bool duplicateExists = _context.Cards.Any(c =>
+                c.CustomerID == user.Id &&
+                c.CardID != card.CardID &&
+                c.CardNumber == cleanNumber &&
+                c.Status);
+
+            if (duplicateExists)
+            {
+                ModelState.AddModelError("CardNumber", "That card is already saved.");
+                return View(card);
+            }
+
+            dbCard.CardNumber = cleanNumber;
+            dbCard.CardType = cardType;
+
+            _context.Update(dbCard);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            AppUser? user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return View("Error", new List<string> { "User not found." });
+            }
+
+            Card? card = _context.Cards.FirstOrDefault(c => c.CardID == id && c.CustomerID == user.Id && c.Status);
+
+            if (card == null)
+            {
+                return View("Error", new List<string> { "Card not found." });
+            }
+
+            return View(card);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            AppUser? user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return View("Error", new List<string> { "User not found." });
+            }
+
+            Card? card = _context.Cards.FirstOrDefault(c => c.CardID == id && c.CustomerID == user.Id && c.Status);
+
+            if (card == null)
+            {
+                return View("Error", new List<string> { "Card not found." });
+            }
+
+            card.Status = false;
+            _context.Update(card);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
         }
     }
 }
