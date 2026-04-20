@@ -6350,19 +6350,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/meghapazhayidathu/.nuget/packages/": {}
+    "/Users/gaurimayekar/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/meghapazhayidathu/MIS333K/Group-10/Team 10 Final Project/Team 10 Final Project.csproj",
+      "projectUniqueName": "/Users/gaurimayekar/Desktop/UT Austin/MIS 333K/Group-10/Team 10 Final Project/Team 10 Final Project.csproj",
       "projectName": "Team 10 Final Project",
-      "projectPath": "/Users/meghapazhayidathu/MIS333K/Group-10/Team 10 Final Project/Team 10 Final Project.csproj",
-      "packagesPath": "/Users/meghapazhayidathu/.nuget/packages/",
-      "outputPath": "/Users/meghapazhayidathu/MIS333K/Group-10/Team 10 Final Project/obj/",
+      "projectPath": "/Users/gaurimayekar/Desktop/UT Austin/MIS 333K/Group-10/Team 10 Final Project/Team 10 Final Project.csproj",
+      "packagesPath": "/Users/gaurimayekar/.nuget/packages/",
+      "outputPath": "/Users/gaurimayekar/Desktop/UT Austin/MIS 333K/Group-10/Team 10 Final Project/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/meghapazhayidathu/.nuget/NuGet/NuGet.Config"
+        "/Users/gaurimayekar/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -6444,7 +6444,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.102/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
@@ -6861,5 +6861,27 @@
         }
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1901",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'NuGet.Packaging' 6.12.1 has a known low severity vulnerability, https://github.com/advisories/GHSA-g4vj-cjjj-v7hg",
+      "libraryId": "NuGet.Packaging",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1901",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'NuGet.Protocol' 6.12.1 has a known low severity vulnerability, https://github.com/advisories/GHSA-g4vj-cjjj-v7hg",
+      "libraryId": "NuGet.Protocol",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
 }
