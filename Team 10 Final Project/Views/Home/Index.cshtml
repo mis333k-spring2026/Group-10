@@ -4,9 +4,9 @@
 
 <style>
     .hero {
-        background: linear-gradient(135deg, #333F48 0%, #4a5a66 45%, #3d4f5c 100%);
-        padding: 4.5rem 2rem 4rem;
-        border-radius: 16px;
+        background-color: #BF5700;
+        padding: 5rem 2.5rem 4.5rem;
+        border-radius: 20px;
         margin-bottom: 2rem;
         position: relative;
         overflow: hidden;
@@ -17,8 +17,8 @@
         position: absolute;
         inset: 0;
         background:
-            radial-gradient(ellipse at 12% 70%, rgba(191,87,0,0.22) 0%, transparent 50%),
-            radial-gradient(ellipse at 88% 20%, rgba(157,71,0,0.14) 0%, transparent 45%);
+            radial-gradient(ellipse at 10% 80%, rgba(255,255,255,0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 90% 10%, rgba(255,255,255,0.04) 0%, transparent 50%);
         pointer-events: none;
     }
 
@@ -27,47 +27,80 @@
         z-index: 1;
     }
 
-    .hero-title {
-        font-size: clamp(2rem, 5vw, 3.2rem);
-        font-weight: 800;
-        color: #fff;
-        line-height: 1.1;
+    .hero-eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.65);
+        margin-bottom: 1rem;
     }
 
-    .hero-title em {
-        font-style: normal;
-        color: #E8D5C4;
+    .hero-title {
+        font-size: clamp(2.4rem, 5vw, 3.6rem);
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        margin-bottom: 1.25rem;
+    }
+
+    .hero-title span {
+        color: #F8F0E8;
+        opacity: 0.85;
     }
 
     .hero-sub {
         color: rgba(255,255,255,0.78);
-        font-size: 1rem;
-        line-height: 1.65;
-        max-width: 540px;
+        font-size: 1.05rem;
+        line-height: 1.7;
+        max-width: 500px;
+        margin-bottom: 2rem;
     }
 
-    .section-title {
-        font-size: 1.2rem;
+    .btn-hero-primary {
+        background-color: #fff;
+        color: #BF5700;
         font-weight: 700;
-        color: #333F48;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        border: none;
+        padding: 0.65rem 1.75rem;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: background 0.15s, color 0.15s;
+        text-decoration: none;
+        display: inline-block;
     }
 
-    .section-title::before {
-        content: '';
+    .btn-hero-primary:hover {
+        background-color: #F8F0E8;
+        color: #9D4700;
+        text-decoration: none;
+    }
+
+    .btn-hero-outline {
+        background-color: transparent;
+        color: #fff;
+        font-weight: 600;
+        border: 1.5px solid rgba(255,255,255,0.5);
+        padding: 0.65rem 1.75rem;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: border-color 0.15s, background 0.15s;
+        text-decoration: none;
         display: inline-block;
-        width: 3px;
-        height: 1.1em;
-        background: linear-gradient(180deg, #BF5700, #9D4700);
-        border-radius: 2px;
-        flex-shrink: 0;
+    }
+
+    .btn-hero-outline:hover {
+        border-color: #fff;
+        background-color: rgba(255,255,255,0.08);
+        color: #fff;
+        text-decoration: none;
     }
 
     .featured-banner {
-        background: linear-gradient(135deg, #333F48 0%, #4a5a66 60%, #3d4f5c 100%);
-        border-radius: 14px;
+        background-color: #F8F0E8;
+        border: 1.5px solid #E8D5C4;
+        border-radius: 16px;
         padding: 2rem 2.25rem;
         display: flex;
         align-items: center;
@@ -77,102 +110,147 @@
 
     .featured-icon {
         flex-shrink: 0;
-        width: 80px;
-        height: 80px;
+        width: 72px;
+        height: 72px;
         border-radius: 12px;
-        background: linear-gradient(135deg, #BF5700, #E8D5C4);
+        background-color: #BF5700;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2rem;
+        font-size: 1.2rem;
+        font-weight: 700;
         color: white;
     }
 
+    .featured-eyebrow {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #BF5700;
+        margin-bottom: 0.35rem;
+    }
+
     .featured-title {
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: #fff;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #555;
         margin-bottom: 0.2rem;
     }
 
     .featured-sub {
-        color: rgba(255,255,255,0.75);
+        color: #999;
         font-size: 14px;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0;
     }
 
-    .quick-link-card {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 60px;
-        padding: 1rem;
-        border-radius: 10px;
+    .section-label {
+        font-size: 11px;
         font-weight: 700;
-        font-size: 15px;
-        text-decoration: none;
-        color: #fff;
-        background: linear-gradient(135deg, #BF5700, #9D4700);
-        border: none;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-        box-shadow: 0 4px 14px rgba(191,87,0,0.2);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #BF5700;
+        margin-bottom: 0.4rem;
     }
 
-    .quick-link-card:hover {
-        color: #fff;
+    .section-heading {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #555;
+        margin-bottom: 1rem;
+    }
+
+    .nav-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 1.25rem 1.5rem;
+        border-radius: 12px;
+        background-color: #F8F0E8;
+        border: 1.5px solid #E8D5C4;
         text-decoration: none;
+        transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+        height: 100%;
+    }
+
+    .nav-card:hover {
+        border-color: #BF5700;
+        box-shadow: 0 4px 16px rgba(191,87,0,0.12);
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(191,87,0,0.3);
+        text-decoration: none;
     }
 
-    .quick-link-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 12px;
+    .nav-card-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #555;
+        margin-bottom: 2px;
     }
 
-    .section-divider {
+    .nav-card-sub {
+        font-size: 12px;
+        color: #999;
+        margin: 0;
+    }
+
+    .nav-card-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #BF5700;
+        margin-bottom: 0.75rem;
+    }
+
+    .divider {
         border-color: #E8D5C4;
+        margin: 1.5rem 0;
     }
 
     .cta-banner {
-        background: linear-gradient(135deg, #333F48 0%, #4a5a66 60%, #BF5700 100%);
-        border-radius: 14px;
-        padding: 2.75rem 2.5rem;
+        background-color: #BF5700;
+        border-radius: 16px;
+        padding: 3rem 2.5rem;
         text-align: center;
         margin-bottom: 2rem;
     }
 
+    .cta-title {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 0.75rem;
+    }
+
     .cta-sub {
         color: rgba(255,255,255,0.78);
+        font-size: 1rem;
+        margin-bottom: 1.75rem;
     }
 
     @@media (max-width: 768px) {
-        .featured-banner {
-            flex-direction: column;
-            text-align: center;
-        }
+        .featured-banner { flex-direction: column; text-align: center; }
     }
 </style>
 
 <!-- Hero -->
 <section class="hero">
     <div class="hero-inner">
-        <h1 class="hero-title mb-3">Welcome to <em>Bevo's Tunes</em></h1>
-        <p class="hero-sub mb-4">
+        <p class="hero-eyebrow">Bevo's Tunes — Texas Music Store</p>
+        <h1 class="hero-title">Your Music,<br /><span>Owned Forever.</span></h1>
+        <p class="hero-sub">
             Buy songs and full albums, then keep them in your personal library.
             Browse artists, explore albums, and build your collection.
         </p>
-        <div class="d-flex gap-2 flex-wrap">
+        <div class="d-flex gap-3 flex-wrap">
             @if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                <a asp-controller="Song" asp-action="Index" class="btn btn-light fw-semibold px-4">&#9835; Browse Songs</a>
-                <a asp-controller="Album" asp-action="Index" class="btn btn-outline-light px-4">View Albums</a>
+                <a asp-controller="Song" asp-action="Index" class="btn-hero-primary">Browse Songs</a>
+                <a asp-controller="Album" asp-action="Index" class="btn-hero-outline">View Albums</a>
             }
             else
             {
-                <a asp-controller="Account" asp-action="Register" class="btn btn-light fw-semibold px-4">&#9835; Get Started</a>
-                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light px-4">Sign In</a>
+                <a asp-controller="Account" asp-action="Register" class="btn-hero-primary">Get Started</a>
+                <a asp-controller="Account" asp-action="Login" class="btn-hero-outline">Sign In</a>
             }
         </div>
     </div>
@@ -180,61 +258,143 @@
 
 <!-- Featured Banner -->
 <div class="featured-banner">
-    <div class="featured-icon">&#9835;</div>
+    <div class="featured-icon">BT</div>
     <div class="flex-grow-1">
-        <span class="badge mb-2 px-2 py-1" style="background:#BF5700; font-size:10px; letter-spacing:.1em;">
-            &#9733; FEATURED NOW
-        </span>
+        <p class="featured-eyebrow">Featured Now</p>
         <h2 class="featured-title">Welcome to Bevo's Tunes</h2>
         <p class="featured-sub">Explore songs, albums, and artists from one place.</p>
-        <span class="text-warning">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-        <span class="fw-bold ms-2" style="color:#E8D5C4;">Music Marketplace</span>
     </div>
     <div>
-        <a asp-controller="Song" asp-action="Index" class="btn btn-light fw-semibold px-4">Browse Songs</a>
+        <a asp-controller="Song" asp-action="Index" class="btn btn-primary fw-semibold px-4">Browse Songs</a>
     </div>
 </div>
 
-<hr class="section-divider my-2" />
+<hr class="divider" />
 
-<!-- Role-based quick links -->
+<!-- Browse — available to everyone -->
+<div class="mb-4">
+    <p class="section-label">Browse</p>
+    <h2 class="section-heading">Music</h2>
+    <div class="row g-3">
+        <div class="col-6 col-md-3">
+            <a asp-controller="Song" asp-action="Index" class="nav-card">
+                <div class="nav-card-dot"></div>
+                <p class="nav-card-title">Songs</p>
+                <p class="nav-card-sub">Browse catalog</p>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a asp-controller="Album" asp-action="Index" class="nav-card">
+                <div class="nav-card-dot"></div>
+                <p class="nav-card-title">Albums</p>
+                <p class="nav-card-sub">Browse all albums</p>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a asp-controller="Artist" asp-action="Index" class="nav-card">
+                <div class="nav-card-dot"></div>
+                <p class="nav-card-title">Artists</p>
+                <p class="nav-card-sub">Browse all artists</p>
+            </a>
+        </div>
+        <div class="col-6 col-md-3">
+            <a asp-controller="Search" asp-action="Index" class="nav-card">
+                <div class="nav-card-dot"></div>
+                <p class="nav-card-title">Search</p>
+                <p class="nav-card-sub">Search music</p>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Logged-in customer links -->
 @if (User.Identity != null && User.Identity.IsAuthenticated)
 {
-    <div class="py-4">
-        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
-            @if (User.IsInRole("Admin"))
-            {
-                <h2 class="section-title mb-0">Admin Quick Links</h2>
-            }
-            else
-            {
-                <h2 class="section-title mb-0">My Account</h2>
-            }
-        </div>
+    <hr class="divider" />
 
-        <div class="quick-link-grid">
-            <a asp-action="Index" asp-controller="Courses" class="quick-link-card">Courses</a>
-            <a asp-action="Index" asp-controller="Registrations" class="quick-link-card">Registrations</a>
-
-            @if (User.IsInRole("Admin"))
-            {
-                <a asp-action="Index" asp-controller="Departments" class="quick-link-card">Departments</a>
-                <a asp-action="Index" asp-controller="RoleAdmin" class="quick-link-card">Manage Users</a>
-            }
+    <div class="mb-4">
+        <p class="section-label">My Account</p>
+        <h2 class="section-heading">Library</h2>
+        <div class="row g-3">
+            <div class="col-6 col-md-3">
+                <a asp-controller="MyMusic" asp-action="Index" class="nav-card">
+                    <div class="nav-card-dot"></div>
+                    <p class="nav-card-title">My Music</p>
+                    <p class="nav-card-sub">Your personal library</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a asp-controller="Order" asp-action="Index" class="nav-card">
+                    <div class="nav-card-dot"></div>
+                    <p class="nav-card-title">Cart</p>
+                    <p class="nav-card-sub">View shopping cart</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a asp-controller="OrderHistory" asp-action="Index" class="nav-card">
+                    <div class="nav-card-dot"></div>
+                    <p class="nav-card-title">Order History</p>
+                    <p class="nav-card-sub">Past purchases</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-3">
+                <a asp-controller="Account" asp-action="Index" class="nav-card">
+                    <div class="nav-card-dot"></div>
+                    <p class="nav-card-title">Account</p>
+                    <p class="nav-card-sub">Manage your account</p>
+                </a>
+            </div>
         </div>
     </div>
 
-    <hr class="section-divider my-2" />
+    @if (User.IsInRole("Admin") || User.IsInRole("Employee") || User.IsInRole("Manager"))
+    {
+        <hr class="divider" />
+
+        <div class="mb-4">
+            <p class="section-label">Staff</p>
+            <h2 class="section-heading">Management</h2>
+            <div class="row g-3">
+                <div class="col-6 col-md-3">
+                    <a asp-controller="RoleAdmin" asp-action="Index" class="nav-card">
+                        <div class="nav-card-dot"></div>
+                        <p class="nav-card-title">Manage Users</p>
+                        <p class="nav-card-sub">User role management</p>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-controller="Promotion" asp-action="Index" class="nav-card">
+                        <div class="nav-card-dot"></div>
+                        <p class="nav-card-title">Promotions</p>
+                        <p class="nav-card-sub">Manage promotions</p>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-controller="Song" asp-action="Create" class="nav-card">
+                        <div class="nav-card-dot"></div>
+                        <p class="nav-card-title">Add Song</p>
+                        <p class="nav-card-sub">Add new song</p>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-controller="Album" asp-action="Create" class="nav-card">
+                        <div class="nav-card-dot"></div>
+                        <p class="nav-card-title">Add Album</p>
+                        <p class="nav-card-sub">Add new album</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
 }
 
 <!-- CTA for guests -->
 @if (User.Identity == null || !User.Identity.IsAuthenticated)
 {
+    <hr class="divider" />
     <div class="cta-banner">
-        <h2 class="fw-bold text-white mb-2">Ready to Build Your Library?</h2>
-        <p class="mb-4 cta-sub">Create an account and start building your Bevo's Tunes collection.</p>
-        <a asp-controller="Account" asp-action="Register" class="btn btn-light fw-semibold px-5">
-            &#9835; Get Started
-        </a>
+        <h2 class="cta-title">Ready to Build Your Library?</h2>
+        <p class="cta-sub">Create an account and start building your Bevo's Tunes collection.</p>
+        <a asp-controller="Account" asp-action="Register" class="btn-hero-primary">Get Started</a>
     </div>
 }

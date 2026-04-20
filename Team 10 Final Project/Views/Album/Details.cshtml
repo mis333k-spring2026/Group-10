@@ -4,26 +4,27 @@
     ViewData["Title"] = "Album Details";
 }
 
-<h1>Album Details</h1>
-<hr />
+<h2 class="fw-bold mb-1" style="color:#333F48;">Album Details</h2>
+<hr style="border-color:#E8D5C4;" />
 
-<div>
+<div class="card border p-4 mb-4" style="border-color:#E8D5C4; background-color:#fff;">
+
     <dl class="row">
-        <dt class="col-sm-2">Album</dt>
-        <dd class="col-sm-10">@Model.AlbumName</dd>
+        <dt class="col-sm-2 text-muted">Album</dt>
+        <dd class="col-sm-10 fw-semibold" style="color:#333F48;">@Model.AlbumName</dd>
 
-        <dt class="col-sm-2">Artist</dt>
+        <dt class="col-sm-2 text-muted">Artist</dt>
         <dd class="col-sm-10">
             @if (Model.Artists != null && Model.Artists.Any())
             {
                 @for (int i = 0; i < Model.Artists.Count; i++)
                 {
                     <a asp-controller="Artist"
-                    asp-action="Details"
-                    asp-route-id="@Model.Artists[i].ArtistID">
+                       asp-action="Details"
+                       asp-route-id="@Model.Artists[i].ArtistID"
+                       style="color:#BF5700;">
                         @Model.Artists[i].ArtistName
                     </a>
-
                     @if (i < Model.Artists.Count - 1)
                     {
                         @:,
@@ -32,38 +33,43 @@
             }
         </dd>
 
-        <dt class="col-sm-2">Price</dt>
-        <dd class="col-sm-10">@Model.Price.ToString("C")</dd>
+        <dt class="col-sm-2 text-muted">Price</dt>
+        <dd class="col-sm-10 fw-semibold" style="color:#BF5700;">@Model.Price.ToString("C")</dd>
 
-        <dt class="col-sm-2">Genres</dt>
+        <dt class="col-sm-2 text-muted">Genres</dt>
         <dd class="col-sm-10">
             @if (Model.Genres != null && Model.Genres.Any())
             {
                 @foreach (var genre in Model.Genres)
                 {
-                    <span class="me-2">@genre.GenreName</span>
+                    <span class="badge me-1" style="background-color:#E8D5C4; color:#333F48;">@genre.GenreName</span>
                 }
             }
             else
             {
-                <span>No genres listed.</span>
+                <span class="text-muted">No genres listed.</span>
             }
         </dd>
 
-        <dt class="col-sm-2">Songs</dt>
+        <dt class="col-sm-2 text-muted">Songs</dt>
         <dd class="col-sm-10">
             @if (Model.Songs != null && Model.Songs.Any())
             {
                 @foreach (var song in Model.Songs)
                 {
                     <div>
-                        <a asp-controller="Song" asp-action="Details" asp-route-id="@song.SongID">@song.SongName</a>
+                        <a asp-controller="Song"
+                           asp-action="Details"
+                           asp-route-id="@song.SongID"
+                           style="color:#BF5700;">
+                            @song.SongName
+                        </a>
                     </div>
                 }
             }
             else
             {
-                <span>No songs listed.</span>
+                <span class="text-muted">No songs listed.</span>
             }
         </dd>
     </dl>
@@ -76,7 +82,7 @@
     </div>
 }
 
-<div>
-    <a asp-action="Index">Back to Albums</a> |
-    <a asp-controller="Home" asp-action="Index">Home</a>
+<div class="d-flex gap-3 mt-2">
+    <a asp-action="Index" style="color:#BF5700;">Back to Albums</a>
+    <a asp-controller="Home" asp-action="Index" style="color:#BF5700;">Home</a>
 </div>
