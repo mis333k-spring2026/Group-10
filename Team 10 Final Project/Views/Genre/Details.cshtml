@@ -4,19 +4,17 @@
     ViewData["Title"] = "Genre Details";
 }
 
-<h1>Genre Details</h1>
+<h2 class="fw-bold mb-1" style="color:#333F48;">Genre Details</h2>
+<hr style="border-color:#E8D5C4;" />
 
-<div>
-    <hr />
+<div class="card border p-4 mb-4" style="border-color:#E8D5C4; background-color:#fff;">
     <dl class="row">
-        <dt class="col-sm-3">Genre ID</dt>
-        <dd class="col-sm-9">@Model.GenreID</dd>
+        <dt class="col-sm-3 text-muted">Genre ID</dt>
+        <dd class="col-sm-9 fw-semibold" style="color:#555;">@Model.GenreID</dd>
 
-        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.GenreName)</dt>
-        <dd class="col-sm-9">@Model.GenreName</dd>
+        <dt class="col-sm-3 text-muted">@Html.DisplayNameFor(model => model.GenreName)</dt>
+        <dd class="col-sm-9 fw-semibold" style="color:#555;">@Model.GenreName</dd>
     </dl>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<a asp-action="Index" style="color:#BF5700;">Back to List</a>
