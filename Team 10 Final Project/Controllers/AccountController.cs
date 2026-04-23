@@ -293,8 +293,8 @@ namespace Team10FinalProject.Controllers
             return View(cpvm);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        // GET: /Account/LogOff
+        [AllowAnonymous]
         public async Task<IActionResult> LogOff()
         {
             await _signInManager.SignOutAsync();
