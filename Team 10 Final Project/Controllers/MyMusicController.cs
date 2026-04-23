@@ -36,6 +36,7 @@ namespace Team10FinalProject.Controllers
                     .ThenInclude(s => s.Genres)
                 .Where(od => od.Order != null &&
                              od.Order.Status == false &&
+                             od.Order.IsRefunded == false &&
                              od.SongID != null &&
                              (
                                  (od.Order.CustomerID == user.Id && od.Order.FriendID == null) ||

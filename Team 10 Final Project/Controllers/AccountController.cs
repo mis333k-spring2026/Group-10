@@ -1,5 +1,3 @@
-#nullable disable warnings
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -67,6 +65,7 @@ namespace Team10FinalProject.Controllers
 
             if (result.Succeeded)
             {
+                EmailMessaging.SendAccountCreationEmail(newUser);
                 await _signInManager.PasswordSignInAsync(rvm.Email, rvm.Password, false, false);
                 return RedirectToAction("Index", "Home");
             }

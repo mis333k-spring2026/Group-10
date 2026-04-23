@@ -170,8 +170,8 @@ namespace Team10FinalProject.Utilities
 
             if (!string.IsNullOrWhiteSpace(recommendedGenre) && !string.IsNullOrWhiteSpace(recommendedArtistName))
             {
-                body.AppendLine($"Recommendation: Since this purchase included music in the genre {recommendedGenre},");
-                body.AppendLine($"you should also try {recommendedArtistName}.");
+                body.AppendLine($"Recommendation: Based on your purchase in the genre {recommendedGenre},");
+                body.AppendLine($"you may also enjoy music by {recommendedArtistName}.");
                 body.AppendLine();
             }
 

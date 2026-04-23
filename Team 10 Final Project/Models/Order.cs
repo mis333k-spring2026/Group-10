@@ -21,6 +21,10 @@ namespace Team10FinalProject.Models
         public bool Status { get; set; } = true;
 
         [Required]
+        [Display(Name = "Refunded")]
+        public bool IsRefunded { get; set; } = false;
+
+        [Required]
         public string CustomerID { get; set; } = "";
 
         public AppUser? Customer { get; set; }

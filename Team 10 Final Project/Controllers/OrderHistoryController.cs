@@ -33,7 +33,9 @@ namespace Team10FinalProject.Controllers
                     .ThenInclude(od => od.Song)
                 .Include(o => o.OrderDetails)
                     .ThenInclude(od => od.Album)
-                .Where(o => o.CustomerID == user.Id && o.Status == false)
+                .Where(o => o.CustomerID == user.Id &&
+                            o.Status == false &&
+                            o.IsRefunded == false)
                 .OrderByDescending(o => o.OrderDate)
                 .ToList();
 

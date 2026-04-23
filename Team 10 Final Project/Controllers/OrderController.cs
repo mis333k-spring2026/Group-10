@@ -353,6 +353,7 @@ namespace Team10FinalProject.Controllers
             order.CardID = card.CardID;
             order.Card = card;
             order.Status = false;
+            order.IsRefunded = false; 
             order.OrderDate = DateTime.Now;
             order.OrderNumber = GetNextOrderNumber();
 
@@ -362,15 +363,33 @@ namespace Team10FinalProject.Controllers
             {
                 var emailOrder = _context.Orders
                     .Include(o => o.Customer)
+                    .Include(o => o.Friend)
                     .Include(o => o.OrderDetails)
                         .ThenInclude(od => od.Song)
                     .Include(o => o.OrderDetails)
                         .ThenInclude(od => od.Album)
                     .FirstOrDefault(o => o.OrderID == order.OrderID);
 
-                if (emailOrder != null && !string.IsNullOrWhiteSpace(user.Email))
+                if (emailOrder != null)
                 {
-                    EmailMessaging.SendOrderConfirmation(user.Email, emailOrder);
+                    string refundLink = Url.Action("Refund", "Order", new { id = emailOrder.OrderID }, Request.Scheme)!;
+
+                    if (emailOrder.Friend != null)
+                    {
+                        var recommendation = GetGiftRecommendation(emailOrder);
+
+                        EmailMessaging.SendGiftPurchaserConfirmationEmail(emailOrder, refundLink);
+
+                        EmailMessaging.SendGiftRecipientEmail(
+                            emailOrder,
+                            recommendation.GenreName,
+                            recommendation.ArtistName
+                        );
+                    }
+                    else
+                    {
+                        EmailMessaging.SendOrderConfirmationEmail(emailOrder, refundLink);
+                    }
                 }
             }
             catch
@@ -384,6 +403,131 @@ namespace Team10FinalProject.Controllers
         {
             ViewBag.OrderID = id;
             return View();
+        }
+
+        public async Task<IActionResult> Refund(int id)
+        {
+            AppUser? user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return View("Error", new List<string> { "User not found." });
+            }
+
+            Order? order = _context.Orders
+                .Include(o => o.Customer)
+                .Include(o => o.Friend)
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Song)
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Album)
+                .FirstOrDefault(o => o.OrderID == id);
+
+            if (order == null)
+            {
+                return View("Error", new List<string> { "Order not found." });
+            }
+
+            if (order.CustomerID != user.Id)
+            {
+                return View("Error", new List<string> { "You are not authorized to refund this order." });
+            }
+
+            if (order.Status == true)
+            {
+                return View("Error", new List<string> { "This order has not been completed yet." });
+            }
+
+            if (order.IsRefunded == true)
+            {
+                return View("Error", new List<string> { "This order has already been refunded." });
+            }
+
+            return View(order);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmRefund(int id)
+        {
+            AppUser? user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return View("Error", new List<string> { "User not found." });
+            }
+
+            Order? order = _context.Orders
+                .Include(o => o.Customer)
+                .Include(o => o.Friend)
+                .FirstOrDefault(o => o.OrderID == id);
+
+            if (order == null)
+            {
+                return View("Error", new List<string> { "Order not found." });
+            }
+
+            if (order.CustomerID != user.Id)
+            {
+                return View("Error", new List<string> { "You are not authorized to refund this order." });
+            }
+
+            if (order.IsRefunded == true)
+            {
+                return View("Error", new List<string> { "This order has already been refunded." });
+            }
+
+            order.IsRefunded = true;
+            _context.SaveChanges();
+
+            if (order.Customer != null && !string.IsNullOrWhiteSpace(order.Customer.Email))
+            {
+                EmailMessaging.SendRefundEmail(order, order.Customer.Email);
+            }
+
+            if (order.Friend != null && !string.IsNullOrWhiteSpace(order.Friend.Email))
+            {
+                EmailMessaging.SendRefundEmail(order, order.Friend.Email);
+            }
+
+            return RedirectToAction("Index", "OrderHistory");
+        }
+
+        private (string GenreName, string ArtistName) GetGiftRecommendation(Order order)
+        {
+            Song? purchasedSong = order.OrderDetails
+                .Where(od => od.Song != null)
+                .Select(od => od.Song)
+                .FirstOrDefault();
+
+            if (purchasedSong == null)
+            {
+                return ("", "");
+            }
+
+            Song? songWithGenres = _context.Songs
+                .Include(s => s.Genres)
+                .FirstOrDefault(s => s.SongID == purchasedSong.SongID);
+
+            if (songWithGenres == null || songWithGenres.Genres == null || songWithGenres.Genres.Count == 0)
+            {
+                return ("", "");
+            }
+
+            Genre selectedGenre = songWithGenres.Genres.First();
+
+            Artist? recommendedArtist = _context.Artists
+                .Include(a => a.Genres)
+                .Where(a => a.Genres.Any(g => g.GenreID == selectedGenre.GenreID))
+                .OrderByDescending(a => a.AvgRating)
+                .FirstOrDefault();
+
+            if (recommendedArtist == null)
+            {
+                return (selectedGenre.GenreName, "");
+            }
+
+            return (selectedGenre.GenreName, recommendedArtist.ArtistName);
         }
 
         private Order? GetPendingOrder(string userId)
