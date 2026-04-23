@@ -65,11 +65,6 @@ namespace Team10FinalProject.Controllers
                 return View("Error", new List<string> { "User not found." });
             }
 
-            if (!ModelState.IsValid)
-            {
-                return View(review);
-            }
-
             if (review.SongID == null)
             {
                 return View("Error", new List<string> { "Review target not found." });
@@ -78,13 +73,29 @@ namespace Team10FinalProject.Controllers
             bool purchasedSong = _context.OrderDetails
                 .Include(od => od.Order)
                 .Any(od => od.SongID == review.SongID &&
-                           od.Order != null &&
-                           od.Order.CustomerID == user.Id &&
-                           od.Order.Status == false);
+                        od.Order != null &&
+                        od.Order.CustomerID == user.Id &&
+                        od.Order.Status == false);
 
             if (!purchasedSong)
             {
                 return View("Error", new List<string> { "You may only review songs you have purchased." });
+            }
+
+            review.ReviewerID = user.Id;
+            review.Status = false;
+
+            ModelState.Remove("ReviewerID");
+            ModelState.Remove("Reviewer");
+            ModelState.Remove("ApproverID");
+            ModelState.Remove("Approver");
+            ModelState.Remove("Song");
+            ModelState.Remove("Album");
+            ModelState.Remove("Artist");
+
+            if (!ModelState.IsValid)
+            {
+                return View(review);
             }
 
             Review? existingReview = _context.Reviews
@@ -98,8 +109,6 @@ namespace Team10FinalProject.Controllers
             }
             else
             {
-                review.ReviewerID = user.Id;
-                review.Status = false;
                 _context.Reviews.Add(review);
             }
 

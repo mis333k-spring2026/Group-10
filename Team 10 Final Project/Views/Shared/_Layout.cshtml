@@ -38,9 +38,12 @@
       .form-control:focus { border-color: var(--ut-orange); box-shadow: 0 0 0 0.2rem rgba(191, 87, 0, 0.25); }
       label { color: var(--ut-charcoal); }
 
-      .footer { background-color: var(--ut-charcoal); color: #fff; }
-      .footer a { color: var(--ut-tan); }
-      .footer a:hover { color: #fff; }
+      .footer {
+        background-color: #F8F0E8;
+        color: #555;
+     }
+        .footer a { color: #BF5700; }
+        .footer a:hover { color: #9D4700; }
     </style>
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -62,7 +65,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-controller="MyMusic" asp-action="Index">My Songs</a>
+                            <a class="nav-link text-white" asp-controller="MyMusic" asp-action="Index">My Music</a>
                         </li>
 
                         <li class="nav-item">

@@ -11,8 +11,8 @@ namespace Team10FinalProject.Utilities
     {
         // Gmail account your team uses to SEND the emails
         private const string FromEmail = "KindKGroup10@gmail.com";
-        private const string AppPassword = "Password123!!!";
-        private const string CompanyName = "Bevo's Tunes";
+        private const string AppPassword = "rekeqpbksohwjwja";
+        private const string CompanyName = "BevosTunes";
 
         // TA clarification: all project emails should be delivered to one inbox for grading
         private const string GradingInbox = "KindKGroup10@gmail.com";
