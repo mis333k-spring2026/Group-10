@@ -1,0 +1,31 @@
+@model Team10FinalProject.Models.Order
+
+@{
+    ViewData["Title"] = "Refund Order";
+}
+
+<h1>Refund Order</h1>
+
+<p>Are you sure this order was made incorrectly and should be refunded?</p>
+
+<div>
+    <p><strong>Order Number:</strong> @Model.OrderNumber</p>
+    <p><strong>Order Date:</strong> @Model.OrderDate</p>
+</div>
+
+<h3>Purchased Music</h3>
+<ul>
+    @foreach (var item in Model.OrderDetails)
+    {
+        <li>
+            @(item.Song != null ? item.Song.SongName : item.Album != null ? item.Album.AlbumName : "Item")
+            - @item.Price.ToString("C")
+        </li>
+    }
+</ul>
+
+<form asp-action="ConfirmRefund" asp-route-id="@Model.OrderID" method="post">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-danger">Yes, Refund This Order</button>
+    <a asp-action="Index" asp-controller="OrderHistory" class="btn btn-secondary">No, Go Back</a>
+</form>

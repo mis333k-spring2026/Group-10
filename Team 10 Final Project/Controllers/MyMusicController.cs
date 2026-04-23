@@ -28,7 +28,6 @@ namespace Team10FinalProject.Controllers
                 return View("Error", new List<string> { "User not found." });
             }
 
-            // TODO: Add null-forgiving operator (!) - change od.Song to od.Song! in Include
             var songs = _context.OrderDetails
                 .Include(od => od.Order)
                 .Include(od => od.Song)
@@ -36,9 +35,13 @@ namespace Team10FinalProject.Controllers
                 .Include(od => od.Song)
                     .ThenInclude(s => s.Genres)
                 .Where(od => od.Order != null &&
-                             od.Order.CustomerID == user.Id &&
                              od.Order.Status == false &&
-                             od.SongID != null)
+                             od.Order.IsRefunded == false &&
+                             od.SongID != null &&
+                             (
+                                 (od.Order.CustomerID == user.Id && od.Order.FriendID == null) ||
+                                 od.Order.FriendID == user.Id
+                             ))
                 .Select(od => od.Song!)
                 .Distinct()
                 .ToList();

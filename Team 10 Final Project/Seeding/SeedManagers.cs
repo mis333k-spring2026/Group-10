@@ -11,6 +11,13 @@ namespace Team10FinalProject.Seeding
 
     public static class ManagerSeeder
     {
+        private static async Task SetCityStateFromZip(AppUser user)
+        {
+            var (city, state) = await Team10FinalProject.Utilities.ZipLookup.LookupAsync(user.ZipCode);
+            user.City = city;
+            user.State = state;
+        }
+
         public static async Task SeedAllManagers(UserManager<AppUser> userManager, AppDbContext db)
         {
             Int32 intUsersAdded = 0;
@@ -29,6 +36,8 @@ namespace Team10FinalProject.Seeding
                 Address = "1245 Lake Libris Dr.",
                 ZipCode = "78613"
             };
+
+            await SetCityStateFromZip(manager1);
 
             AppUser dbUser1 = await userManager.FindByEmailAsync("c.baker@bevotunes.com");
 
@@ -62,6 +71,8 @@ namespace Team10FinalProject.Seeding
                 dbUser1.Address = "1245 Lake Libris Dr.";
                 dbUser1.ZipCode = "78613";
 
+                await SetCityStateFromZip(dbUser1);
+
                 await userManager.UpdateAsync(dbUser1);
 
                 if (await userManager.IsInRoleAsync(dbUser1, "Manager") == false)
@@ -83,6 +94,8 @@ namespace Team10FinalProject.Seeding
                 Address = "3405 Rio Grande",
                 ZipCode = "78746"
             };
+
+            await SetCityStateFromZip(manager2);
 
             AppUser dbUser2 = await userManager.FindByEmailAsync("e.rice@bevotunes.com");
 
@@ -116,6 +129,8 @@ namespace Team10FinalProject.Seeding
                 dbUser2.Address = "3405 Rio Grande";
                 dbUser2.ZipCode = "78746";
 
+                await SetCityStateFromZip(dbUser2);
+
                 await userManager.UpdateAsync(dbUser2);
 
                 if (await userManager.IsInRoleAsync(dbUser2, "Manager") == false)
@@ -137,6 +152,8 @@ namespace Team10FinalProject.Seeding
                 Address = "4965 Oak Hill",
                 ZipCode = "78705"
             };
+
+            await SetCityStateFromZip(manager3);
 
             AppUser dbUser3 = await userManager.FindByEmailAsync("a.rogers@bevotunes.com");
 
@@ -170,6 +187,8 @@ namespace Team10FinalProject.Seeding
                 dbUser3.Address = "4965 Oak Hill";
                 dbUser3.ZipCode = "78705";
 
+                await SetCityStateFromZip(dbUser3);
+
                 await userManager.UpdateAsync(dbUser3);
 
                 if (await userManager.IsInRoleAsync(dbUser3, "Manager") == false)
@@ -191,6 +210,8 @@ namespace Team10FinalProject.Seeding
                 Address = "2365 51st St.",
                 ZipCode = "78755"
             };
+
+            await SetCityStateFromZip(manager4);
 
             AppUser dbUser4 = await userManager.FindByEmailAsync("w.sewell@bevotunes.com");
 
@@ -223,6 +244,8 @@ namespace Team10FinalProject.Seeding
                 dbUser4.LastName = "Sewell";
                 dbUser4.Address = "2365 51st St.";
                 dbUser4.ZipCode = "78755";
+
+                await SetCityStateFromZip(dbUser4);
 
                 await userManager.UpdateAsync(dbUser4);
 
