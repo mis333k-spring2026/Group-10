@@ -101,6 +101,19 @@
                         </select>
                     </div>
 
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="isGift" name="isGift" value="true" />
+                        <label class="form-check-label" for="isGift">
+                            This order is a gift
+                        </label>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="friendEmail" class="form-label text-muted">Friend Email</label>
+                        <input type="email" id="friendEmail" name="friendEmail" class="form-control" placeholder="Enter your friend's email" />
+                        <div class="form-text">Only fill this in if this order is a gift.</div>
+                    </div>
+
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary">Place Order</button>
                         <a asp-action="Index" class="btn btn-secondary">Back to Cart</a>

@@ -260,7 +260,7 @@ namespace Team10FinalProject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Checkout(int cardID)
+        public async Task<IActionResult> Checkout(int cardID, bool isGift, string? friendEmail)
         {
             AppUser? user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -288,6 +288,61 @@ namespace Team10FinalProject.Controllers
 
                 ModelState.AddModelError("", "Please select a valid saved card.");
                 return View(order);
+            }
+
+            if (isGift)
+            {
+                if (String.IsNullOrWhiteSpace(friendEmail))
+                {
+                    ViewBag.Cards = _context.Cards
+                        .Where(c => c.CustomerID == user.Id && c.Status)
+                        .ToList();
+
+                    ModelState.AddModelError("", "Please enter your friend's email for a gift purchase.");
+                    return View(order);
+                }
+
+                AppUser? friend = await _userManager.FindByEmailAsync(friendEmail);
+
+                if (friend == null)
+                {
+                    ViewBag.Cards = _context.Cards
+                        .Where(c => c.CustomerID == user.Id && c.Status)
+                        .ToList();
+
+                    ModelState.AddModelError("", "No user with that email address was found.");
+                    return View(order);
+                }
+
+                if (friend.Id == user.Id)
+                {
+                    ViewBag.Cards = _context.Cards
+                        .Where(c => c.CustomerID == user.Id && c.Status)
+                        .ToList();
+
+                    ModelState.AddModelError("", "You cannot gift songs to yourself.");
+                    return View(order);
+                }
+
+                bool containsAlbum = order.OrderDetails.Any(od => od.AlbumID != null);
+
+                if (containsAlbum)
+                {
+                    ViewBag.Cards = _context.Cards
+                        .Where(c => c.CustomerID == user.Id && c.Status)
+                        .ToList();
+
+                    ModelState.AddModelError("", "Gift purchases currently support songs only, not albums.");
+                    return View(order);
+                }
+
+                order.FriendID = friend.Id;
+                order.Friend = friend;
+            }
+            else
+            {
+                order.FriendID = null;
+                order.Friend = null;
             }
 
             if (HasDuplicateSongs(order))

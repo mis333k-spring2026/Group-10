@@ -15,7 +15,7 @@ namespace Team10FinalProject.Models
         public String ArtistName { get; set; }
 
         [Required]
-[Display(Name = "Rating")]
+        [Display(Name = "Rating")]
         public Decimal AvgRating { get; set; } = 0.0m;
 
         //navigation properties
