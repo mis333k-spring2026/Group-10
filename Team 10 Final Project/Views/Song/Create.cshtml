@@ -1,0 +1,34 @@
+@model Team10FinalProject.Models.Song
+
+@{
+    ViewData["Title"] = "Add Song";
+}
+
+<h2>Add New Song</h2>
+
+<form asp-action="Create" method="post">
+
+    <div class="mb-3">
+        <label asp-for="SongName" class="form-label"></label>
+        <input asp-for="SongName" class="form-control" />
+        <span asp-validation-for="SongName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ArtistID" class="form-label">Artist</label>
+        <select asp-for="ArtistID"
+                asp-items="ViewBag.AllArtists"
+                class="form-control">
+            <option value="">Select Artist</option>
+        </select>
+        <span asp-validation-for="ArtistID" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Song</button>
+</form>

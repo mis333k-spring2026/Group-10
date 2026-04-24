@@ -1,0 +1,42 @@
+@model Team10FinalProject.Models.Album
+
+@{
+    ViewData["Title"] = "Add Album";
+}
+
+<h2>Add New Album</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="AlbumName" class="form-label"></label>
+        <input asp-for="AlbumName" class="form-control" />
+        <span asp-validation-for="AlbumName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="AlbumCover" class="form-label"></label>
+        <input asp-for="AlbumCover" class="form-control" />
+        <span asp-validation-for="AlbumCover" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Artists</label>
+        <select name="selectedArtists" asp-items="ViewBag.AllArtists" class="form-control" multiple></select>
+        <div class="form-text">Hold Ctrl to select multiple artists.</div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Songs</label>
+        <select name="selectedSongs" asp-items="ViewBag.AllSongs" class="form-control" multiple></select>
+        <div class="form-text">Hold Ctrl to select multiple songs.</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Album</button>
+    <a asp-action="Index" class="btn btn-secondary">Back to Albums</a>
+</form>

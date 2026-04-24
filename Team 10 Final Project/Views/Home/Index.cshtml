@@ -234,24 +234,30 @@
 
 <!-- Hero -->
 <section class="hero">
-    <div class="hero-inner">
-        <p class="hero-eyebrow">Bevo's Tunes — Texas Music Store</p>
-        <h1 class="hero-title">Your Music,<br /><span>Owned Forever.</span></h1>
-        <p class="hero-sub">
-            Buy songs and full albums, then keep them in your personal library.
-            Browse artists, explore albums, and build your collection.
-        </p>
-        <div class="d-flex gap-3 flex-wrap">
-            @if (User.Identity != null && User.Identity.IsAuthenticated)
-            {
-                <a asp-controller="Song" asp-action="Index" class="btn-hero-primary">Browse Songs</a>
-                <a asp-controller="Album" asp-action="Index" class="btn-hero-outline">View Albums</a>
-            }
-            else
-            {
-                <a asp-controller="Account" asp-action="Register" class="btn-hero-primary">Get Started</a>
-                <a asp-controller="Account" asp-action="Login" class="btn-hero-outline">Sign In</a>
-            }
+    <div class="hero-inner d-flex align-items-center gap-4">
+        <div class="flex-grow-1">
+            <p class="hero-eyebrow">Bevo's Tunes — Texas Music Store</p>
+            <h1 class="hero-title">Your Music,<br /><span>Owned Forever.</span></h1>
+            <p class="hero-sub">
+                Buy songs and full albums, then keep them in your personal library.
+                Browse artists, explore albums, and build your collection.
+            </p>
+            <div class="d-flex gap-3 flex-wrap">
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Song" asp-action="Index" class="btn-hero-primary">Browse Songs</a>
+                    <a asp-controller="Album" asp-action="Index" class="btn-hero-outline">View Albums</a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Register" class="btn-hero-primary">Get Started</a>
+                    <a asp-controller="Account" asp-action="Login" class="btn-hero-outline">Sign In</a>
+                }
+            </div>
+        </div>
+        <div class="d-none d-md-block" style="flex: 0 0 600px;">
+            <img src="~/images/vinyl.png" alt="Vinyl record player"
+                style="width:100%; max-height:600px; object-fit:contain; filter: invert(1);" />
         </div>
     </div>
 </section>
@@ -269,39 +275,43 @@
     </div>
 </div>
 
-<hr class="divider" />
-
 <!-- Browse — available to everyone -->
 <div class="mb-4">
     <p class="section-label">Browse</p>
     <h2 class="section-heading">Music</h2>
+
+    <!-- Search as its own wide row -->
+    <div class="row g-3 mb-3">
+        <div class="col-12">
+            <a asp-controller="Search" asp-action="Index" class="nav-card text-center" style="padding: 1.5rem;">
+                <i class="bi bi-search" style="color:#BF5700; font-size:1.2rem;"></i>
+                <p class="nav-card-title">Search</p>
+                <p class="nav-card-sub">Search music</p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Songs, Albums, Artists below -->
     <div class="row g-3">
-        <div class="col-6 col-md-3">
+        <div class="col-4">
             <a asp-controller="Song" asp-action="Index" class="nav-card">
-                <div class="nav-card-dot"></div>
+                <i class="bi bi-music-note" style="color:#BF5700; font-size:1.2rem;"></i>
                 <p class="nav-card-title">Songs</p>
                 <p class="nav-card-sub">Browse catalog</p>
             </a>
         </div>
-        <div class="col-6 col-md-3">
+        <div class="col-4">
             <a asp-controller="Album" asp-action="Index" class="nav-card">
-                <div class="nav-card-dot"></div>
+                <i class="bi bi-vinyl" style="color:#BF5700; font-size:1.2rem;"></i>
                 <p class="nav-card-title">Albums</p>
                 <p class="nav-card-sub">Browse all albums</p>
             </a>
         </div>
-        <div class="col-6 col-md-3">
+        <div class="col-4">
             <a asp-controller="Artist" asp-action="Index" class="nav-card">
-                <div class="nav-card-dot"></div>
+                <i class="bi bi-mic" style="color:#BF5700; font-size:1.2rem;"></i>
                 <p class="nav-card-title">Artists</p>
                 <p class="nav-card-sub">Browse all artists</p>
-            </a>
-        </div>
-        <div class="col-6 col-md-3">
-            <a asp-controller="Search" asp-action="Index" class="nav-card">
-                <div class="nav-card-dot"></div>
-                <p class="nav-card-title">Search</p>
-                <p class="nav-card-sub">Search music</p>
             </a>
         </div>
     </div>
@@ -354,7 +364,9 @@
         <div class="mb-4">
             <p class="section-label">Staff</p>
             <h2 class="section-heading">Management</h2>
+
             <div class="row g-3">
+
                 <div class="col-6 col-md-3">
                     <a asp-controller="RoleAdmin" asp-action="Index" class="nav-card">
                         <div class="nav-card-dot"></div>
@@ -362,6 +374,15 @@
                         <p class="nav-card-sub">User role management</p>
                     </a>
                 </div>
+
+                <div class="col-6 col-md-3">
+                    <a asp-controller="Account" asp-action="AddUser" class="nav-card">
+                        <div class="nav-card-dot"></div>
+                        <p class="nav-card-title">Add User</p>
+                        <p class="nav-card-sub">Create staff/customer account</p>
+                    </a>
+                </div>
+
                 <div class="col-6 col-md-3">
                     <a asp-controller="Promotion" asp-action="Index" class="nav-card">
                         <div class="nav-card-dot"></div>
@@ -369,6 +390,7 @@
                         <p class="nav-card-sub">Manage promotions</p>
                     </a>
                 </div>
+
                 <div class="col-6 col-md-3">
                     <a asp-controller="Song" asp-action="Create" class="nav-card">
                         <div class="nav-card-dot"></div>
@@ -376,6 +398,7 @@
                         <p class="nav-card-sub">Add new song</p>
                     </a>
                 </div>
+
                 <div class="col-6 col-md-3">
                     <a asp-controller="Album" asp-action="Create" class="nav-card">
                         <div class="nav-card-dot"></div>
@@ -383,6 +406,7 @@
                         <p class="nav-card-sub">Add new album</p>
                     </a>
                 </div>
+
             </div>
         </div>
     }

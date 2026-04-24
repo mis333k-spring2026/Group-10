@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Team10FinalProject.DAL;
 using Team10FinalProject.Models;
+using Team10FinalProject.Utilities;
 
 namespace Team10FinalProject.Controllers
 {
@@ -101,18 +102,23 @@ namespace Team10FinalProject.Controllers
             Review? existingReview = _context.Reviews
                 .FirstOrDefault(r => r.SongID == review.SongID && r.ReviewerID == user.Id);
 
+            Review reviewToTrack;  // we'll pass this to the rating helper
+
             if (existingReview != null)
             {
                 existingReview.Rating = review.Rating;
                 existingReview.ReviewText = review.ReviewText;
-                existingReview.Status = false;
+                existingReview.Status = false;  // edits need re-approval
+                reviewToTrack = existingReview;
             }
             else
             {
                 _context.Reviews.Add(review);
+                reviewToTrack = review;
             }
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+            await RatingHelper.UpdateRatingForReviewAsync(_context, reviewToTrack);
 
             return RedirectToAction("Details", "Song", new { id = review.SongID });
         }
@@ -142,7 +148,10 @@ namespace Team10FinalProject.Controllers
             review.Status = true;
             review.ApproverID = approver?.Id;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+
+            // Recalculate the average now that the review is approved
+            await RatingHelper.UpdateRatingForReviewAsync(_context, review);
 
             return RedirectToAction("Approve");
         }

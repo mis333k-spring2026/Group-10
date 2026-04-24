@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Team10FinalProject.DAL;
+using Team10FinalProject.Models;
 
 namespace Team10FinalProject.Controllers
 {
@@ -41,6 +44,38 @@ namespace Team10FinalProject.Controllers
                 .ToList();
 
             return View(song);
+        }
+
+
+        // =========================
+        // CREATE SONG (STAFF ONLY)
+        // =========================
+
+        [Authorize(Roles = "Admin,Employee,Manager")]
+        public IActionResult Create()
+        {
+            ViewBag.AllArtists = new SelectList(_context.Artists, "ArtistID", "ArtistName");
+            return View();
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,Employee,Manager")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Song song)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.AllArtists = new SelectList(_context.Artists, "ArtistID", "ArtistName");
+                return View(song);
+            }
+
+            song.AvgRating = 0;
+
+            _context.Songs.Add(song);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
         }
     }
 }
