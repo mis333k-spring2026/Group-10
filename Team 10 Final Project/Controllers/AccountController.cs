@@ -9,7 +9,6 @@ using Team10FinalProject.Utilities;
 namespace Team10FinalProject.Controllers
 {
     [Authorize]
-    //[AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly SignInManager<AppUser> _signInManager;
@@ -61,7 +60,7 @@ namespace Team10FinalProject.Controllers
                 RoleName = "Customer"
             };
 
-            IdentityResult result = await AddUser.AddUserWithRoleAsync(aum, _userManager, _context);
+            IdentityResult result = await Team10FinalProject.Utilities.AddUser.AddUserWithRoleAsync(aum, _userManager, _context);
 
             if (result.Succeeded)
             {
@@ -75,6 +74,61 @@ namespace Team10FinalProject.Controllers
                 ModelState.AddModelError("", error.Description);
             }
 
+            return View(rvm);
+        }
+
+        [Authorize(Roles = "Admin,Employee,Manager")]
+        public IActionResult AddUser()
+        {
+            ViewBag.AllRoles = new List<string> { "Customer", "Employee", "Manager", "Admin" };
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,Employee,Manager")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddUser(RegisterViewModel rvm, string roleName)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.AllRoles = new List<string> { "Customer", "Employee", "Manager", "Admin" };
+                return View(rvm);
+            }
+
+            AppUser newUser = new AppUser
+            {
+                UserName = rvm.Email,
+                Email = rvm.Email,
+                PhoneNumber = rvm.PhoneNumber,
+                FirstName = rvm.FirstName,
+                LastName = rvm.LastName,
+                Address = rvm.Address,
+                ZipCode = rvm.ZipCode,
+                City = "",
+                State = ""
+            };
+
+            AddUserModel aum = new AddUserModel
+            {
+                User = newUser,
+                Password = rvm.Password,
+                RoleName = roleName
+            };
+
+            IdentityResult result = await Team10FinalProject.Utilities.AddUser.AddUserWithRoleAsync(aum, _userManager, _context);
+
+            if (result.Succeeded)
+            {
+                EmailMessaging.SendAccountCreationEmail(newUser);
+                return RedirectToAction("Index", "RoleAdmin");
+            }
+
+            foreach (IdentityError error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            ViewBag.AllRoles = new List<string> { "Customer", "Employee", "Manager", "Admin" };
             return View(rvm);
         }
 
@@ -101,7 +155,7 @@ namespace Team10FinalProject.Controllers
                 return View(lvm);
             }
 
-            AppUser user = await _userManager.FindByEmailAsync(lvm.Email);
+            AppUser? user = await _userManager.FindByEmailAsync(lvm.Email);
 
             if (user == null)
             {
@@ -146,7 +200,7 @@ namespace Team10FinalProject.Controllers
                 return View("Error", new List<string> { "User not found." });
             }
 
-            AppUser user = await _userManager.FindByNameAsync(userName);
+            AppUser? user = await _userManager.FindByNameAsync(userName);
 
             if (user == null)
             {
@@ -180,7 +234,7 @@ namespace Team10FinalProject.Controllers
                 return View("Error", new List<string> { "User not found." });
             }
 
-            AppUser user = await _userManager.FindByNameAsync(userName);
+            AppUser? user = await _userManager.FindByNameAsync(userName);
 
             if (user == null)
             {
@@ -216,18 +270,17 @@ namespace Team10FinalProject.Controllers
                 return View("Error", new List<string> { "User not found." });
             }
 
-            AppUser user = await _userManager.FindByNameAsync(userName);
+            AppUser? user = await _userManager.FindByNameAsync(userName);
 
             if (user == null)
             {
                 return View("Error", new List<string> { "User not found." });
             }
 
-            // Update user properties
             user.FirstName = ivm.FirstName;
             user.LastName = ivm.LastName;
             user.Email = ivm.Email;
-            user.UserName = ivm.Email; // Keep username in sync with email
+            user.UserName = ivm.Email;
             user.PhoneNumber = ivm.PhoneNumber;
             user.Address = ivm.Address;
             user.City = ivm.City;
@@ -270,7 +323,7 @@ namespace Team10FinalProject.Controllers
                 return View("Error", new List<string> { "User not found." });
             }
 
-            AppUser user = await _userManager.FindByNameAsync(userName);
+            AppUser? user = await _userManager.FindByNameAsync(userName);
 
             if (user == null)
             {
@@ -293,7 +346,6 @@ namespace Team10FinalProject.Controllers
             return View(cpvm);
         }
 
-        // GET: /Account/LogOff
         [AllowAnonymous]
         public async Task<IActionResult> LogOff()
         {

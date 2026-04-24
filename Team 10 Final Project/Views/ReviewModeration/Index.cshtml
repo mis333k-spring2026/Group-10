@@ -1,0 +1,84 @@
+@model IEnumerable<Team10FinalProject.Models.Review>
+
+@{
+    ViewData["Title"] = "Review Moderation";
+}
+
+@functions {
+    public string GetReviewValue(Team10FinalProject.Models.Review review, params string[] propertyNames)
+    {
+        foreach (var propertyName in propertyNames)
+        {
+            var property = review.GetType().GetProperty(propertyName);
+
+            if (property != null)
+            {
+                var value = property.GetValue(review);
+
+                if (value != null)
+                {
+                    return value.ToString();
+                }
+            }
+        }
+
+        return "N/A";
+    }
+}
+
+<h1>Review Moderation</h1>
+
+<p class="text-muted">
+    Review submitted ratings before approving or denying them.
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        There are no pending reviews right now.
+    </div>
+}
+else
+{
+    <table class="table table-striped table-bordered align-middle">
+        <thead>
+            <tr>
+                <th>Review ID</th>
+                <th>Rating</th>
+                <th>Review Text</th>
+                <th>Related Item</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var review in Model)
+            {
+                var reviewId = GetReviewValue(review, "ReviewID", "ReviewId", "ID", "Id");
+                var rating = GetReviewValue(review, "Rating", "Stars", "Score");
+                var reviewText = GetReviewValue(review, "ReviewText", "ReviewBody", "Text", "Description", "Content");
+                var relatedItem = GetReviewValue(review, "Song", "Album", "Artist", "SongTitle", "AlbumTitle", "ArtistName");
+
+                <tr>
+                    <td>@reviewId</td>
+                    <td>@rating</td>
+                    <td>@reviewText</td>
+                    <td>@relatedItem</td>
+                    <td>
+                        <a asp-action="Approve"
+                           asp-route-id="@reviewId"
+                           class="btn btn-success btn-sm">
+                            Approve
+                        </a>
+
+                        <a asp-action="Reject"
+                           asp-route-id="@reviewId"
+                           class="btn btn-danger btn-sm ms-2">
+                            Deny
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

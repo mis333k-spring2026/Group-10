@@ -123,7 +123,7 @@ namespace Team10FinalProject.Controllers
             return RedirectToAction("Details", "Song", new { id = review.SongID });
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Employee, Manager")]
         public IActionResult Approve()
         {
             var pending = _context.Reviews
@@ -135,7 +135,7 @@ namespace Team10FinalProject.Controllers
             return View(pending);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Employee, Manager")]
         public async Task<IActionResult> ApproveReview(int id)
         {
             Review? review = _context.Reviews.Find(id);

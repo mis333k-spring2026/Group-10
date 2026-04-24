@@ -77,9 +77,22 @@ namespace Team10FinalProject.Controllers
             }
 
             Order? order = GetPendingOrder(user.Id);
+
             if (order == null)
             {
-                return RedirectToAction("Index");
+                order = new Order
+                {
+                    CustomerID = user.Id,
+                    Customer = user,
+                    Status = true,
+                    OrderDate = DateTime.Now,
+                    OrderNumber = 0
+                };
+
+                _context.Orders.Add(order);
+                _context.SaveChanges();
+
+                order = GetPendingOrder(user.Id)!;
             }
 
             Song? song = _context.Songs
@@ -132,9 +145,22 @@ namespace Team10FinalProject.Controllers
             }
 
             Order? order = GetPendingOrder(user.Id);
+
             if (order == null)
             {
-                return RedirectToAction("Index");
+                order = new Order
+                {
+                    CustomerID = user.Id,
+                    Customer = user,
+                    Status = true,
+                    OrderDate = DateTime.Now,
+                    OrderNumber = 0
+                };
+
+                _context.Orders.Add(order);
+                _context.SaveChanges();
+
+                order = GetPendingOrder(user.Id)!;
             }
 
             Album? album = _context.Albums
@@ -528,6 +554,31 @@ namespace Team10FinalProject.Controllers
             }
 
             return (selectedGenre.GenreName, recommendedArtist.ArtistName);
+        }
+
+        private Order GetOrCreatePendingOrder(string userId, AppUser user)
+        {
+            Order? order = GetPendingOrder(userId);
+
+            if (order == null)
+            {
+                order = new Order
+                {
+                    CustomerID = userId,
+                    Customer = user,
+                    Status = true,
+                    IsRefunded = false,
+                    OrderDate = DateTime.Now,
+                    OrderNumber = 0
+                };
+
+                _context.Orders.Add(order);
+                _context.SaveChanges();
+
+                order = GetPendingOrder(userId)!;
+            }
+
+            return order;
         }
 
         private Order? GetPendingOrder(string userId)

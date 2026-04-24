@@ -36,5 +36,8 @@ namespace Team10FinalProject.Models
 
         public int? ArtistID { get; set; }
         public Artist? Artist { get; set; }
+
+        public Boolean IsApproved { get; set; } = false;
+        public Boolean IsRejected { get; set; } = false;
     }
 }
