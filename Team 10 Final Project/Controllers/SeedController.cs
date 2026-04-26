@@ -227,11 +227,11 @@ namespace Team10FinalProject.Controllers
             return View("Confirm");
         }
 
-        public IActionResult SeedReviews()
+        public async Task<IActionResult> SeedReviews()
         {
             try
             {
-                ReviewSeeder.SeedAllReviews(_context);
+                await ReviewSeeder.SeedAllReviews(_context);
             }
             catch (Exception ex)
             {

@@ -1,16 +1,18 @@
 using Team10FinalProject.DAL;
 using Team10FinalProject.Models;
+using Team10FinalProject.Utilities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Team10FinalProject.Seeding
 {
 
     public static class ReviewSeeder
     {
-        public static void SeedAllReviews(AppDbContext db)
+        public static async Task SeedAllReviews(AppDbContext db)
         {
             Int32 intReviewsAdded = 0;
             String strItemName = "Begin";
@@ -663,6 +665,25 @@ namespace Team10FinalProject.Seeding
 
                     db.SaveChanges();
                     intReviewsAdded += 1;
+                }
+
+                // After all reviews are seeded, recalculate AvgRating for every song/album/artist
+                List<Int32> allSongIds = await db.Songs.Select(s => s.SongID).ToListAsync();
+                foreach (Int32 id in allSongIds)
+                {
+                    await RatingHelper.UpdateSongRatingAsync(db, id);
+                }
+
+                List<Int32> allAlbumIds = await db.Albums.Select(a => a.AlbumID).ToListAsync();
+                foreach (Int32 id in allAlbumIds)
+                {
+                    await RatingHelper.UpdateAlbumRatingAsync(db, id);
+                }
+
+                List<Int32> allArtistIds = await db.Artists.Select(a => a.ArtistID).ToListAsync();
+                foreach (Int32 id in allArtistIds)
+                {
+                    await RatingHelper.UpdateArtistRatingAsync(db, id);
                 }
             }
             catch (Exception ex)

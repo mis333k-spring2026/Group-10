@@ -42,16 +42,20 @@ namespace Team10FinalProject.Controllers
             bool purchasedSong = _context.OrderDetails
                 .Include(od => od.Order)
                 .Any(od => od.SongID == songID &&
-                           od.Order != null &&
-                           od.Order.CustomerID == user.Id &&
-                           od.Order.Status == false);
+                        od.Order != null &&
+                        od.Order.CustomerID == user.Id &&
+                        od.Order.Status == false);
 
             if (!purchasedSong)
             {
                 return View("Error", new List<string> { "You may only review songs you have purchased." });
             }
 
-            Review review = new Review { SongID = songID };
+            // Pre-fill with existing review if they already have one
+            Review? existingReview = _context.Reviews
+                .FirstOrDefault(r => r.SongID == songID && r.ReviewerID == user.Id);
+
+            Review review = existingReview ?? new Review { SongID = songID };
             return View(review);
         }
 
@@ -123,7 +127,7 @@ namespace Team10FinalProject.Controllers
             return RedirectToAction("Details", "Song", new { id = review.SongID });
         }
 
-        [Authorize(Roles = "Employee, Manager")]
+        [Authorize(Roles = "Employee,Manager")]
         public IActionResult Approve()
         {
             var pending = _context.Reviews
@@ -135,7 +139,7 @@ namespace Team10FinalProject.Controllers
             return View(pending);
         }
 
-        [Authorize(Roles = "Employee, Manager")]
+        [Authorize(Roles = "Employee,Manager")]
         public async Task<IActionResult> ApproveReview(int id)
         {
             Review? review = _context.Reviews.Find(id);
@@ -152,6 +156,75 @@ namespace Team10FinalProject.Controllers
 
             // Recalculate the average now that the review is approved
             await RatingHelper.UpdateRatingForReviewAsync(_context, review);
+
+            return RedirectToAction("Approve");
+        }
+
+        [Authorize(Roles = "Employee,Manager")]
+        public IActionResult EditReviewText(int id)
+        {
+            Review? review = _context.Reviews
+                .Include(r => r.Song)
+                .Include(r => r.Album)
+                .Include(r => r.Artist)
+                .Include(r => r.Reviewer)
+                .FirstOrDefault(r => r.ReviewID == id);
+
+            if (review == null)
+            {
+                return View("Error", new List<string> { "Review not found." });
+            }
+
+            return View(review);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Employee,Manager")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditReviewText(int id, string reviewText)
+        {
+            Review? review = _context.Reviews.Find(id);
+            if (review == null)
+            {
+                return View("Error", new List<string> { "Review not found." });
+            }
+
+            // Spec: employees can edit text but NOT the rating
+            review.ReviewText = reviewText;
+
+            await _context.SaveChangesAsync();
+            // Rating didn't change, but call helper for consistency
+            await RatingHelper.UpdateRatingForReviewAsync(_context, review);
+
+            return RedirectToAction("Approve");
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Employee,Manager")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteReview(int id)
+        {
+            Review? review = await _context.Reviews.FindAsync(id);
+            if (review == null)
+            {
+                return View("Error", new List<string> { "Review not found." });
+            }
+
+            // Capture IDs before deleting so we can recalculate after
+            int? songId = review.SongID;
+            int? albumId = review.AlbumID;
+            int? artistId = review.ArtistID;
+
+            _context.Reviews.Remove(review);
+            await _context.SaveChangesAsync();
+
+            // Recalculate the affected entity's average
+            if (songId.HasValue)
+                await RatingHelper.UpdateSongRatingAsync(_context, songId.Value);
+            else if (albumId.HasValue)
+                await RatingHelper.UpdateAlbumRatingAsync(_context, albumId.Value);
+            else if (artistId.HasValue)
+                await RatingHelper.UpdateArtistRatingAsync(_context, artistId.Value);
 
             return RedirectToAction("Approve");
         }

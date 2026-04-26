@@ -11,7 +11,7 @@ namespace Team10FinalProject.Controllers
 {
     //TODO: Uncomment this line once you have roles working correctly
     //TODO: uncomment after milestone 6
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Manager")]
     public class RoleAdminController : Controller
     {
         //create private variables for the services needed in this controller

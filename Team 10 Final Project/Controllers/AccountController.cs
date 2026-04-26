@@ -40,6 +40,9 @@ namespace Team10FinalProject.Controllers
                 return View(rvm);
             }
 
+            // Look up city and state from the zip code
+            var (city, state) = await ZipLookup.LookupAsync(rvm.ZipCode);
+
             AppUser newUser = new AppUser
             {
                 UserName = rvm.Email,
@@ -49,8 +52,8 @@ namespace Team10FinalProject.Controllers
                 LastName = rvm.LastName,
                 Address = rvm.Address,
                 ZipCode = rvm.ZipCode,
-                City = "",
-                State = ""
+                City = city,
+                State = state
             };
 
             AddUserModel aum = new AddUserModel
@@ -76,16 +79,16 @@ namespace Team10FinalProject.Controllers
 
             return View(rvm);
         }
-
-        [Authorize(Roles = "Admin,Employee,Manager")]
+        
+        [Authorize(Roles = "Employee,Manager")]
         public IActionResult AddUser()
         {
-            ViewBag.AllRoles = new List<string> { "Customer", "Employee", "Manager", "Admin" };
+            ViewBag.AllRoles = new List<string> { "Customer", "Employee", "Manager"};
             return View();
         }
 
-        [HttpPost]
-        [Authorize(Roles = "Admin,Employee,Manager")]
+       [HttpPost]
+        [Authorize(Roles = "Employee,Manager")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddUser(RegisterViewModel rvm, string roleName)
         {
@@ -94,6 +97,9 @@ namespace Team10FinalProject.Controllers
                 ViewBag.AllRoles = new List<string> { "Customer", "Employee", "Manager", "Admin" };
                 return View(rvm);
             }
+
+            // Look up city and state from the zip code
+            var (city, state) = await ZipLookup.LookupAsync(rvm.ZipCode);
 
             AppUser newUser = new AppUser
             {
@@ -104,8 +110,8 @@ namespace Team10FinalProject.Controllers
                 LastName = rvm.LastName,
                 Address = rvm.Address,
                 ZipCode = rvm.ZipCode,
-                City = "",
-                State = ""
+                City = city,
+                State = state
             };
 
             AddUserModel aum = new AddUserModel
@@ -283,9 +289,10 @@ namespace Team10FinalProject.Controllers
             user.UserName = ivm.Email;
             user.PhoneNumber = ivm.PhoneNumber;
             user.Address = ivm.Address;
-            user.City = ivm.City;
-            user.State = ivm.State;
             user.ZipCode = ivm.ZipCode;
+            var (city, state) = await ZipLookup.LookupAsync(ivm.ZipCode);
+            user.City = city;
+            user.State = state;
 
             var result = await _userManager.UpdateAsync(user);
 
