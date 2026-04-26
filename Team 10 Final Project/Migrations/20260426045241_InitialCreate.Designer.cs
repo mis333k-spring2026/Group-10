@@ -12,7 +12,7 @@ using Team10FinalProject.DAL;
 namespace Team_10_Final_Project.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260410045307_InitialCreate")]
+    [Migration("20260426045241_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -253,6 +253,9 @@ namespace Team_10_Final_Project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("AvgRating")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -366,6 +369,9 @@ namespace Team_10_Final_Project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("AvgRating")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("ArtistID");
 
                     b.ToTable("Artists");
@@ -435,6 +441,9 @@ namespace Team_10_Final_Project.Migrations
 
                     b.Property<string>("FriendID")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsRefunded")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -541,6 +550,12 @@ namespace Team_10_Final_Project.Migrations
 
                     b.Property<int?>("ArtistID")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRejected")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");
@@ -819,7 +834,7 @@ namespace Team_10_Final_Project.Migrations
             modelBuilder.Entity("Team10FinalProject.Models.Review", b =>
                 {
                     b.HasOne("Team10FinalProject.Models.Album", "Album")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("AlbumID")
                         .OnDelete(DeleteBehavior.NoAction);
 
@@ -829,7 +844,7 @@ namespace Team_10_Final_Project.Migrations
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Team10FinalProject.Models.Artist", "Artist")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("ArtistID")
                         .OnDelete(DeleteBehavior.NoAction);
 
@@ -840,7 +855,7 @@ namespace Team_10_Final_Project.Migrations
                         .IsRequired();
 
                     b.HasOne("Team10FinalProject.Models.Song", "Song")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("SongID")
                         .OnDelete(DeleteBehavior.NoAction);
 
@@ -866,8 +881,15 @@ namespace Team_10_Final_Project.Migrations
                     b.Navigation("Artist");
                 });
 
+            modelBuilder.Entity("Team10FinalProject.Models.Album", b =>
+                {
+                    b.Navigation("Reviews");
+                });
+
             modelBuilder.Entity("Team10FinalProject.Models.Artist", b =>
                 {
+                    b.Navigation("Reviews");
+
                     b.Navigation("Songs");
                 });
 
@@ -879,6 +901,11 @@ namespace Team_10_Final_Project.Migrations
             modelBuilder.Entity("Team10FinalProject.Models.Order", b =>
                 {
                     b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("Team10FinalProject.Models.Song", b =>
+                {
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

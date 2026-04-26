@@ -12,8 +12,8 @@ using Team10FinalProject.DAL;
 namespace Team_10_Final_Project.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260423001942_ModelUpdates")]
-    partial class ModelUpdates
+    [Migration("20260426045707_Setup")]
+    partial class Setup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -442,6 +442,9 @@ namespace Team_10_Final_Project.Migrations
                     b.Property<string>("FriendID")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("IsRefunded")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
@@ -547,6 +550,12 @@ namespace Team_10_Final_Project.Migrations
 
                     b.Property<int?>("ArtistID")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRejected")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");

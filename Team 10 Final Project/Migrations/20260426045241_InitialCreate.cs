@@ -19,6 +19,7 @@ namespace Team_10_Final_Project.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AlbumName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    AvgRating = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     AlbumCover = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -33,7 +34,8 @@ namespace Team_10_Final_Project.Migrations
                 {
                     ArtistID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ArtistName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ArtistName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AvgRating = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -398,7 +400,9 @@ namespace Team_10_Final_Project.Migrations
                     ApproverID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     SongID = table.Column<int>(type: "int", nullable: true),
                     AlbumID = table.Column<int>(type: "int", nullable: true),
-                    ArtistID = table.Column<int>(type: "int", nullable: true)
+                    ArtistID = table.Column<int>(type: "int", nullable: true),
+                    IsApproved = table.Column<bool>(type: "bit", nullable: false),
+                    IsRejected = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -439,6 +443,7 @@ namespace Team_10_Final_Project.Migrations
                     OrderNumber = table.Column<int>(type: "int", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
+                    IsRefunded = table.Column<bool>(type: "bit", nullable: false),
                     CustomerID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FriendID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CardID = table.Column<int>(type: "int", nullable: true)

@@ -5,7 +5,7 @@
 namespace Team_10_Final_Project.Migrations
 {
     /// <inheritdoc />
-    public partial class AddAvgRatingToAlbumAndArtist : Migration
+    public partial class Setup : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
