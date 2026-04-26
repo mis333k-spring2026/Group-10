@@ -64,9 +64,14 @@ namespace Team10FinalProject.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Song song)
         {
+            ModelState.Remove("Artist");
+            ModelState.Remove("Albums");
+            ModelState.Remove("Genres");
+            ModelState.Remove("Reviews");
+
             if (!ModelState.IsValid)
             {
-                ViewBag.AllArtists = new SelectList(_context.Artists, "ArtistID", "ArtistName");
+                ViewBag.AllArtists = new SelectList(_context.Artists, "ArtistID", "ArtistName", song.ArtistID);
                 return View(song);
             }
 
@@ -75,7 +80,7 @@ namespace Team10FinalProject.Controllers
             _context.Songs.Add(song);
             _context.SaveChanges();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Song");
         }
     }
 }

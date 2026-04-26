@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Kind_K\\Group-10\\Team 10 Final Project\\Team 10 Final Project.csproj": {}
+    "C:\\Users\\bryce\\OneDrive\\Desktop\\C# - [MIS-333K]\\Final Project\\Group-10\\Team 10 Final Project\\Team 10 Final Project.csproj": {}
   },
   "projects": {
-    "C:\\Kind_K\\Group-10\\Team 10 Final Project\\Team 10 Final Project.csproj": {
+    "C:\\Users\\bryce\\OneDrive\\Desktop\\C# - [MIS-333K]\\Final Project\\Group-10\\Team 10 Final Project\\Team 10 Final Project.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Kind_K\\Group-10\\Team 10 Final Project\\Team 10 Final Project.csproj",
+        "projectUniqueName": "C:\\Users\\bryce\\OneDrive\\Desktop\\C# - [MIS-333K]\\Final Project\\Group-10\\Team 10 Final Project\\Team 10 Final Project.csproj",
         "projectName": "Team 10 Final Project",
-        "projectPath": "C:\\Kind_K\\Group-10\\Team 10 Final Project\\Team 10 Final Project.csproj",
-        "packagesPath": "C:\\Users\\Natalie Pang\\.nuget\\packages\\",
-        "outputPath": "C:\\Kind_K\\Group-10\\Team 10 Final Project\\obj\\",
+        "projectPath": "C:\\Users\\bryce\\OneDrive\\Desktop\\C# - [MIS-333K]\\Final Project\\Group-10\\Team 10 Final Project\\Team 10 Final Project.csproj",
+        "packagesPath": "C:\\Users\\bryce\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\bryce\\OneDrive\\Desktop\\C# - [MIS-333K]\\Final Project\\Group-10\\Team 10 Final Project\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Natalie Pang\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\bryce\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"

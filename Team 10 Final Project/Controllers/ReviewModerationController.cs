@@ -6,7 +6,7 @@ using Team10FinalProject.Models;
 
 namespace Team10FinalProject.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Manager, Employee")]
     public class ReviewModerationController : Controller
     {
         private readonly AppDbContext _context;

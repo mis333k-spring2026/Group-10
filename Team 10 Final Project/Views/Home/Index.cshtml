@@ -368,14 +368,6 @@
             <div class="row g-3">
 
                 <div class="col-6 col-md-3">
-                    <a asp-controller="RoleAdmin" asp-action="Index" class="nav-card">
-                        <div class="nav-card-dot"></div>
-                        <p class="nav-card-title">Manage Users</p>
-                        <p class="nav-card-sub">User role management</p>
-                    </a>
-                </div>
-
-                <div class="col-6 col-md-3">
                     <a asp-controller="Account" asp-action="AddUser" class="nav-card">
                         <div class="nav-card-dot"></div>
                         <p class="nav-card-title">Add User</p>
@@ -384,10 +376,10 @@
                 </div>
 
                 <div class="col-6 col-md-3">
-                    <a asp-controller="Promotion" asp-action="Index" class="nav-card">
+                    <a asp-controller="RoleAdmin" asp-action="Index" class="nav-card">
                         <div class="nav-card-dot"></div>
-                        <p class="nav-card-title">Promotions</p>
-                        <p class="nav-card-sub">Manage promotions</p>
+                        <p class="nav-card-title">Manage Users</p>
+                        <p class="nav-card-sub">User role management</p>
                     </a>
                 </div>
 
@@ -408,9 +400,26 @@
                 </div>
 
                 <div class="col-6 col-md-3">
-                    <a asp-controller="ReviewModeration" asp-action="Index"
-                    class="btn btn-outline-primary w-100">
-                        Review Moderation
+                    <a asp-controller="ReviewModeration" asp-action="Index" class="nav-card">
+                        <div class="nav-card-dot"></div>
+                        <p class="nav-card-title">Review Moderation</p>
+                        <p class="nav-card-sub">Approve or deny reviews</p>
+                    </a>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <a asp-controller="Promotion" asp-action="Index" class="nav-card">
+                        <div class="nav-card-dot"></div>
+                        <p class="nav-card-title">Promotions</p>
+                        <p class="nav-card-sub">Manage promotions</p>
+                    </a>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <a asp-controller="Reports" asp-action="Index" class="nav-card">
+                        <i class="bi bi-bar-chart" style="color:#BF5700; font-size:1.2rem;"></i>
+                        <p class="nav-card-title">Reports</p>
+                        <p class="nav-card-sub">View reports</p>
                     </a>
                 </div>
 

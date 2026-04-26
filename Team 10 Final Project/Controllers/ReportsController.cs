@@ -6,7 +6,7 @@ using Team10FinalProject.ViewModels;
 
 namespace Team10FinalProject.Controllers
 {
-    [Authorize(Roles = "Manager")]
+    [Authorize(Roles = "Admin,Manager")]
     public class ReportsController : Controller
     {
         private readonly AppDbContext _context;
@@ -19,7 +19,7 @@ namespace Team10FinalProject.Controllers
         // GET: /Reports
         public IActionResult Index()
         {
-            return View();
+            return View("~/Views/Report/Index.cshtml");
         }
 
         // GET: /Reports/AllSongsSold

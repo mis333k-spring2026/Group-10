@@ -6,7 +6,10 @@
 
 <h2>Add New Song</h2>
 
-<form asp-action="Create" method="post">
+<form asp-controller="Song" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="All" class="text-danger"></div>
 
     <div class="mb-3">
         <label asp-for="SongName" class="form-label"></label>
@@ -32,3 +35,7 @@
 
     <button type="submit" class="btn btn-primary">Create Song</button>
 </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

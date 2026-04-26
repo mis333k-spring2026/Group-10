@@ -2,33 +2,6 @@
     ViewData["Title"] = "Reports";
 }
 
-<h2 class="mb-1">Reports</h2>
-<p class="text-muted mb-4">Manager dashboard — business performance reports</p>
-
-<div class="row g-3">
-    <div class="col-6 col-md-4">
-        <a asp-action="AllSongsSold" class="nav-card">
-            <div class="nav-card-dot"></div>
-            <p class="nav-card-title">All Songs Sold</p>
-            <p class="nav-card-sub">Purchases &amp; revenue by song</p>
-        </a>
-    </div>
-    <div class="col-6 col-md-4">
-        <a asp-action="AllAlbumsSold" class="nav-card">
-            <div class="nav-card-dot"></div>
-            <p class="nav-card-title">All Albums Sold</p>
-            <p class="nav-card-sub">Purchases &amp; revenue by album</p>
-        </a>
-    </div>
-    <div class="col-6 col-md-4">
-        <a asp-action="TopSellingBands" class="nav-card">
-            <div class="nav-card-dot"></div>
-            <p class="nav-card-title">Top Selling Bands</p>
-            <p class="nav-card-sub">Top artist per genre by revenue</p>
-        </a>
-    </div>
-</div>
-
 <style>
     .nav-card {
         display: flex;
@@ -49,6 +22,33 @@
         text-decoration: none;
     }
     .nav-card-title { font-size: 15px; font-weight: 700; color: #555; margin-bottom: 2px; }
-    .nav-card-sub   { font-size: 12px; color: #999; margin: 0; }
-    .nav-card-dot   { width: 8px; height: 8px; border-radius: 50%; background-color: #BF5700; margin-bottom: 0.75rem; }
+    .nav-card-sub { font-size: 12px; color: #999; margin: 0; }
 </style>
+
+<h2 class="fw-bold mb-1" style="color:#333F48;">Reports</h2>
+<p class="text-muted mb-4">Manager dashboard — business performance reports</p>
+<hr style="border-color:#E8D5C4;" />
+
+<div class="row g-3">
+    <div class="col-6 col-md-4">
+        <a asp-action="AllSongsSold" class="nav-card">
+            <i class="bi bi-music-note-list" style="color:#BF5700; font-size:1.2rem;"></i>
+            <p class="nav-card-title">All Songs Sold</p>
+            <p class="nav-card-sub">Purchases &amp; revenue by song</p>
+        </a>
+    </div>
+    <div class="col-6 col-md-4">
+        <a asp-action="AllAlbumsSold" class="nav-card">
+            <i class="bi bi-vinyl" style="color:#BF5700; font-size:1.2rem;"></i>
+            <p class="nav-card-title">All Albums Sold</p>
+            <p class="nav-card-sub">Purchases &amp; revenue by album</p>
+        </a>
+    </div>
+    <div class="col-6 col-md-4">
+        <a asp-action="TopSellingBands" class="nav-card">
+            <i class="bi bi-trophy" style="color:#BF5700; font-size:1.2rem;"></i>
+            <p class="nav-card-title">Top Selling Bands</p>
+            <p class="nav-card-sub">Top artist per genre by revenue</p>
+        </a>
+    </div>
+</div>
