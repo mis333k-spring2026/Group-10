@@ -1,0 +1,71 @@
+@model IEnumerable<Team10FinalProject.ViewModels.TopSellingBandViewModel>
+@{
+    ViewData["Title"] = "Top Selling Bands by Genre";
+}
+
+<div class="d-flex align-items-center justify-content-between mb-1">
+    <h2 class="mb-0">Top Selling Bands by Genre</h2>
+    <a asp-action="Index" class="btn btn-outline-primary btn-sm">← Back to Reports</a>
+</div>
+<p class="text-muted mb-4">
+    Highest-revenue artist per genre &mdash; displaying <strong>@ViewBag.RecordCount</strong> record(s)
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No sales data available yet.</div>
+}
+else
+{
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-striped table-bordered mb-0">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.GenreName)</th>
+                        <th>@Html.DisplayNameFor(m => m.ArtistName)</th>
+                        <th class="text-center">@Html.DisplayNameFor(m => m.SongPurchases)</th>
+                        <th class="text-end">@Html.DisplayNameFor(m => m.SongRevenue)</th>
+                        <th>@Html.DisplayNameFor(m => m.AlbumBreakdown)</th>
+                        <th class="text-center">@Html.DisplayNameFor(m => m.TotalAlbumPurchases)</th>
+                        <th class="text-end">@Html.DisplayNameFor(m => m.TotalAlbumRevenue)</th>
+                        <th class="text-end">@Html.DisplayNameFor(m => m.TotalRevenue)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model)
+                    {
+                        <tr>
+                            <td><strong>@row.GenreName</strong></td>
+                            <td>@row.ArtistName</td>
+                            <td class="text-center">@row.SongPurchases</td>
+                            <td class="text-end">@row.SongRevenue.ToString("C")</td>
+                            <td>
+                                @if (row.AlbumBreakdown.Any())
+                                {
+                                    <ul class="mb-0 ps-3" style="font-size: 13px;">
+                                        @foreach (var album in row.AlbumBreakdown)
+                                        {
+                                            <li>
+                                                <em>@album.AlbumTitle</em> &mdash;
+                                                @album.AlbumPurchases purchase(s),
+                                                @album.AlbumRevenue.ToString("C")
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <span class="text-muted" style="font-size:13px;">No album sales</span>
+                                }
+                            </td>
+                            <td class="text-center">@row.TotalAlbumPurchases</td>
+                            <td class="text-end">@row.TotalAlbumRevenue.ToString("C")</td>
+                            <td class="text-end fw-bold" style="color: #BF5700;">@row.TotalRevenue.ToString("C")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Team10FinalProject.ViewModels;
 
 namespace Team10FinalProject.ViewModels
 {
