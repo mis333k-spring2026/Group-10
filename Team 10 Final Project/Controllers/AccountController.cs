@@ -298,6 +298,7 @@ namespace Team10FinalProject.Controllers
 
             if (result.Succeeded)
             {
+                await _signInManager.RefreshSignInAsync(user);
                 return RedirectToAction("Index");
             }
 
@@ -341,7 +342,7 @@ namespace Team10FinalProject.Controllers
 
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, false);
+                await _signInManager.RefreshSignInAsync(user);
                 return RedirectToAction("Index", "Home");
             }
 

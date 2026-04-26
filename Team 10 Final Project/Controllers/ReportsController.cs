@@ -45,7 +45,7 @@ namespace Team10FinalProject.Controllers
                 .ToList();
 
             ViewBag.RecordCount = results.Count;
-            return View(results);
+            return View("~/Views/Report/AllSongsSold.cshtml", results);
         }
 
         // GET: /Reports/AllAlbumsSold
@@ -75,7 +75,7 @@ namespace Team10FinalProject.Controllers
                 .ToList();
 
             ViewBag.RecordCount = results.Count;
-            return View(results);
+            return View("~/Views/Report/AllAlbumsSold.cshtml", results);
         }
 
         // GET: /Reports/TopSellingBands
@@ -159,7 +159,7 @@ namespace Team10FinalProject.Controllers
             }
 
             ViewBag.RecordCount = results.Count;
-            return View(results);
+            return View("~/Views/Report/TopSellingBands.cshtml", results);
         }
     }
 }

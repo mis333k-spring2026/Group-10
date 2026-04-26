@@ -193,14 +193,6 @@
         margin: 0;
     }
 
-    .nav-card-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: #BF5700;
-        margin-bottom: 0.75rem;
-    }
-
     .divider {
         border-color: #E8D5C4;
         margin: 1.5rem 0;
@@ -280,7 +272,6 @@
     <p class="section-label">Browse</p>
     <h2 class="section-heading">Music</h2>
 
-    <!-- Search as its own wide row -->
     <div class="row g-3 mb-3">
         <div class="col-12">
             <a asp-controller="Search" asp-action="Index" class="nav-card text-center" style="padding: 1.5rem;">
@@ -291,7 +282,6 @@
         </div>
     </div>
 
-    <!-- Songs, Albums, Artists below -->
     <div class="row g-3">
         <div class="col-4">
             <a asp-controller="Song" asp-action="Index" class="nav-card">
@@ -317,7 +307,6 @@
     </div>
 </div>
 
-<!-- Logged-in customer links -->
 @if (User.Identity != null && User.Identity.IsAuthenticated)
 {
     <hr class="divider" />
@@ -328,28 +317,28 @@
         <div class="row g-3">
             <div class="col-6 col-md-3">
                 <a asp-controller="MyMusic" asp-action="Index" class="nav-card">
-                    <div class="nav-card-dot"></div>
+                    <i class="bi bi-music-note-list" style="color:#BF5700; font-size:1.2rem;"></i>
                     <p class="nav-card-title">My Music</p>
                     <p class="nav-card-sub">Your personal library</p>
                 </a>
             </div>
             <div class="col-6 col-md-3">
                 <a asp-controller="Order" asp-action="Index" class="nav-card">
-                    <div class="nav-card-dot"></div>
+                    <i class="bi bi-cart" style="color:#BF5700; font-size:1.2rem;"></i>
                     <p class="nav-card-title">Cart</p>
                     <p class="nav-card-sub">View shopping cart</p>
                 </a>
             </div>
             <div class="col-6 col-md-3">
                 <a asp-controller="OrderHistory" asp-action="Index" class="nav-card">
-                    <div class="nav-card-dot"></div>
+                    <i class="bi bi-clock-history" style="color:#BF5700; font-size:1.2rem;"></i>
                     <p class="nav-card-title">Order History</p>
                     <p class="nav-card-sub">Past purchases</p>
                 </a>
             </div>
             <div class="col-6 col-md-3">
                 <a asp-controller="Account" asp-action="Index" class="nav-card">
-                    <div class="nav-card-dot"></div>
+                    <i class="bi bi-person-circle" style="color:#BF5700; font-size:1.2rem;"></i>
                     <p class="nav-card-title">Account</p>
                     <p class="nav-card-sub">Manage your account</p>
                 </a>
@@ -364,57 +353,49 @@
         <div class="mb-4">
             <p class="section-label">Staff</p>
             <h2 class="section-heading">Management</h2>
-
             <div class="row g-3">
-
                 <div class="col-6 col-md-3">
                     <a asp-controller="Account" asp-action="AddUser" class="nav-card">
-                        <div class="nav-card-dot"></div>
+                        <i class="bi bi-person-plus" style="color:#BF5700; font-size:1.2rem;"></i>
                         <p class="nav-card-title">Add User</p>
                         <p class="nav-card-sub">Create staff/customer account</p>
                     </a>
                 </div>
-
                 <div class="col-6 col-md-3">
                     <a asp-controller="RoleAdmin" asp-action="Index" class="nav-card">
-                        <div class="nav-card-dot"></div>
+                        <i class="bi bi-people" style="color:#BF5700; font-size:1.2rem;"></i>
                         <p class="nav-card-title">Manage Users</p>
                         <p class="nav-card-sub">User role management</p>
                     </a>
                 </div>
-
                 <div class="col-6 col-md-3">
                     <a asp-controller="Song" asp-action="Create" class="nav-card">
-                        <div class="nav-card-dot"></div>
+                        <i class="bi bi-music-note-beamed" style="color:#BF5700; font-size:1.2rem;"></i>
                         <p class="nav-card-title">Add Song</p>
                         <p class="nav-card-sub">Add new song</p>
                     </a>
                 </div>
-
                 <div class="col-6 col-md-3">
                     <a asp-controller="Album" asp-action="Create" class="nav-card">
-                        <div class="nav-card-dot"></div>
+                        <i class="bi bi-vinyl" style="color:#BF5700; font-size:1.2rem;"></i>
                         <p class="nav-card-title">Add Album</p>
                         <p class="nav-card-sub">Add new album</p>
                     </a>
                 </div>
-
                 <div class="col-6 col-md-3">
                     <a asp-controller="ReviewModeration" asp-action="Index" class="nav-card">
-                        <div class="nav-card-dot"></div>
+                        <i class="bi bi-chat-left-text" style="color:#BF5700; font-size:1.2rem;"></i>
                         <p class="nav-card-title">Review Moderation</p>
                         <p class="nav-card-sub">Approve or deny reviews</p>
                     </a>
                 </div>
-
                 <div class="col-6 col-md-3">
                     <a asp-controller="Promotion" asp-action="Index" class="nav-card">
-                        <div class="nav-card-dot"></div>
+                        <i class="bi bi-tag" style="color:#BF5700; font-size:1.2rem;"></i>
                         <p class="nav-card-title">Promotions</p>
                         <p class="nav-card-sub">Manage promotions</p>
                     </a>
                 </div>
-
                 <div class="col-6 col-md-3">
                     <a asp-controller="Reports" asp-action="Index" class="nav-card">
                         <i class="bi bi-bar-chart" style="color:#BF5700; font-size:1.2rem;"></i>
@@ -422,7 +403,6 @@
                         <p class="nav-card-sub">View reports</p>
                     </a>
                 </div>
-
             </div>
         </div>
     }
