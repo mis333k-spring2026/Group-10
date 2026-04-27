@@ -1,15 +1,17 @@
 @model Team10FinalProject.Models.Album
 
 @{
-    ViewData["Title"] = "Add Album";
+    ViewData["Title"] = "Edit Album";
 }
 
-<h2 class="fw-bold mb-1" style="color:#333F48;">Add New Album</h2>
-<p class="text-muted mb-4">Select the artist first, then choose their songs to add to the album.</p>
+<h2 class="fw-bold mb-1" style="color:#333F48;">Edit Album</h2>
+<p class="text-muted mb-4">Automatically generated fields (ID, Rating) cannot be edited.</p>
 <hr style="border-color:#E8D5C4;" />
 
-<form asp-action="Create" method="post">
+<form asp-action="Edit" method="post">
     @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="AlbumID" />
+    <input type="hidden" asp-for="AvgRating" />
 
     <div class="mb-3">
         <label asp-for="AlbumName" class="form-label fw-semibold"></label>
@@ -19,16 +21,17 @@
 
     <div class="mb-3">
         <label asp-for="AlbumCover" class="form-label fw-semibold">Album Cover URL</label>
-        <input asp-for="AlbumCover" class="form-control" placeholder="https://..." />
+        <input asp-for="AlbumCover" class="form-control" />
         <span asp-validation-for="AlbumCover" class="text-danger"></span>
 
-        @* Preview image as URL is typed *@
-        <div id="coverPreview" class="mt-2" style="display:none;">
+        @* Show current / preview *@
+        <div class="mt-2">
             <img id="previewImg"
-                 src=""
+                 src="@Model.AlbumCover"
                  alt="Cover preview"
                  class="rounded shadow-sm"
-                 style="max-height:180px; object-fit:cover; border:2px solid #E8D5C4;" />
+                 style="max-height:160px; object-fit:cover; border:2px solid #E8D5C4;
+                        display:@(string.IsNullOrEmpty(Model.AlbumCover) ? "none" : "block");" />
         </div>
     </div>
 
@@ -38,7 +41,12 @@
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
 
-    @* Step 1: Select Artist(s) *@
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label fw-semibold">Active</label>
+        <input asp-for="Status" type="checkbox" class="form-check-input ms-2" />
+    </div>
+
+    @* Artist selection with song filtering *@
     <div class="mb-3">
         <label class="form-label fw-semibold">Artist(s)</label>
         <select id="artistSelect"
@@ -50,38 +58,44 @@
         <div class="form-text">Hold Ctrl (or Cmd) to select multiple artists.</div>
     </div>
 
-    @* Step 2: Songs filtered by selected artist(s) *@
     <div class="mb-3">
         <label class="form-label fw-semibold">Songs</label>
-        <div class="form-text mb-1 text-muted">Select artist(s) above to load their songs.</div>
         <select id="songSelect"
                 name="selectedSongs"
                 class="form-select"
                 multiple
                 style="min-height:140px;">
+            @* Pre-populated by JS on load *@
         </select>
         <div class="form-text">Hold Ctrl (or Cmd) to select multiple songs.</div>
     </div>
 
     <div class="d-flex gap-2 mt-4">
-        <button type="submit" class="btn btn-primary">Create Album</button>
-        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a asp-action="Details" asp-route-id="@Model.AlbumID" class="btn btn-outline-secondary">Cancel</a>
     </div>
 </form>
 
 @section Scripts {
 <script>
-    // All songs passed from the controller as JSON
-    const allSongs = @Html.Raw(ViewBag.SongsJson ?? "[]");
+    const allSongs         = @Html.Raw(ViewBag.SongsJson ?? "[]");
+    const currentSongIds   = @Html.Raw(ViewBag.CurrentSongIds ?? "[]");
+    const currentArtistIds = @Html.Raw(ViewBag.CurrentArtistIds ?? "[]");
 
     const artistSelect = document.getElementById('artistSelect');
     const songSelect   = document.getElementById('songSelect');
 
-    function filterSongs() {
+    // Pre-select the album's existing artists
+    Array.from(artistSelect.options).forEach(opt => {
+        if (currentArtistIds.includes(parseInt(opt.value))) {
+            opt.selected = true;
+        }
+    });
+
+    function filterSongs(preserveSelection) {
         const selectedArtistIds = Array.from(artistSelect.selectedOptions)
             .map(opt => parseInt(opt.value));
 
-        // Clear current song options
         songSelect.innerHTML = '';
 
         if (selectedArtistIds.length === 0) return;
@@ -98,26 +112,31 @@
 
         filtered.forEach(song => {
             const opt = document.createElement('option');
-            opt.value   = song.songID;
+            opt.value  = song.songID;
             opt.textContent = song.songName;
+            // Re-select songs that were already on this album
+            if (preserveSelection && currentSongIds.includes(song.songID)) {
+                opt.selected = true;
+            }
             songSelect.appendChild(opt);
         });
     }
 
-    artistSelect.addEventListener('change', filterSongs);
+    // Load songs on page init with existing selections preserved
+    filterSongs(true);
+    artistSelect.addEventListener('change', () => filterSongs(false));
 
-    // Album cover preview
-    const coverInput   = document.getElementById('AlbumCover');
-    const coverPreview = document.getElementById('coverPreview');
-    const previewImg   = document.getElementById('previewImg');
+    // Cover preview on URL change
+    const coverInput = document.getElementById('AlbumCover');
+    const previewImg = document.getElementById('previewImg');
 
     coverInput.addEventListener('input', function () {
         const url = this.value.trim();
         if (url.length > 10) {
             previewImg.src = url;
-            coverPreview.style.display = 'block';
+            previewImg.style.display = 'block';
         } else {
-            coverPreview.style.display = 'none';
+            previewImg.style.display = 'none';
         }
     });
 </script>

@@ -1,4 +1,4 @@
-@model Album
+@model Team10FinalProject.ViewModels.AlbumDetailsViewModel
 
 @{
     ViewData["Title"] = "Album Details";
@@ -7,25 +7,36 @@
 <h2 class="fw-bold mb-1" style="color:#333F48;">Album Details</h2>
 <hr style="border-color:#E8D5C4;" />
 
+@* Album Cover *@
+@if (!string.IsNullOrEmpty(Model.Album.AlbumCover))
+{
+    <div class="mb-3">
+        <img src="@Model.Album.AlbumCover"
+             alt="@Model.Album.AlbumName cover"
+             class="rounded shadow-sm"
+             style="max-height:280px; object-fit:cover; border:2px solid #E8D5C4;" />
+    </div>
+}
+
 <div class="card border p-4 mb-4" style="border-color:#E8D5C4; background-color:#fff;">
 
     <dl class="row">
         <dt class="col-sm-2 text-muted">Album</dt>
-        <dd class="col-sm-10 fw-semibold" style="color:#333F48;">@Model.AlbumName</dd>
+        <dd class="col-sm-10 fw-semibold" style="color:#333F48;">@Model.Album.AlbumName</dd>
 
         <dt class="col-sm-2 text-muted">Artist</dt>
         <dd class="col-sm-10">
-            @if (Model.Artists != null && Model.Artists.Any())
+            @if (Model.Album.Artists != null && Model.Album.Artists.Any())
             {
-                @for (int i = 0; i < Model.Artists.Count; i++)
+                @for (int i = 0; i < Model.Album.Artists.Count; i++)
                 {
                     <a asp-controller="Artist"
                        asp-action="Details"
-                       asp-route-id="@Model.Artists[i].ArtistID"
+                       asp-route-id="@Model.Album.Artists[i].ArtistID"
                        style="color:#BF5700;">
-                        @Model.Artists[i].ArtistName
+                        @Model.Album.Artists[i].ArtistName
                     </a>
-                    @if (i < Model.Artists.Count - 1)
+                    @if (i < Model.Album.Artists.Count - 1)
                     {
                         @:,
                     }
@@ -34,13 +45,27 @@
         </dd>
 
         <dt class="col-sm-2 text-muted">Price</dt>
-        <dd class="col-sm-10 fw-semibold" style="color:#BF5700;">@Model.Price.ToString("C")</dd>
+        <dd class="col-sm-10 fw-semibold" style="color:#BF5700;">
+            @if (Model.IsDiscounted)
+            {
+                @Model.CurrentPrice.ToString("C")
+                <span class="ms-2 text-decoration-line-through text-muted fw-normal">@Model.OriginalPrice?.ToString("C")</span>
+                <span class="badge ms-2" style="background-color:#BF5700;">Sale</span>
+            }
+            else
+            {
+                @Model.CurrentPrice.ToString("C")
+            }
+        </dd>
+
+        <dt class="col-sm-2 text-muted">Rating</dt>
+        <dd class="col-sm-10">@Model.AverageRating.ToString("F1") / 5</dd>
 
         <dt class="col-sm-2 text-muted">Genres</dt>
         <dd class="col-sm-10">
-            @if (Model.Genres != null && Model.Genres.Any())
+            @if (Model.Album.Genres != null && Model.Album.Genres.Any())
             {
-                @foreach (var genre in Model.Genres)
+                @foreach (var genre in Model.Album.Genres)
                 {
                     <span class="badge me-1" style="background-color:#E8D5C4; color:#333F48;">@genre.GenreName</span>
                 }
@@ -53,9 +78,9 @@
 
         <dt class="col-sm-2 text-muted">Songs</dt>
         <dd class="col-sm-10">
-            @if (Model.Songs != null && Model.Songs.Any())
+            @if (Model.Album.Songs != null && Model.Album.Songs.Any())
             {
-                @foreach (var song in Model.Songs)
+                @foreach (var song in Model.Album.Songs)
                 {
                     <div>
                         <a asp-controller="Song"
@@ -78,8 +103,62 @@
 @if (User.Identity != null && User.Identity.IsAuthenticated)
 {
     <div class="mb-3">
-        <a asp-controller="Order" asp-action="AddAlbum" asp-route-albumID="@Model.AlbumID" class="btn btn-primary">Add to Cart</a>
+        @if (Model.AlreadyInCart)
+        {
+            <button class="btn btn-secondary" disabled>Already in Cart</button>
+        }
+        else if (Model.CanAddToCart)
+        {
+            <a asp-controller="Order" asp-action="AddAlbum" asp-route-albumID="@Model.Album.AlbumID" class="btn btn-primary">Add to Cart</a>
+        }
     </div>
+}
+
+@if (User.IsInRole("Manager") || User.IsInRole("Employee") || User.IsInRole("Admin"))
+{
+    <div class="mb-3">
+        <a asp-action="Edit" asp-route-id="@Model.Album.AlbumID" class="btn btn-outline-primary">Edit Album</a>
+    </div>
+}
+
+<hr style="border-color:#E8D5C4;" />
+
+@* Reviews *@
+<h4 class="fw-semibold mb-3" style="color:#333F48;">
+    Reviews <span class="text-muted fs-6 fw-normal ms-2">(@Model.Reviews.Count review(s))</span>
+</h4>
+
+@if (Model.CanReview)
+{
+    <a asp-controller="Review"
+       asp-action="Create"
+       asp-route-albumID="@Model.Album.AlbumID"
+       class="btn btn-outline-primary btn-sm mb-3">Write a Review</a>
+}
+else if (User.Identity != null && User.Identity.IsAuthenticated
+      && !User.IsInRole("Manager") && !User.IsInRole("Employee") && !User.IsInRole("Admin"))
+{
+    <p class="text-muted small mb-3">You must purchase this album before leaving a review.</p>
+}
+
+@if (Model.Reviews.Any())
+{
+    @foreach (var review in Model.Reviews)
+    {
+        <div class="card mb-3" style="border-color:#E8D5C4;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <strong style="color:#333F48;">@review.Customer?.UserName</strong>
+                    <span class="badge" style="background-color:#BF5700;">@review.Rating / 5</span>
+                </div>
+                <p class="mb-0 text-muted" style="font-size:14px;">@review.ReviewText</p>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p class="text-muted">No reviews yet.</p>
 }
 
 <div class="d-flex gap-3 mt-2">
