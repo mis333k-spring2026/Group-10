@@ -148,7 +148,7 @@ else if (User.Identity != null && User.Identity.IsAuthenticated
         <div class="card mb-3" style="border-color:#E8D5C4;">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                    <strong style="color:#333F48;">@review.Customer?.UserName</strong>
+                    <strong style="color:#333F48;">@review.Reviewer?.UserName</strong>
                     <span class="badge" style="background-color:#BF5700;">@review.Rating / 5</span>
                 </div>
                 <p class="mb-0 text-muted" style="font-size:14px;">@review.ReviewText</p>

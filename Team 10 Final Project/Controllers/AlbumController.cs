@@ -47,7 +47,7 @@ namespace Team10FinalProject.Controllers
 
             // Reviews with customer info
             var reviews = _context.Reviews
-                .Include(r => r.Customer)
+                .Include(r => r.Reviewer)
                 .Where(r => r.AlbumID == id)
                 .ToList();
 
@@ -83,16 +83,17 @@ namespace Team10FinalProject.Controllers
             // Check for active promotion
             var promotion = _context.Promotions
                 .FirstOrDefault(p => p.AlbumID == id
-                                  && p.StartDate <= DateTime.Now
-                                  && p.EndDate >= DateTime.Now);
+                                && p.PromotionStatus == true);
 
             bool    isDiscounted  = promotion != null;
-            decimal currentPrice  = isDiscounted ? promotion.DiscountedPrice : album.Price;
+            decimal currentPrice  = isDiscounted
+                ? album.Price - (promotion.DiscountAmount ?? 0)
+                : album.Price;
             decimal? originalPrice = isDiscounted ? album.Price : null;
 
             decimal avgRating = reviews.Any()
-                ? reviews.Average(r => (decimal)r.Rating)
-                : 0m;
+            ? reviews.Average(r => (decimal)r.Rating)
+            : 0m;
 
             var vm = new AlbumDetailsViewModel
             {
