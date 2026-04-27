@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Team10FinalProject.DAL;
@@ -5,6 +6,7 @@ using Team10FinalProject.Models;
 
 namespace Team10FinalProject.Controllers
 {
+    [Authorize(Roles = "Admin,Manager")]
     public class PromotionController : Controller
     {
         private readonly AppDbContext _context;

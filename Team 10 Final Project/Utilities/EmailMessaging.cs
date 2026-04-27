@@ -19,7 +19,7 @@ namespace Team10FinalProject.Utilities
 
         private const string SubjectPrefix = "Team 10: ";
 
-        public static void SendEmail(string emailSubject, string emailBody, string intendedRecipientEmail)
+        public static void SendEmail(string emailSubject, string emailBody, string intendedRecipientEmail, bool isHtml = false)
         {
             if (string.IsNullOrWhiteSpace(emailSubject) || string.IsNullOrWhiteSpace(emailBody))
             {
@@ -40,8 +40,8 @@ namespace Team10FinalProject.Utilities
                 Subject = SubjectPrefix + emailSubject,
                 Sender = senderEmail,
                 From = senderEmail,
-                Body = BuildDeliveredBody(intendedRecipientEmail, emailBody),
-                IsBodyHtml = false
+                Body = BuildDeliveredBody(intendedRecipientEmail, emailBody, isHtml),
+                IsBodyHtml = isHtml
             };
 
             // TA clarification: send to one inbox, even for different users
@@ -50,14 +50,17 @@ namespace Team10FinalProject.Utilities
             client.Send(message);
         }
 
-        private static string BuildDeliveredBody(string intendedRecipientEmail, string originalBody)
+        private static string BuildDeliveredBody(string intendedRecipientEmail, string originalBody, bool isHtml = false)
         {
-            StringBuilder sb = new StringBuilder();
+            if (isHtml)
+            {
+                return $"<p><strong>Intended Recipient:</strong> {intendedRecipientEmail}</p><hr>{originalBody}";
+            }
 
+            StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Intended Recipient: {intendedRecipientEmail}");
             sb.AppendLine();
             sb.Append(originalBody);
-
             return sb.ToString();
         }
 
@@ -80,7 +83,11 @@ namespace Team10FinalProject.Utilities
         }
 
         // Non-gift order email to purchasing customer
-        public static void SendOrderConfirmationEmail(Order order, string refundLink)
+        public static void SendOrderConfirmationEmail(
+            Order order,
+            string refundLink,
+            string recommendedGenre = "",
+            string recommendedArtistName = "")
         {
             if (order == null || order.Customer == null || string.IsNullOrWhiteSpace(order.Customer.Email))
             {
@@ -90,24 +97,26 @@ namespace Team10FinalProject.Utilities
             string subject = $"Order Confirmation #{order.OrderNumber}";
 
             StringBuilder body = new StringBuilder();
-            body.AppendLine($"Hello {order.Customer.FirstName},");
-            body.AppendLine();
-            body.AppendLine("Your order has been completed.");
-            body.AppendLine($"Order Number: {order.OrderNumber}");
-            body.AppendLine($"Order Date: {order.OrderDate:MMMM dd, yyyy}");
-            body.AppendLine();
-            body.AppendLine("Purchased Music:");
-            body.Append(BuildPurchasedItemsList(order));
-            body.AppendLine();
-            body.AppendLine($"Order Total: {GetOrderTotal(order):C2}");
-            body.AppendLine();
-            body.AppendLine("If this order was made incorrectly, use this link to refund the order:");
-            body.AppendLine(refundLink);
-            body.AppendLine();
-            body.AppendLine("Thank you,");
-            body.AppendLine("Bevo's Tunes");
+            body.AppendLine($"<p>Hello {order.Customer.FirstName},</p>");
+            body.AppendLine($"<p>Your order has been completed.<br>");
+            body.AppendLine($"Order Number: {order.OrderNumber}<br>");
+            body.AppendLine($"Order Date: {order.OrderDate:MMMM dd, yyyy}</p>");
+            body.AppendLine("<p><strong>Purchased Music:</strong><br>");
+            body.Append(BuildPurchasedItemsListHtml(order));
+            body.AppendLine("</p>");
+            body.AppendLine($"<p><strong>Order Total: {GetOrderTotal(order):C2}</strong></p>");
+            if (!string.IsNullOrWhiteSpace(recommendedGenre) && !string.IsNullOrWhiteSpace(recommendedArtistName))
+            {
+                body.AppendLine("Recommended Artist:");
+                body.AppendLine($"Since you purchased music in the genre {recommendedGenre},");
+                body.AppendLine($"we recommend trying {recommendedArtistName}, one of our highest-rated artists in that genre.");
+                body.AppendLine();
+            }
+            body.AppendLine($"<p>If this order was made incorrectly, click the link below to request a refund:</p>");
+            body.AppendLine($"<p><a href=\"{refundLink}\">Cancel / Refund This Order</a></p>");
+            body.AppendLine("<p>Thank you,<br>Bevo's Tunes</p>");
 
-            SendEmail(subject, body.ToString(), order.Customer.Email);
+            SendEmail(subject, body.ToString(), order.Customer.Email, isHtml: true);
         }
 
         // Gift order email to gift-giver
@@ -124,24 +133,20 @@ namespace Team10FinalProject.Utilities
 
             StringBuilder body = new StringBuilder();
             body.AppendLine($"Hello {order.Customer.FirstName},");
-            body.AppendLine();
-            body.AppendLine("Your gift order has been completed.");
-            body.AppendLine($"Order Number: {order.OrderNumber}");
-            body.AppendLine($"Order Date: {order.OrderDate:MMMM dd, yyyy}");
-            body.AppendLine($"Recipient: {recipientEmail}");
-            body.AppendLine();
-            body.AppendLine("Purchased Music:");
-            body.Append(BuildPurchasedItemsList(order));
-            body.AppendLine();
-            body.AppendLine($"Order Total: {GetOrderTotal(order):C2}");
-            body.AppendLine();
-            body.AppendLine("If this order was made incorrectly, use this link to refund the order:");
-            body.AppendLine(refundLink);
-            body.AppendLine();
-            body.AppendLine("Thank you,");
-            body.AppendLine("Bevo's Tunes");
+            body.AppendLine($"<p>Hello {order.Customer.FirstName},</p>");
+            body.AppendLine($"<p>Your gift order has been completed.<br>");
+            body.AppendLine($"Order Number: {order.OrderNumber}<br>");
+            body.AppendLine($"Order Date: {order.OrderDate:MMMM dd, yyyy}<br>");
+            body.AppendLine($"Recipient: {recipientEmail}</p>");
+            body.AppendLine("<p><strong>Purchased Music:</strong><br>");
+            body.Append(BuildPurchasedItemsListHtml(order));
+            body.AppendLine("</p>");
+            body.AppendLine($"<p><strong>Order Total: {GetOrderTotal(order):C2}</strong></p>");
+            body.AppendLine($"<p>If this order was made incorrectly, click the link below to request a refund:</p>");
+            body.AppendLine($"<p><a href=\"{refundLink}\">Cancel / Refund This Order</a></p>");
+            body.AppendLine("<p>Thank you,<br>Bevo's Tunes</p>");
 
-            SendEmail(subject, body.ToString(), order.Customer.Email);
+            SendEmail(subject, body.ToString(), order.Customer.Email, isHtml: true);
         }
 
         // Gift order email to gift recipient with recommendation
@@ -211,6 +216,20 @@ namespace Team10FinalProject.Utilities
             }
 
             return order.OrderDetails.Sum(od => od.Price);
+        }
+
+        private static string BuildPurchasedItemsListHtml(Order order)
+        {
+            if (order.OrderDetails == null || order.OrderDetails.Count == 0)
+                return "No items found<br>";
+
+            var sb = new StringBuilder();
+            foreach (OrderDetail item in order.OrderDetails)
+            {
+                string name = item.Song?.SongName ?? item.Album?.AlbumName ?? "Item";
+                sb.AppendLine($"{name}: {item.Price:C2}<br>");
+            }
+            return sb.ToString();
         }
 
         private static string BuildPurchasedItemsList(Order order)

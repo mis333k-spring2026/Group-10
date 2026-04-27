@@ -1,0 +1,82 @@
+@using Team10FinalProject.Models
+@model Order
+
+@{
+    ViewData["Title"] = "Checkout for Customer";
+    var customer = ViewBag.Customer as AppUser;
+    string customerId = ViewBag.CustomerId;
+    var cards = ViewBag.Cards as List<Card> ?? new List<Card>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="fw-bold mb-0" style="color:#333F48;">Checkout for @customer?.FirstName @customer?.LastName</h2>
+    <a asp-action="Cart" asp-route-customerId="@customerId" class="btn btn-outline-secondary btn-sm">Back to Cart</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card border p-3 mb-3" style="border-color:#E8D5C4;">
+            <h5 class="fw-semibold mb-3" style="color:#BF5700;">Order Summary</h5>
+            <ul class="list-group list-group-flush">
+                @foreach (var item in Model.OrderDetails)
+                {
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <span>
+                            @if (item.Song != null)
+                            {
+                                <span class="badge bg-secondary me-1">Song</span>@item.Song.SongName
+                            }
+                            else if (item.Album != null)
+                            {
+                                <span class="badge me-1" style="background-color:#BF5700;">Album</span>@item.Album.AlbumName
+                            }
+                        </span>
+                        <span>@item.Price.ToString("C")</span>
+                    </li>
+                }
+            </ul>
+            <div class="d-flex justify-content-between fw-semibold mt-2 pt-2 border-top">
+                <span>Total</span>
+                <span style="color:#BF5700;">@Model.OrderDetails.Sum(od => od.Price).ToString("C")</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border p-4" style="border-color:#E8D5C4; background-color:#fff;">
+            <h5 class="fw-semibold mb-3" style="color:#BF5700;">Payment</h5>
+
+            <form asp-action="Checkout" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="customerId" value="@customerId" />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-4">
+                    <label for="cardId" class="form-label text-muted">Customer's Saved Card</label>
+                    @if (cards.Any())
+                    {
+                        <select name="cardId" id="cardId" class="form-select" required>
+                            <option value="">-- Select a card --</option>
+                            @foreach (var card in cards)
+                            {
+                                <option value="@card.CardID">**** **** **** @card.CardNumber.ToString().Substring(Math.Max(0, card.CardNumber.ToString().Length - 4))</option>
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning mb-0">This customer has no saved cards on file. A card must be added to their account before checkout.</div>
+                    }
+                </div>
+
+                @if (cards.Any())
+                {
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">Complete Purchase</button>
+                    </div>
+                }
+            </form>
+        </div>
+    </div>
+</div>

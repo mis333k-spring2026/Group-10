@@ -55,7 +55,18 @@
       .footer { background-color: var(--ut-cream); color: #555; border-top: 1px solid var(--ut-tan) !important; }
       .footer a { color: var(--ut-orange); }
       .footer a:hover { color: var(--ut-orange-dark); }
-    </style>
+
+    .strata-chat-widget {
+    pointer-events: none !important;
+    z-index: -1 !important;
+    }
+
+    .strata-chat-widget iframe {
+        pointer-events: auto !important;
+        z-index: -1 !important;
+    }
+   
+   </style>
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Team10FinalProject.styles.css" asp-append-version="true" />

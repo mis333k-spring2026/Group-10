@@ -254,18 +254,54 @@
     </div>
 </section>
 
-<!-- Featured Banner -->
-<div class="featured-banner">
-    <div class="featured-icon">BT</div>
-    <div class="flex-grow-1">
-        <p class="featured-eyebrow">Featured Now</p>
-        <h2 class="featured-title">Welcome to Bevo's Tunes</h2>
-        <p class="featured-sub">Explore songs, albums, and artists from one place.</p>
+<!-- Featured Items -->
+@{
+    var featuredPromotions = ViewBag.FeaturedPromotions as List<Team10FinalProject.Models.Promotion>;
+}
+
+@if (featuredPromotions != null && featuredPromotions.Any())
+{
+    <div class="mb-4">
+        <p class="section-label">Featured Now</p>
+        <h2 class="section-heading">Featured Music</h2>
+
+        <div class="row g-3">
+            @foreach (var promo in featuredPromotions)
+            {
+                if (promo.Song != null)
+                {
+                    <div class="col-12 col-md-4">
+                        <a asp-controller="Song" asp-action="Details" asp-route-id="@promo.SongID" class="nav-card">
+                            <i class="bi bi-music-note-beamed" style="color:#BF5700; font-size:1.2rem;"></i>
+                            <p class="nav-card-title">@promo.Song.SongName</p>
+                            <p class="nav-card-sub">Song by @promo.Song.Artist?.ArtistName</p>
+                        </a>
+                    </div>
+                }
+                else if (promo.Album != null)
+                {
+                    <div class="col-12 col-md-4">
+                        <a asp-controller="Album" asp-action="Details" asp-route-id="@promo.AlbumID" class="nav-card">
+                            <i class="bi bi-vinyl" style="color:#BF5700; font-size:1.2rem;"></i>
+                            <p class="nav-card-title">@promo.Album.AlbumName</p>
+                            <p class="nav-card-sub">Featured Album</p>
+                        </a>
+                    </div>
+                }
+                else if (promo.Artist != null)
+                {
+                    <div class="col-12 col-md-4">
+                        <a asp-controller="Artist" asp-action="Details" asp-route-id="@promo.ArtistID" class="nav-card">
+                            <i class="bi bi-mic" style="color:#BF5700; font-size:1.2rem;"></i>
+                            <p class="nav-card-title">@promo.Artist.ArtistName</p>
+                            <p class="nav-card-sub">Featured Artist</p>
+                        </a>
+                    </div>
+                }
+            }
+        </div>
     </div>
-    <div>
-        <a asp-controller="Song" asp-action="Index" class="btn btn-primary fw-semibold px-4">Browse Songs</a>
-    </div>
-</div>
+}
 
 <!-- Browse — available to everyone -->
 <div class="mb-4">
@@ -309,6 +345,8 @@
 
 @if (User.Identity != null && User.Identity.IsAuthenticated)
 {
+    @if (!User.IsInRole("Employee") && !User.IsInRole("Manager") && !User.IsInRole("Admin"))
+    {
     <hr class="divider" />
 
     <div class="mb-4">
@@ -345,6 +383,7 @@
             </div>
         </div>
     </div>
+    }
 
     @if (User.IsInRole("Admin") || User.IsInRole("Employee") || User.IsInRole("Manager"))
     {
@@ -352,7 +391,7 @@
 
         <div class="mb-4">
             <p class="section-label">Staff</p>
-            <h2 class="section-heading">Management</h2>
+            <h2 class="section-heading">@(User.IsInRole("Employee") && !User.IsInRole("Manager") && !User.IsInRole("Admin") ? "Employees" : "Management")</h2>
             <div class="row g-3">
                 <div class="col-6 col-md-3">
                     <a asp-controller="Account" asp-action="AddUser" class="nav-card">
@@ -362,12 +401,14 @@
                     </a>
                 </div>
                 <div class="col-6 col-md-3">
-                    <a asp-controller="RoleAdmin" asp-action="Index" class="nav-card">
+                    <a asp-controller="CustomerManagement" asp-action="Index" class="nav-card">
                         <i class="bi bi-people" style="color:#BF5700; font-size:1.2rem;"></i>
-                        <p class="nav-card-title">Manage Users</p>
-                        <p class="nav-card-sub">User role management</p>
+                        <p class="nav-card-title">Manage Customers</p>
+                        <p class="nav-card-sub">Edit customer accounts</p>
                     </a>
                 </div>
+                @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                {
                 <div class="col-6 col-md-3">
                     <a asp-controller="Song" asp-action="Create" class="nav-card">
                         <i class="bi bi-music-note-beamed" style="color:#BF5700; font-size:1.2rem;"></i>
@@ -382,13 +423,23 @@
                         <p class="nav-card-sub">Add new album</p>
                     </a>
                 </div>
+                }
+                <div class="col-6 col-md-3">
+                    <a asp-controller="EmployeeOrder" asp-action="SelectCustomer" class="nav-card">
+                        <i class="bi bi-bag-plus" style="color:#BF5700; font-size:1.2rem;"></i>
+                        <p class="nav-card-title">Purchase for Customer</p>
+                        <p class="nav-card-sub">Place an order on behalf of a customer</p>
+                    </a>
+                </div>
                 <div class="col-6 col-md-3">
                     <a asp-controller="ReviewModeration" asp-action="Index" class="nav-card">
                         <i class="bi bi-chat-left-text" style="color:#BF5700; font-size:1.2rem;"></i>
                         <p class="nav-card-title">Review Moderation</p>
-                        <p class="nav-card-sub">Approve or deny reviews</p>
+                        <p class="nav-card-sub">Approve or edit reviews</p>
                     </a>
                 </div>
+                @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                {
                 <div class="col-6 col-md-3">
                     <a asp-controller="Promotion" asp-action="Index" class="nav-card">
                         <i class="bi bi-tag" style="color:#BF5700; font-size:1.2rem;"></i>
@@ -396,6 +447,9 @@
                         <p class="nav-card-sub">Manage promotions</p>
                     </a>
                 </div>
+                }
+                @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                {
                 <div class="col-6 col-md-3">
                     <a asp-controller="Reports" asp-action="Index" class="nav-card">
                         <i class="bi bi-bar-chart" style="color:#BF5700; font-size:1.2rem;"></i>
@@ -403,6 +457,7 @@
                         <p class="nav-card-sub">View reports</p>
                     </a>
                 </div>
+                }
             </div>
         </div>
     }

@@ -1,0 +1,209 @@
+@using Team10FinalProject.Models
+@model Order?
+
+@{
+    ViewData["Title"] = "Customer Cart";
+    var customer = ViewBag.Customer as AppUser;
+    string customerId = ViewBag.CustomerId;
+    var songResults = ViewBag.SongResults as List<Song>;
+    var albumResults = ViewBag.AlbumResults as List<Album>;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="fw-bold mb-0" style="color:#333F48;">Cart for @customer?.FirstName @customer?.LastName</h2>
+        <p class="text-muted small mb-0">@customer?.Email</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="SelectCustomer" class="btn btn-outline-secondary btn-sm">Change Customer</a>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-sm">Home</a>
+    </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning">@TempData["Error"]</div>
+}
+
+<div class="row g-4">
+
+    @* Left: current cart *@
+    <div class="col-md-5">
+        <div class="card border p-3" style="border-color:#E8D5C4;">
+            <h5 class="fw-semibold mb-3" style="color:#BF5700;">Current Cart</h5>
+
+            @if (Model == null || !Model.OrderDetails.Any())
+            {
+                <p class="text-muted small">No items in cart yet.</p>
+            }
+            else
+            {
+                <ul class="list-group list-group-flush mb-3">
+                    @foreach (var item in Model.OrderDetails)
+                    {
+                        <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                            <div>
+                                @if (item.Song != null)
+                                {
+                                    <span class="badge bg-secondary me-1">Song</span>
+                                    <span>@item.Song.SongName</span>
+                                    <span class="text-muted small ms-1">— @item.Song.Artist?.ArtistName</span>
+                                }
+                                else if (item.Album != null)
+                                {
+                                    <span class="badge me-1" style="background-color:#BF5700;">Album</span>
+                                    <span>@item.Album.AlbumName</span>
+                                }
+                                <div class="text-muted small">@item.Price.ToString("C")</div>
+                            </div>
+                            <div>
+                                @if (item.SongID != null)
+                                {
+                                    <a asp-action="RemoveSong"
+                                       asp-route-customerId="@customerId"
+                                       asp-route-songId="@item.SongID"
+                                       class="btn btn-sm btn-outline-danger">Remove</a>
+                                }
+                                else if (item.AlbumID != null)
+                                {
+                                    <a asp-action="RemoveAlbum"
+                                       asp-route-customerId="@customerId"
+                                       asp-route-albumId="@item.AlbumID"
+                                       class="btn btn-sm btn-outline-danger">Remove</a>
+                                }
+                            </div>
+                        </li>
+                    }
+                </ul>
+                <div class="d-flex justify-content-between fw-semibold px-0 mb-3">
+                    <span>Total</span>
+                    <span style="color:#BF5700;">@Model.OrderDetails.Sum(od => od.Price).ToString("C")</span>
+                </div>
+                <a asp-action="Checkout" asp-route-customerId="@customerId" class="btn btn-success w-100">Proceed to Checkout</a>
+            }
+        </div>
+    </div>
+
+    @* Right: search *@
+    <div class="col-md-7">
+
+        @* Song search *@
+        <div class="card border p-3 mb-3" style="border-color:#E8D5C4;">
+            <h5 class="fw-semibold mb-3" style="color:#BF5700;">Search Songs</h5>
+            <form method="get" asp-action="Cart">
+                <input type="hidden" name="customerId" value="@customerId" />
+                <div class="input-group mb-3">
+                    <input type="text" name="songQuery" value="@ViewBag.SongQuery" class="form-control" placeholder="Song name..." />
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+
+            @if (songResults != null && songResults.Any())
+            {
+                <table class="table table-sm table-hover mb-0">
+                    <thead>
+                        <tr style="background-color:#F8F0E8;">
+                            <th>Song</th>
+                            <th>Artist</th>
+                            <th>Rating</th>
+                            <th>Price</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var song in songResults)
+                        {
+                            bool inCart = Model != null && Model.OrderDetails.Any(od => od.SongID == song.SongID);
+                            <tr>
+                                <td class="align-middle">
+                                    <a asp-controller="Song" asp-action="Details" asp-route-id="@song.SongID"
+                                       style="color:#BF5700;">@song.SongName</a>
+                                </td>
+                                <td class="align-middle text-muted small">@song.Artist?.ArtistName</td>
+                                <td class="align-middle text-muted small">@song.AvgRating / 5</td>
+                                <td class="align-middle">@song.Price.ToString("C")</td>
+                                <td class="align-middle text-end">
+                                    @if (inCart)
+                                    {
+                                        <span class="badge bg-secondary">In Cart</span>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="AddSong"
+                                           asp-route-customerId="@customerId"
+                                           asp-route-songId="@song.SongID"
+                                           class="btn btn-sm btn-primary">Add</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else if (ViewBag.SongQuery != null)
+            {
+                <p class="text-muted small mb-0">No songs found.</p>
+            }
+        </div>
+
+        @* Album search *@
+        <div class="card border p-3" style="border-color:#E8D5C4;">
+            <h5 class="fw-semibold mb-3" style="color:#BF5700;">Search Albums</h5>
+            <form method="get" asp-action="Cart">
+                <input type="hidden" name="customerId" value="@customerId" />
+                <div class="input-group mb-3">
+                    <input type="text" name="albumQuery" value="@ViewBag.AlbumQuery" class="form-control" placeholder="Album name..." />
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+
+            @if (albumResults != null && albumResults.Any())
+            {
+                <table class="table table-sm table-hover mb-0">
+                    <thead>
+                        <tr style="background-color:#F8F0E8;">
+                            <th>Album</th>
+                            <th>Artist(s)</th>
+                            <th>Rating</th>
+                            <th>Price</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var album in albumResults)
+                        {
+                            bool inCart = Model != null && Model.OrderDetails.Any(od => od.AlbumID == album.AlbumID);
+                            <tr>
+                                <td class="align-middle">
+                                    <a asp-controller="Album" asp-action="Details" asp-route-id="@album.AlbumID"
+                                       style="color:#BF5700;">@album.AlbumName</a>
+                                </td>
+                                <td class="align-middle text-muted small">@string.Join(", ", album.Artists.Select(a => a.ArtistName))</td>
+                                <td class="align-middle text-muted small">@album.AvgRating / 5</td>
+                                <td class="align-middle">@album.Price.ToString("C")</td>
+                                <td class="align-middle text-end">
+                                    @if (inCart)
+                                    {
+                                        <span class="badge bg-secondary">In Cart</span>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="AddAlbum"
+                                           asp-route-customerId="@customerId"
+                                           asp-route-albumId="@album.AlbumID"
+                                           class="btn btn-sm btn-primary">Add</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else if (ViewBag.AlbumQuery != null)
+            {
+                <p class="text-muted small mb-0">No albums found.</p>
+            }
+        </div>
+
+    </div>
+</div>

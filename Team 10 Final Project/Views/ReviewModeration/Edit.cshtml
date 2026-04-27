@@ -1,0 +1,51 @@
+@model Team10FinalProject.Models.Review
+
+@{
+    ViewData["Title"] = "Edit Review";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="fw-bold mb-0" style="color:#333F48;">Edit Review</h2>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Back to List</a>
+        </div>
+
+        <div class="card border p-4" style="border-color:#E8D5C4; background-color:#fff;">
+
+            <div class="mb-3">
+                <p class="text-muted small mb-1">Item</p>
+                <p class="fw-semibold mb-0">
+                    @if (Model.Song != null) { <span>Song: @Model.Song.SongName</span> }
+                    else if (Model.Album != null) { <span>Album: @Model.Album.AlbumName</span> }
+                    else if (Model.Artist != null) { <span>Artist: @Model.Artist.ArtistName</span> }
+                </p>
+            </div>
+
+            <div class="mb-4">
+                <p class="text-muted small mb-1">Rating</p>
+                <span class="badge bg-secondary fs-6">@Model.Rating / 5</span>
+                <div class="form-text text-muted">Rating cannot be changed.</div>
+            </div>
+
+            <hr style="border-color:#E8D5C4;" />
+
+            <form asp-action="Edit" asp-route-id="@Model.ReviewID" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="mb-4">
+                    <label for="reviewText" class="form-label text-muted">Review Text</label>
+                    <textarea name="reviewText" id="reviewText" class="form-control" rows="4"
+                              maxlength="100">@Model.ReviewText</textarea>
+                    <div class="form-text text-muted">Maximum 100 characters. You may edit for clarity or to remove inappropriate content.</div>
+                </div>
+
+                <div class="d-grid">
+                    <input type="submit" value="Save Changes" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

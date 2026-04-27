@@ -120,8 +120,6 @@ namespace Team10FinalProject.Controllers
         {
             IQueryable<Album> query = _context.Albums
                 .Include(a => a.Artists)
-                .Include(a => a.Genres)
-                .Include(a => a.Songs)
                 .Where(a => a.Status == true);
 
             avm.TotalResultsCount = query.Count();

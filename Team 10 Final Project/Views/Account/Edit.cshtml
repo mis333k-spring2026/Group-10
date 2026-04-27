@@ -13,23 +13,44 @@
         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
         <div class="row mb-3">
-            <label for="FirstName" class="col-sm-3 col-form-label text-muted">First Name</label>
+            <label class="col-sm-3 col-form-label text-muted">First Name</label>
             <div class="col-sm-9">
-                <input type="text" id="FirstName" name="FirstName" class="form-control" value="@Model.FirstName" />
+                @if (User.IsInRole("Employee"))
+                {
+                    <p class="form-control-plaintext">@Model.FirstName</p>
+                }
+                else
+                {
+                    <input type="text" id="FirstName" name="FirstName" class="form-control" value="@Model.FirstName" />
+                }
             </div>
         </div>
 
         <div class="row mb-3">
-            <label for="LastName" class="col-sm-3 col-form-label text-muted">Last Name</label>
+            <label class="col-sm-3 col-form-label text-muted">Last Name</label>
             <div class="col-sm-9">
-                <input type="text" id="LastName" name="LastName" class="form-control" value="@Model.LastName" />
+                @if (User.IsInRole("Employee"))
+                {
+                    <p class="form-control-plaintext">@Model.LastName</p>
+                }
+                else
+                {
+                    <input type="text" id="LastName" name="LastName" class="form-control" value="@Model.LastName" />
+                }
             </div>
         </div>
 
         <div class="row mb-3">
-            <label for="Email" class="col-sm-3 col-form-label text-muted">Email</label>
+            <label class="col-sm-3 col-form-label text-muted">Email</label>
             <div class="col-sm-9">
-                <input type="email" id="Email" name="Email" class="form-control" value="@Model.Email" />
+                @if (User.IsInRole("Employee"))
+                {
+                    <p class="form-control-plaintext">@Model.Email</p>
+                }
+                else
+                {
+                    <input type="email" id="Email" name="Email" class="form-control" value="@Model.Email" />
+                }
             </div>
         </div>
 
@@ -48,23 +69,38 @@
         </div>
 
         <div class="row mb-3">
-            <label for="City" class="col-sm-3 col-form-label text-muted">City</label>
+            <label class="col-sm-3 col-form-label text-muted">City</label>
             <div class="col-sm-9">
-                <input type="text" id="City" name="City" class="form-control" value="@Model.City" />
+                @if (User.IsInRole("Employee"))
+                {
+                    <p class="form-control-plaintext" id="CityDisplay">@Model.City</p>
+                }
+                else
+                {
+                    <input type="text" id="City" name="City" class="form-control" value="@Model.City" />
+                }
             </div>
         </div>
 
         <div class="row mb-3">
-            <label for="State" class="col-sm-3 col-form-label text-muted">State</label>
+            <label class="col-sm-3 col-form-label text-muted">State</label>
             <div class="col-sm-9">
-                <input type="text" id="State" name="State" class="form-control" value="@Model.State" />
+                @if (User.IsInRole("Employee"))
+                {
+                    <p class="form-control-plaintext" id="StateDisplay">@Model.State</p>
+                }
+                else
+                {
+                    <input type="text" id="State" name="State" class="form-control" value="@Model.State" />
+                }
             </div>
         </div>
 
         <div class="row mb-4">
             <label for="ZipCode" class="col-sm-3 col-form-label text-muted">Zip Code</label>
             <div class="col-sm-9">
-                <input type="text" id="ZipCode" name="ZipCode" class="form-control" value="@Model.ZipCode" />
+                <input type="text" id="ZipCode" name="ZipCode" class="form-control" value="@Model.ZipCode"
+                       @(User.IsInRole("Employee") ? "oninput=\"updateCityState(this.value)\"" : "") />
             </div>
         </div>
 
@@ -76,3 +112,22 @@
 </div>
 
 <a asp-action="Index" style="color:#BF5700;">Back to Account Information</a>
+
+@if (User.IsInRole("Employee"))
+{
+    @section Scripts {
+        <script>
+            function updateCityState(zip) {
+                if (!/^\d{5}$/.test(zip)) return;
+                fetch('https://api.zippopotam.us/us/' + zip)
+                    .then(function(r) { return r.ok ? r.json() : null; })
+                    .then(function(data) {
+                        if (!data) return;
+                        document.getElementById('CityDisplay').textContent = data.places[0]['place name'];
+                        document.getElementById('StateDisplay').textContent = data.places[0]['state abbreviation'];
+                    })
+                    .catch(function() {});
+            }
+        </script>
+    }
+}

@@ -109,11 +109,11 @@ namespace Team10FinalProject.Seeding
                 strOrderFlag = "Order Number 212001";
 
                 AppUser customer2 = db.Users
-                    .FirstOrDefault(u => (u.FirstName + " " + u.LastName) == "Christopher Baker");
+                    .FirstOrDefault(u => u.Email == "cbaker@example.com");
 
                 if (customer2 == null)
                 {
-                    throw new InvalidOperationException("Customer not found: Christopher Baker");
+                    throw new InvalidOperationException("Customer not found: cbaker@example.com");
                 }
 
                 AppUser? friend2 = null;
@@ -181,11 +181,11 @@ namespace Team10FinalProject.Seeding
                 strOrderFlag = "Order Number 212002";
 
                 AppUser customer3 = db.Users
-                    .FirstOrDefault(u => (u.FirstName + " " + u.LastName) == "Christopher Baker");
+                    .FirstOrDefault(u => u.Email == "cbaker@example.com");
 
                 if (customer3 == null)
                 {
-                    throw new InvalidOperationException("Customer not found: Christopher Baker");
+                    throw new InvalidOperationException("Customer not found: cbaker@example.com");
                 }
 
                 AppUser? friend3 = null;
@@ -640,11 +640,11 @@ namespace Team10FinalProject.Seeding
                 strOrderFlag = "Order Number 212008";
 
                 AppUser customer9 = db.Users
-                    .FirstOrDefault(u => (u.FirstName + " " + u.LastName) == "Christopher Baker");
+                    .FirstOrDefault(u => u.Email == "cbaker@example.com");
 
                 if (customer9 == null)
                 {
-                    throw new InvalidOperationException("Customer not found: Christopher Baker");
+                    throw new InvalidOperationException("Customer not found: cbaker@example.com");
                 }
 
                 AppUser? friend9 = null;
@@ -1390,11 +1390,11 @@ namespace Team10FinalProject.Seeding
                 strOrderFlag = "Order Number 212018";
 
                 AppUser customer19 = db.Users
-                    .FirstOrDefault(u => (u.FirstName + " " + u.LastName) == "Christopher Baker");
+                    .FirstOrDefault(u => u.Email == "cbaker@example.com");
 
                 if (customer19 == null)
                 {
-                    throw new InvalidOperationException("Customer not found: Christopher Baker");
+                    throw new InvalidOperationException("Customer not found: cbaker@example.com");
                 }
 
                 AppUser? friend19 = null;
@@ -1699,11 +1699,11 @@ namespace Team10FinalProject.Seeding
                 strOrderFlag = "Order Number 212022";
 
                 AppUser customer23 = db.Users
-                    .FirstOrDefault(u => (u.FirstName + " " + u.LastName) == "Christopher Baker");
+                    .FirstOrDefault(u => u.Email == "cbaker@example.com");
 
                 if (customer23 == null)
                 {
-                    throw new InvalidOperationException("Customer not found: Christopher Baker");
+                    throw new InvalidOperationException("Customer not found: cbaker@example.com");
                 }
 
                 AppUser? friend23 = null;

@@ -1,11 +1,9 @@
-@model Song
 @using Team10FinalProject.Models
+@using Team10FinalProject.ViewModels
+@model SongDetailsViewModel
 
 @{
     ViewData["Title"] = "Song Details";
-    List<Review> reviews = ViewBag.Reviews == null
-        ? new List<Review>()
-        : (List<Review>)ViewBag.Reviews;
 }
 
 <h1>Song Details</h1>
@@ -14,22 +12,33 @@
 <div>
     <dl class="row">
         <dt class="col-sm-2">Song</dt>
-        <dd class="col-sm-10">@Model.SongName</dd>
+        <dd class="col-sm-10">@Model.Song.SongName</dd>
 
         <dt class="col-sm-2">Artist</dt>
-        <dd class="col-sm-10">@Model.Artist?.ArtistName</dd>
+        <dd class="col-sm-10">@Model.Song.Artist?.ArtistName</dd>
 
         <dt class="col-sm-2">Price</dt>
-        <dd class="col-sm-10">@Model.Price.ToString("C")</dd>
+        <dd class="col-sm-10 fw-semibold" style="color:#BF5700;">
+            @if (Model.IsDiscounted)
+            {
+                @Model.CurrentPrice.ToString("C")
+                <span class="ms-2 text-decoration-line-through text-muted fw-normal">@Model.OriginalPrice?.ToString("C")</span>
+                <span class="badge ms-2" style="background-color:#BF5700;">Sale</span>
+            }
+            else
+            {
+                @Model.CurrentPrice.ToString("C")
+            }
+        </dd>
 
         <dt class="col-sm-2">Rating</dt>
-        <dd class="col-sm-10">@Model.AvgRating</dd>
+        <dd class="col-sm-10">@Model.AverageRating.ToString("F1") / 5</dd>
 
         <dt class="col-sm-2">Albums</dt>
         <dd class="col-sm-10">
-            @if (Model.Albums != null && Model.Albums.Any())
+            @if (Model.Song.Albums != null && Model.Song.Albums.Any())
             {
-                @foreach (var album in Model.Albums)
+                @foreach (var album in Model.Song.Albums)
                 {
                     <div>
                         <a asp-controller="Album" asp-action="Details" asp-route-id="@album.AlbumID">@album.AlbumName</a>
@@ -44,9 +53,9 @@
 
         <dt class="col-sm-2">Genres</dt>
         <dd class="col-sm-10">
-            @if (Model.Genres != null && Model.Genres.Any())
+            @if (Model.Song.Genres != null && Model.Song.Genres.Any())
             {
-                @foreach (var genre in Model.Genres)
+                @foreach (var genre in Model.Song.Genres)
                 {
                     <span class="me-2">@genre.GenreName</span>
                 }
@@ -59,17 +68,32 @@
     </dl>
 </div>
 
-@if (User.Identity != null && User.Identity.IsAuthenticated)
+@if (User.Identity != null && User.Identity.IsAuthenticated
+     && !User.IsInRole("Employee") && !User.IsInRole("Manager") && !User.IsInRole("Admin"))
 {
     <div class="mb-3">
-        <a asp-controller="Order" asp-action="AddSong" asp-route-songID="@Model.SongID" class="btn btn-primary">Add to Cart</a>
-        <a asp-controller="Review" asp-action="Create" asp-route-songID="@Model.SongID" class="btn btn-secondary">Write Review</a>
+        @if (Model.AlreadyInCart)
+        {
+            <button class="btn btn-secondary" disabled>Already in Cart</button>
+        }
+        else if (Model.CanAddToCart)
+        {
+            <a asp-controller="Order" asp-action="AddSong" asp-route-songID="@Model.Song.SongID" class="btn btn-primary">Add to Cart</a>
+        }
+        @if (Model.CanReview)
+        {
+            <a asp-controller="Review" asp-action="Create" asp-route-songID="@Model.Song.SongID" class="btn btn-secondary ms-2">Write Review</a>
+        }
+        else
+        {
+            <span class="text-muted small ms-2">You must purchase this song before leaving a review.</span>
+        }
     </div>
 }
 
 <h3>Approved Reviews</h3>
 
-@if (!reviews.Any())
+@if (!Model.Reviews.Any())
 {
     <p>No approved reviews yet.</p>
 }
@@ -84,7 +108,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var review in reviews)
+            @foreach (var review in Model.Reviews)
             {
                 <tr>
                     <td>@review.Reviewer?.FirstName @review.Reviewer?.LastName</td>

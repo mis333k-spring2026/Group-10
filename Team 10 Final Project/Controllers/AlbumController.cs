@@ -48,7 +48,7 @@ namespace Team10FinalProject.Controllers
             // Reviews with customer info
             var reviews = _context.Reviews
                 .Include(r => r.Reviewer)
-                .Where(r => r.AlbumID == id)
+                .Where(r => r.AlbumID == id && r.IsApproved == true)
                 .ToList();
 
             bool canAddToCart   = false;
@@ -112,7 +112,7 @@ namespace Team10FinalProject.Controllers
         }
 
         // GET: /Album/Create
-        [Authorize(Roles = "Admin,Employee,Manager")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult Create()
         {
             ViewBag.AllArtists = new MultiSelectList(_context.Artists.OrderBy(a => a.ArtistName), "ArtistID", "ArtistName");
@@ -128,7 +128,7 @@ namespace Team10FinalProject.Controllers
 
         // POST: /Album/Create
         [HttpPost]
-        [Authorize(Roles = "Admin,Employee,Manager")]
+        [Authorize(Roles = "Admin,Manager")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Album album, int[] selectedArtists, int[] selectedSongs)
         {
@@ -171,7 +171,7 @@ namespace Team10FinalProject.Controllers
         }
 
         // GET: /Album/Edit/5
-        [Authorize(Roles = "Admin,Employee,Manager")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult Edit(int id)
         {
             var album = _context.Albums
@@ -200,7 +200,7 @@ namespace Team10FinalProject.Controllers
 
         // POST: /Album/Edit/5
         [HttpPost]
-        [Authorize(Roles = "Admin,Employee,Manager")]
+        [Authorize(Roles = "Admin,Manager")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Album album, int[] selectedArtists, int[] selectedSongs)
         {

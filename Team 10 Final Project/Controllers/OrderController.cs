@@ -266,6 +266,11 @@ namespace Team10FinalProject.Controllers
                 return View("Error", new List<string> { "User not found." });
             }
 
+            if (!user.Status)
+            {
+                return View("Error", new List<string> { "Your account has been disabled. Please contact support." });
+            }
+
             Order? order = GetPendingOrder(user.Id);
             if (order == null)
             {
@@ -292,6 +297,11 @@ namespace Team10FinalProject.Controllers
             if (user == null)
             {
                 return View("Error", new List<string> { "User not found." });
+            }
+
+            if (!user.Status)
+            {
+                return View("Error", new List<string> { "Your account has been disabled. Please contact support." });
             }
 
             Order? order = GetPendingOrder(user.Id);
@@ -414,7 +424,14 @@ namespace Team10FinalProject.Controllers
                     }
                     else
                     {
-                        EmailMessaging.SendOrderConfirmationEmail(emailOrder, refundLink);
+                        var recommendation = GetGiftRecommendation(emailOrder);
+
+                        EmailMessaging.SendOrderConfirmationEmail(
+                            emailOrder,
+                            refundLink,
+                            recommendation.GenreName,
+                            recommendation.ArtistName
+                        );
                     }
                 }
             }
@@ -630,6 +647,46 @@ namespace Team10FinalProject.Controllers
             }
 
             return songIds.Count != songIds.Distinct().Count();
+        }
+
+        private string GetRecommendationForOrder(Order order)
+        {
+            // Get one genre from a purchased song or album
+            Genre? selectedGenre = null;
+
+            foreach (OrderDetail od in order.OrderDetails)
+            {
+                if (od.Song != null && od.Song.Genres.Any())
+                {
+                    selectedGenre = od.Song.Genres.First();
+                    break;
+                }
+
+                if (od.Album != null && od.Album.Genres.Any())
+                {
+                    selectedGenre = od.Album.Genres.First();
+                    break;
+                }
+            }
+
+            if (selectedGenre == null)
+            {
+                return "";
+            }
+
+            // Find highest-rated artist/band that produces that genre
+            Artist? recommendedArtist = _context.Artists
+                .Include(a => a.Genres)
+                .Where(a => a.Genres.Any(g => g.GenreID == selectedGenre.GenreID))
+                .OrderByDescending(a => a.AvgRating)
+                .FirstOrDefault();
+
+            if (recommendedArtist == null)
+            {
+                return "";
+            }
+
+            return $"Based on your gift, we recommend trying {recommendedArtist.ArtistName}, one of our highest-rated artists in {selectedGenre.GenreName}.";
         }
     }
 }

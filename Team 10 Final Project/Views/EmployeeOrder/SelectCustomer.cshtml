@@ -1,0 +1,35 @@
+@{
+    ViewData["Title"] = "Purchase for Customer";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="fw-bold mb-0" style="color:#333F48;">Purchase for Customer</h2>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-sm">Back to Home</a>
+        </div>
+
+        <div class="card border p-4" style="border-color:#E8D5C4; background-color:#fff;">
+            <p class="text-muted mb-4">Select a customer to manage a purchase on their behalf.</p>
+
+            <form asp-action="SelectCustomer" method="post">
+                @Html.AntiForgeryToken()
+                <div class="mb-4">
+                    <label for="customerId" class="form-label text-muted">Customer</label>
+                    <select name="customerId" id="customerId" class="form-select" required>
+                        <option value="">-- Select a Customer --</option>
+                        @foreach (var customer in ViewBag.Customers as IEnumerable<Team10FinalProject.Models.AppUser>)
+                        {
+                            <option value="@customer.Id">@customer.FirstName @customer.LastName (@customer.Email)</option>
+                        }
+                    </select>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Manage Cart</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

@@ -126,7 +126,7 @@ namespace Team10FinalProject.Controllers
             if (result.Succeeded)
             {
                 EmailMessaging.SendAccountCreationEmail(newUser);
-                return RedirectToAction("Index", "RoleAdmin");
+                return RedirectToAction("AddUserConfirmed");
             }
 
             foreach (IdentityError error in result.Errors)
@@ -136,6 +136,12 @@ namespace Team10FinalProject.Controllers
 
             ViewBag.AllRoles = new List<string> { "Customer", "Employee", "Manager", "Admin" };
             return View(rvm);
+        }
+
+        [Authorize(Roles = "Employee,Manager")]
+        public IActionResult AddUserConfirmed()
+        {
+            return View();
         }
 
         [AllowAnonymous]
@@ -283,10 +289,16 @@ namespace Team10FinalProject.Controllers
                 return View("Error", new List<string> { "User not found." });
             }
 
-            user.FirstName = ivm.FirstName;
-            user.LastName = ivm.LastName;
-            user.Email = ivm.Email;
-            user.UserName = ivm.Email;
+            bool isEmployee = await _userManager.IsInRoleAsync(user, "Employee");
+
+            if (!isEmployee)
+            {
+                user.FirstName = ivm.FirstName;
+                user.LastName = ivm.LastName;
+                user.Email = ivm.Email;
+                user.UserName = ivm.Email;
+            }
+
             user.PhoneNumber = ivm.PhoneNumber;
             user.Address = ivm.Address;
             user.ZipCode = ivm.ZipCode;

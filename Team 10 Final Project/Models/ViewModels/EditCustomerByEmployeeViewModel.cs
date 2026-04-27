@@ -8,6 +8,13 @@ namespace Team10FinalProject.ViewModels
         public string UserID { get; set; }
 
         [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        public string OriginalEmail { get; set; }
+
+        [Required]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
 

@@ -15,7 +15,7 @@ namespace Team10FinalProject.Utilities
             if (song == null) return;
 
             var approvedRatings = song.Reviews
-                .Where(r => r.Status == true)
+                .Where(r => r.IsApproved == true)
                 .Select(r => r.Rating)
                 .ToList();
 
@@ -35,7 +35,7 @@ namespace Team10FinalProject.Utilities
             if (album == null) return;
 
             var approvedRatings = album.Reviews
-                .Where(r => r.Status == true)
+                .Where(r => r.IsApproved == true)
                 .Select(r => r.Rating)
                 .ToList();
 
@@ -55,7 +55,7 @@ namespace Team10FinalProject.Utilities
             if (artist == null) return;
 
             var approvedRatings = artist.Reviews
-                .Where(r => r.Status == true)
+                .Where(r => r.IsApproved == true)
                 .Select(r => r.Rating)
                 .ToList();
 
